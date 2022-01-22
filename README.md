@@ -3,7 +3,7 @@
 ### Front end (Clients) installation
 <br/>
 
-Recommend development envieronment
+Reccommend development environment
 ~~~~
 Node version >= v14.17.4
 NPM >= v6.14.14 
