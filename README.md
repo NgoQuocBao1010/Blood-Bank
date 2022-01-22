@@ -1,6 +1,14 @@
 # Blood-Bank
 
 ### Front end (Clients) installation
+<br/>
+
+Recommend development envieronment
+~~~~
+Node version >= v14.17.4
+NPM >= v6.14.14 
+~~~~
+
 1. Clone repo
 2. Change directory to the “clients” folder
     
