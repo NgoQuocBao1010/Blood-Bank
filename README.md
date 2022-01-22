@@ -1,6 +1,6 @@
 # Blood-Bank
 
-## Front end installation
+- Front end installation
     1. Clone repo
     2. Change directory to the “clients” folder
         
