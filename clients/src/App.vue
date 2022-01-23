@@ -1,6 +1,13 @@
 <script setup>
 import { RouterView, RouterLink } from "vue-router";
+import Comp from "./components/Comp.vue";
+
 const name = $ref("Quoc Bao Ngo");
+const clickMe = () => {
+    name += " 4 ";
+};
+
+const message = $ref("yo");
 </script>
 
 <template>
@@ -11,6 +18,10 @@ const name = $ref("Quoc Bao Ngo");
             New Compostion API Template
             <span>{{ name }}</span>
         </p>
+
+        <button @click="clickMe">Click</button>
+
+        <Comp :message="message"></Comp>
 
         <RouterView />
     </main>
