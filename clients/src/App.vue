@@ -1,13 +1,17 @@
 <script setup>
 import { RouterView, RouterLink } from "vue-router";
-import Comp from "./components/Comp.vue";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
 
 const name = $ref("Quoc Bao Ngo");
 const clickMe = () => {
-    name += " 4 ";
+    if (name.length > 25) name = "Quoc Bao Ngo";
+    else name += " Changed";
 };
 
-const message = $ref("yo");
+let isOpenDialog = $ref(false);
+
+let isOpenConfirm = $ref(false);
 </script>
 
 <template>
@@ -15,16 +19,39 @@ const message = $ref("yo");
     <router-link :to="{ name: 'About' }">About</router-link>
     <main>
         <p>
-            New Compostion API Template
+            Dynamic Content:
             <span>{{ name }}</span>
         </p>
 
-        <button @click="clickMe">Click</button>
+        <Button
+            @click="clickMe"
+            label="PrimeVue Button"
+            class="p-button-success my-btn"
+        />
 
-        <Comp :message="message"></Comp>
+        <Button @click="() => (isOpenDialog = true)" label="Open Dialog" class="my-btn" />
+
+        <Button
+            @click="() => (isOpenConfirm = true)"
+            label="Open Confirm"
+            class="my-btn"
+            style="background-color: lightcoral; border: none"
+        />
 
         <RouterView />
     </main>
+
+    <Dialog
+        v-model:visible="isOpenDialog"
+        modal="true"
+        header="My Dialog"
+        style="max-width: 80%"
+    >
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse nihil id
+        perferendis doloribus dolores deserunt et iste ut quam iure, dolor sint culpa
+        facilis dignissimos eos quibusdam modi, facere nesciunt, voluptatum impedit enim.
+        Impedit nulla aliquid blanditiis magnam dolorem minus?
+    </Dialog>
 </template>
 
 <style lang="scss">
@@ -60,6 +87,15 @@ main {
         span {
             color: rgba(73, 255, 88, 0.74);
         }
+    }
+}
+
+.my-btn {
+    margin: 1rem;
+
+    &:enabled:focus {
+        border: none !important;
+        outline: none;
     }
 }
 </style>
