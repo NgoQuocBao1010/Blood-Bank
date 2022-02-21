@@ -1,17 +1,65 @@
 <script setup>
+import { watch } from "vue";
 import { RouterView, RouterLink } from "vue-router";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
+import ConfirmPopup from "primevue/confirmpopup";
+import { useConfirm } from "primevue/useconfirm";
+import Dropdown from "primevue/dropdown";
+import Toast from "primevue/toast";
+import { useToast } from "primevue/usetoast";
 
-const name = $ref("Quoc Bao Ngo");
+let name = $ref("Quoc Bao Ngo");
 const clickMe = () => {
     if (name.length > 25) name = "Quoc Bao Ngo";
     else name += " Changed";
 };
 
+// Dialog handler
 let isOpenDialog = $ref(false);
 
-let isOpenConfirm = $ref(false);
+// Confirm popup handler
+const confirm = useConfirm();
+const popConfirmTest = (event) => {
+    confirm.require({
+        target: event.currentTarget,
+        message: "Football on 6.30pm Thursday?",
+        icon: "pi pi-question-circle",
+        accept: () => console.log("Accepted"),
+        reject: () => console.log("Rejected"),
+    });
+};
+
+// Dropdown toast noification
+let selectedToast = $ref(null);
+let toastPos = $ref("top-center");
+const toasts = [
+    { name: "Toast Top Right Success", code: "tr" },
+    { name: "Toast Bottom Left Error", code: "bl" },
+];
+const toastsHandler = useToast();
+watch(
+    () => selectedToast,
+    (newVal) => {
+        if (newVal === "tr") {
+            toastPos = "top-right";
+            toastsHandler.add({
+                severity: "success",
+                summary: "Success Message",
+                detail: "Success Notification",
+                life: 1000,
+            });
+        } else if (newVal === "bl") {
+            toastPos = "bottom-left";
+            toastsHandler.add({
+                severity: "error",
+                summary: "Error Message",
+                detail: "Error Notification",
+                life: 1000,
+            });
+        }
+    }
+);
 </script>
 
 <template>
@@ -29,29 +77,54 @@ let isOpenConfirm = $ref(false);
             class="p-button-success my-btn"
         />
 
-        <Button @click="() => (isOpenDialog = true)" label="Open Dialog" class="my-btn" />
-
+        <!-- Open Dialog -->
         <Button
-            @click="() => (isOpenConfirm = true)"
+            @click="() => (isOpenDialog = true)"
+            label="Open Dialog"
+            class="my-btn"
+        />
+
+        <!-- Open Confirm modal -->
+        <Button
+            @click="popConfirmTest"
             label="Open Confirm"
             class="my-btn"
             style="background-color: lightcoral; border: none"
+            icon="pi pi-apple"
         />
 
+        <!-- Toast selection dropdown -->
+        <Dropdown
+            placeholder="Choose a toast notification"
+            v-model="selectedToast"
+            :options="toasts"
+            optionLabel="name"
+            optionValue="code"
+            class="my-btn"
+        />
         <RouterView />
     </main>
 
+    <!-- Dialog -->
     <Dialog
         v-model:visible="isOpenDialog"
-        modal="true"
+        :modal="true"
         header="My Dialog"
+        position="top"
         style="max-width: 80%"
     >
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse nihil id
-        perferendis doloribus dolores deserunt et iste ut quam iure, dolor sint culpa
-        facilis dignissimos eos quibusdam modi, facere nesciunt, voluptatum impedit enim.
-        Impedit nulla aliquid blanditiis magnam dolorem minus?
+        perferendis doloribus dolores deserunt et iste ut quam iure, dolor sint
+        culpa facilis dignissimos eos quibusdam modi, facere nesciunt,
+        voluptatum impedit enim. Impedit nulla aliquid blanditiis magnam dolorem
+        minus?
     </Dialog>
+
+    <!-- Confirm Popup -->
+    <ConfirmPopup style="margin-top: 1rem"></ConfirmPopup>
+
+    <!-- Toast -->
+    <Toast :position="toastPos" />
 </template>
 
 <style lang="scss">
@@ -92,10 +165,12 @@ main {
 
 .my-btn {
     margin: 1rem;
-
-    &:enabled:focus {
-        border: none !important;
-        outline: none;
+    &:focus {
+        box-shadow: none !important;
     }
+}
+
+.p-dropdown {
+    width: 20rem;
 }
 </style>
