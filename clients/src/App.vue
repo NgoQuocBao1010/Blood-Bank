@@ -134,13 +134,9 @@ watch(
     box-sizing: border-box;
 }
 
-html {
-    background-color: black;
-    color: #fff;
-}
-
 a {
     color: white;
+    font-size: 2rem;
     padding: 1rem 2rem;
     transition: all 0.4s ease;
     &.router-link-active {
