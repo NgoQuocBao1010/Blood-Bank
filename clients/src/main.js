@@ -1,11 +1,12 @@
+import "primevue/resources/themes/lara-dark-blue/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
+
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primeVue/confirmationservice";
 import ToastService from "primeVue/toastservice";
-import "primevue/resources/themes/lara-dark-blue/theme.css";
-import "primevue/resources/primevue.min.css";
-import "primeicons/primeicons.css";
 
 import App from "./App.vue";
 import router from "./router";
