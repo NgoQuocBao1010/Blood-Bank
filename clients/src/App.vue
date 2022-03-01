@@ -1,6 +1,8 @@
 <script setup>
+import { RouterView } from "vue-router";
 import Button from "primevue/button";
-import AppSidebar from "./layouts/AppSidebar.vue";
+import AppNavbar from "./layouts/navbar/AppNavbar.vue";
+import AppSidebar from "./layouts/sidebar/AppSidebar.vue";
 
 let sidebarVisibility = $ref(true);
 </script>
@@ -10,23 +12,26 @@ let sidebarVisibility = $ref(true);
         class="layout-wrapper layout-static"
         :class="{ 'layout-static-sidebar-inactive': sidebarVisibility }"
     >
+        <!-- Navbar -->
+        <AppNavbar @toggleSidebar="sidebarVisibility = !sidebarVisibility" />
+
         <!-- Sidebar -->
         <div class="layout-sidebar">
             <AppSidebar />
         </div>
+
+        <!-- Main -->
         <div class="layout-main-container">
-            <Button
-                class="p-button-primary my-btn"
-                label="Toggle Sidebar"
-                @click="sidebarVisibility = !sidebarVisibility"
-            />
+            <div class="layout-main">
+                <router-view />
+            </div>
         </div>
     </main>
 </template>
 
 <style lang="scss">
 .my-btn {
-    margin: 1rem;
+    margin: 1rem 0;
     width: max-content;
     &:focus {
         box-shadow: none !important;
