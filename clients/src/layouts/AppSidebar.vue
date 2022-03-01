@@ -1,4 +1,5 @@
 <script setup>
+import SidebarMenu from "./SidebarMenu.vue";
 const menu = [
     {
         label: "Home",
@@ -11,21 +12,18 @@ const menu = [
         ],
     },
     {
-        label: "Get Started",
+        label: "Information",
         items: [
             {
-                label: "Documentation",
-                icon: "pi pi-fw pi-question",
-                command: () => {
-                    window.location = "#/documentation";
-                },
+                label: "About",
+                icon: "pi pi-fw pi-info-circle",
+                to: "/about",
             },
             {
                 label: "View Source",
                 icon: "pi pi-fw pi-search",
-                command: () => {
-                    window.location = "https://github.com/primefaces/sakai-vue";
-                },
+                newTab: true,
+                url: "https://github.com/NgoQuocBao1010/Blood-Bank",
             },
         ],
     },
@@ -33,7 +31,9 @@ const menu = [
 </script>
 
 <template>
-    <p>Sidebar</p>
+    <div class="layout-menu-container">
+        <SidebarMenu class="layout-menu" :items="menu" :root="true" />
+    </div>
 </template>
 
 <style lang="scss" scoped></style>

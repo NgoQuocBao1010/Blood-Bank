@@ -1,4 +1,30 @@
 // Suggested location to add your overrides so that migration would be easy by just updating the SASS folder in the future
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;800&family=Roboto:wght@300;400;500;700&display=swap");
+
 :root {
-    --surface-ground: rgb(0, 0, 0);
+    // --surface-ground: rgb(0, 0, 0);
+    --primary-color: #f07279;
+    --primary-color-text: #1e2d50;
+    --focus-ring: 0 0 0 0.2rem #faadb3;
+    --font-family: "Roboto", sans-serif;
+}
+
+.p-component {
+    font-family: var(--font-family);
+    font-weight: 400;
+}
+
+.p-button {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 900;
+
+    &:enabled:hover {
+        background: #db696e;
+        border-color: var(--primary-color);
+    }
+}
+
+.p-badge {
+    background: var(--primary-color);
 }
