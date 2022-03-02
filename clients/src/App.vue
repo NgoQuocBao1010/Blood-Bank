@@ -1,19 +1,29 @@
 <script setup>
+import { onMounted } from "vue";
 import { RouterView } from "vue-router";
-import Button from "primevue/button";
 import AppNavbar from "./layouts/navbar/AppNavbar.vue";
 import AppSidebar from "./layouts/sidebar/AppSidebar.vue";
 
-let sidebarVisibility = $ref(true);
+let sidebarHide = $ref(null);
+
+const winWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+
+onMounted(() => {
+    // Hide sidebar if window's width is lower than 1280
+    sidebarHide = winWidth <= 1280 ? true : false;
+});
 </script>
 
 <template>
     <main
         class="layout-wrapper layout-static"
-        :class="{ 'layout-static-sidebar-inactive': sidebarVisibility }"
+        :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
     >
         <!-- Navbar -->
-        <AppNavbar @toggleSidebar="sidebarVisibility = !sidebarVisibility" />
+        <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
 
         <!-- Sidebar -->
         <div class="layout-sidebar">
