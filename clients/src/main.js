@@ -1,5 +1,6 @@
 import "primevue/resources/themes/saga-purple/theme.css";
 import "primevue/resources/primevue.min.css";
+import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
 
 import "./assets/styles/layout.scss";
