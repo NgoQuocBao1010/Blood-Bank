@@ -2,12 +2,38 @@
 import Button from "primevue/button";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import Chart from "primevue/chart";
+
+import { THEMES } from "../constants/index.js";
 
 let activities = $ref([
     { type: "Blood Donation", detail: "Bui Quoc Trong", date: "11-05-2021" },
     { type: "Blood Donation", detail: "Quoc Bao", date: "10-10-2021" },
     { type: "Blood Donated", detail: "Hospital Cho Ray", date: "01-01-2021" },
 ]);
+
+// Chart data
+let data = $ref({
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+        {
+            label: "Blood Received",
+            data: [65, 59, 80, 81, 56, 55, 40],
+            fill: false,
+            backgroundColor: THEMES.primaryColor,
+            borderColor: THEMES.primaryColor,
+            tension: 0.4,
+        },
+        {
+            label: "Blood Donated",
+            data: [28, 48, 40, 19, 86, 27, 90],
+            fill: false,
+            backgroundColor: THEMES.darkColor,
+            borderColor: THEMES.darkColor,
+            tension: 0.4,
+        },
+    ],
+});
 </script>
 
 <template>
@@ -18,7 +44,9 @@ let activities = $ref([
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Blood Receive</span>
+                        <span class="block text-500 font-medium mb-3"
+                            >Blood Receive</span
+                        >
                         <div class="text-900 font-medium text-xl">25.00 L</div>
                     </div>
                     <div
@@ -40,7 +68,9 @@ let activities = $ref([
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-400 font-medium mb-3">Blood Donated</span>
+                        <span class="block text-400 font-medium mb-3"
+                            >Blood Donated</span
+                        >
                         <div class="text-900 font-medium text-xl">500.00 L</div>
                     </div>
                     <div
@@ -62,7 +92,9 @@ let activities = $ref([
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Donators</span>
+                        <span class="block text-500 font-medium mb-3"
+                            >Donators</span
+                        >
                         <div class="text-900 font-medium text-xl">152</div>
                     </div>
                     <div
@@ -82,7 +114,9 @@ let activities = $ref([
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Events</span>
+                        <span class="block text-500 font-medium mb-3"
+                            >Events</span
+                        >
                         <div class="text-900 font-medium text-xl">30</div>
                     </div>
                     <div
@@ -97,6 +131,7 @@ let activities = $ref([
             </div>
         </div>
 
+        <!-- Recent Activities -->
         <div class="col-12 xl:col-6">
             <!-- Activity table -->
             <div class="card">
@@ -108,8 +143,13 @@ let activities = $ref([
                     responsiveLayout="scroll"
                 >
                     <Column field="type" header="Type"></Column>
-                    <Column field="detail" header="Detail" :sortable="true"></Column>
-                    <Column field="date" header="Date" :sortable="true"> </Column>
+                    <Column
+                        field="detail"
+                        header="Detail"
+                        :sortable="true"
+                    ></Column>
+                    <Column field="date" header="Date" :sortable="true">
+                    </Column>
                     <Column>
                         <template #header> View </template>
                         <template #body>
@@ -121,6 +161,14 @@ let activities = $ref([
                         </template>
                     </Column>
                 </DataTable>
+            </div>
+        </div>
+
+        <!-- Blood Activities -->
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h5>Blood Activites</h5>
+                <Chart type="line" :data="data" :options="null" />
             </div>
         </div>
     </div>
