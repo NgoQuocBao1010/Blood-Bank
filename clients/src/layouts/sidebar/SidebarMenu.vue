@@ -83,11 +83,11 @@ export default {
 
 <style lang="scss" scoped>
 .layout-menuitem-root-text {
-    font-size: 1.2rem !important;
+    font-size: 1rem !important;
 }
 
 .layout-menu li a {
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
 
     &:focus {
         box-shadow: none;
