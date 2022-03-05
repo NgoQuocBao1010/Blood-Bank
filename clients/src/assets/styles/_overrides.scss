@@ -37,6 +37,10 @@
     }
 }
 
+.p-menu .p-menuitem-link:focus {
+    box-shadow: inset 0 0 0 0.15rem var(--primary-color);
+}
+
 // Paginator
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
     background: rgb(250, 173, 179, 0.5);
