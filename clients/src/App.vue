@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
-import AppNavbar from "./layouts/navbar/AppNavbar.vue";
-import AppSidebar from "./layouts/sidebar/AppSidebar.vue";
+import AppNavbar from "./components/navbar/AppNavbar.vue";
+import AppSidebar from "./components/sidebar/AppSidebar.vue";
 
 let sidebarHide = $ref(null);
 
