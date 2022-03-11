@@ -1,36 +1,52 @@
 <script setup>
-import { RouterView, RouterLink } from "vue-router";
-import Header from "./views/Header.vue";
+import { onMounted } from "vue";
+import { RouterView } from "vue-router";
+import AppNavbar from "./components/navbar/AppNavbar.vue";
+import AppSidebar from "./components/sidebar/AppSidebar.vue";
+import Footer from "./components/Footer.vue";
+
+let sidebarHide = $ref(null);
+
+const winWidth =
+  window.innerWidth ||
+  document.documentElement.clientWidth ||
+  document.body.clientWidth;
+
+onMounted(() => {
+  // Hide sidebar if window's width is lower than 1280
+  sidebarHide = winWidth <= 1280 ? true : false;
+});
 </script>
 
 <template>
-  <main>
-    <div class="header">
-      <Header />
+  <main
+    class="layout-wrapper layout-static"
+    :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
+  >
+    <!-- Navbar -->
+    <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
+
+    <!-- Sidebar -->
+    <div class="layout-sidebar">
+      <AppSidebar />
     </div>
-    <div class="content">
-      <RouterView />
+
+    <!-- Main -->
+    <div class="layout-main-container">
+      <div class="layout-main">
+        <router-view />
+      </div>
+      <Footer />
     </div>
   </main>
 </template>
 
 <style lang="scss">
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  background-color: #fff;
-  color: #ccc;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-main {
-}
-
-.header {
-  padding: 20px 60px;
+.my-btn {
+  margin: 1rem 0;
+  width: max-content;
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 </style>

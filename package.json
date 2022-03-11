@@ -1,0 +1,21 @@
+{
+    "name": "blood-bank",
+    "version": "1.0.0",
+    "description": "<br/>",
+    "main": "index.js",
+    "scripts": {
+        "install-client": "cd clients && npm i",
+        "start-client": "cd clients && npm run dev"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/NgoQuocBao1010/Blood-Bank.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/NgoQuocBao1010/Blood-Bank/issues"
+    },
+    "homepage": "https://github.com/NgoQuocBao1010/Blood-Bank#readme"
+}

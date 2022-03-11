@@ -1,29 +1,27 @@
 # Blood-Bank
 
-### Front end (Clients) installation
-<br/>
+## Front end (Clients) installation guide
 
-Reccommend development environment
-~~~~
-Node version >= v14.17.4
-NPM >= v6.14.14 
-~~~~
+### Reccommend development environment
+
+```
+    Node version >= v14.17.4
+    NPM >= v6.14.14
+```
+
+### Run Front-end
 
 1. Clone repo
-2. Change directory to the “clients” folder
-    
+1. Install front-end dependencies
+
     ```bash
-    cd clients
+    npm run install-client
     ```
-    
-3. Install dependencies
-    
+
+1. Start front-end's dev server
+
     ```bash
-    npm i
+    npm run start-client
     ```
-    
-4. Run the dev server
-    
-    ```bash
-    npm run dev
-    ```
+
+1. If everything is successfull, Go to http://localhost:3000/
