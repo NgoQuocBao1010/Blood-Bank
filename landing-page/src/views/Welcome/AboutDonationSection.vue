@@ -59,9 +59,14 @@ const products = ref([
           src="https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/donationFact.webp"
           alt=""
         />
+        <p>
+          After donating blood, the body works to replenish the blood loss. This
+          stimulates the production of new blood cells and in turn, helps in
+          maintaining good health.
+        </p>
         <Button label="Donate Now" />
       </div>
-      <div class="blood-table">
+      <div class="blood_table">
         <DataTable :value="products" showGridlines responsiveLayout="scroll">
           <template #header>Compatible Blood Type Donors</template>
           <Column field="blood_type" header="Blood Type"></Column>
@@ -74,8 +79,9 @@ const products = ref([
 </template>
 
 <style lang="scss" scoped>
-.content-section {
+.about_donation-section {
   main {
+    padding: 0 45px;
     .heading {
       text-align: center;
       h1 {
@@ -93,6 +99,19 @@ const products = ref([
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
+        p {
+          color: #292929;
+          line-height: 1.8rem;
+          font-size: 16px;
+          text-align: center;
+          font-weight: 700;
+          margin-top: 10px;
+        }
+
+        img {
+          width: 650px;
+        }
 
         button {
           width: 150px;
