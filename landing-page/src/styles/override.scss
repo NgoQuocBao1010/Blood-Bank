@@ -86,3 +86,34 @@
     box-shadow: none;
   }
 }
+
+.login {
+  .p-button {
+    background-color: var(--PRIMARY_COLOR);
+    border: 1px solid var(--SECONDARY_COLOR);
+  }
+
+  .p-button:hover {
+    background-color: var(--SECONDARY_COLOR);
+    border: 1px solid var(--SECONDARY_COLOR);
+  }
+
+  .p-button:focus {
+    box-shadow: none;
+  }
+
+  .login_form_wrapper {
+    border-radius: 56px;
+    padding: 0.3rem;
+    background: linear-gradient(
+      180deg,
+      var(--PRIMARY_COLOR),
+      rgba(33, 150, 243, 0) 30%
+    );
+
+    .login_form_wrapper {
+      border-radius: 53px;
+      background: linear-gradient(180deg, #fafafa 38.9%, #fff);
+    }
+  }
+}

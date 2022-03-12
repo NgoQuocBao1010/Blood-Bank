@@ -2,20 +2,17 @@
 import TabMenu from "primevue/tabmenu";
 
 const items = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Want to donate", to: "/donate" },
-  { label: "Login", to: "/login" },
+  { label: "HOME", to: "/" },
+  { label: "ABOUT DONATION", to: "/about" },
+  { label: "WANT TO DONATE", to: "/donate" },
+  { label: "LOGIN", to: "/login" },
 ];
 </script>
 
 <template>
   <div class="navbar_header">
     <div class="logo">
-      <img
-        src="https://t4.ftcdn.net/jpg/02/33/73/41/360_F_233734129_XSFihndylwUnThy9r878nTAmSy5J8alW.webp"
-        alt="logo"
-      />
+      <img src="../assets/logo-blood_bank.webp" alt="logo" />
     </div>
     <div class="navbar">
       <TabMenu :model="items" />

@@ -22,9 +22,8 @@ import DonationTypesSection from "./DonationTypesSection.vue";
 <style lang="scss" scoped>
 .welcome {
   .section {
-    margin-bottom: 20px;
     border-bottom: 1px solid #ccc;
-    padding-bottom: 20px;
+    padding: 20px 0;
   }
 }
 </style>
