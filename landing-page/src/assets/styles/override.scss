@@ -1,0 +1,119 @@
+:root {
+  --PRIMARY_COLOR: #f07279;
+  --SECONDARY_COLOR: #f79ca4;
+  --DARK_BLUE: #1e2d50;
+  --DARK_PINK: #b6555a;
+}
+
+.p-carousel-container button,
+.p-carousel-indicator.p-highlight button {
+  background-color: var(--PRIMARY_COLOR) !important;
+}
+
+.p-carousel-container button:hover,
+.p-carousel-indicator button:hover {
+  background-color: var(--SECONDARY_COLOR) !important;
+}
+
+.blood_table {
+  table {
+    width: 650px;
+  }
+  .p-datatable-header {
+    color: #fff;
+    background-color: var(--PRIMARY_COLOR);
+    border: 1px solid var(--PRIMARY_COLOR);
+  }
+
+  .p-datatable .p-datatable-thead > tr > th,
+  .p-datatable .p-datatable-tbody > tr,
+  .p-datatable .p-datatable-tbody > tr > td {
+    color: #000;
+    background-color: #fff !important;
+    border: 1px solid var(--PRIMARY_COLOR);
+  }
+
+  .p-datatable .p-datatable-tbody > tr > td:first-child {
+    color: var(--DARK_PINK);
+    font-weight: bold;
+  }
+}
+
+.tab_view-blood {
+  h3 {
+    color: #292929;
+  }
+
+  p {
+  }
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #fff;
+    border-bottom: 1px solid var(--PRIMARY_COLOR);
+    color: var(--DARK_BLUE);
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    border: solid #ccc;
+    border-width: 0 0 2px 0;
+    background-color: transparent;
+    color: var(--PRIMARY_COLOR);
+    padding: 0.75rem;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    transition: box-shadow 0.2s;
+    margin: 0 0 -2px 0;
+  }
+
+  .p-tabview .p-tabview-panels {
+    background-color: transparent;
+  }
+
+  .p-tabview .p-tabview-nav {
+    border: 1px solid #ccc;
+    border-width: 0 0 2px 0;
+  }
+
+  .p-tabview
+    .p-tabview-nav
+    li:not(.p-highlight):not(.p-disabled):hover
+    .p-tabview-nav-link {
+    background: transparent;
+    color: #337ab7;
+  }
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: none;
+  }
+}
+
+.login {
+  .p-button {
+    background-color: var(--PRIMARY_COLOR);
+    border: 1px solid var(--SECONDARY_COLOR);
+  }
+
+  .p-button:hover {
+    background-color: var(--SECONDARY_COLOR);
+    border: 1px solid var(--SECONDARY_COLOR);
+  }
+
+  .p-button:focus {
+    box-shadow: none;
+  }
+
+  .login_form_wrapper {
+    border-radius: 56px;
+    padding: 0.3rem;
+    background: linear-gradient(
+      180deg,
+      var(--PRIMARY_COLOR),
+      rgba(33, 150, 243, 0) 30%
+    );
+
+    .login_form_wrapper {
+      border-radius: 53px;
+      background: linear-gradient(180deg, #fafafa 38.9%, #fff);
+    }
+  }
+}
