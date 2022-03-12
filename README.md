@@ -9,7 +9,7 @@
     NPM >= v6.14.14
 ```
 
-### Run Front-end
+### Run Admin Page
 
 1. Clone repo
 1. Install front-end dependencies
@@ -25,3 +25,20 @@
     ```
 
 1. If everything is successfull, Go to http://localhost:3000/
+
+### Run Landing Page
+
+1. Clone repo
+1. Install front-end dependencies
+
+    ```bash
+    npm run install-lp
+    ```
+
+1. Start front-end's dev server
+
+    ```bash
+    npm run start-lp
+    ```
+
+1. If everything is successfull, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**
