@@ -6,7 +6,7 @@ import ToastService from "primeVue/toastservice";
 import "primevue/resources/themes/lara-dark-blue/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
-import "./styles/global.scss";
+import "./assets/styles/global.scss";
 
 import App from "./App.vue";
 import router from "./router";
