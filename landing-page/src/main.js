@@ -1,16 +1,19 @@
-import "primeflex/primeflex.css";
-import "primeicons/primeicons.css";
-import "primevue/resources/primevue.min.css";
-import "primevue/resources/themes/lara-light-blue/theme.css";
-import "./styles/override.scss";
-
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import ConfirmationService from "primeVue/confirmationservice";
 import ToastService from "primeVue/toastservice";
-import router from "./router";
+
+import "primeflex/primeflex.css";
+import "primeicons/primeicons.css";
+import "primevue/resources/primevue.min.css";
+import "primevue/resources/themes/lara-light-blue/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
+import "./assets/styles/override.scss";
+
 import App from "./App.vue";
+import router from "./router";
 
 const app = createApp(App);
 

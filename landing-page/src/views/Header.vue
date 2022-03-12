@@ -12,7 +12,7 @@ const items = [
 <template>
   <div class="navbar_header">
     <div class="logo">
-      <img src="../assets/logo-blood_bank.webp" alt="logo" />
+      <img src="../assets/images/logo.png" alt="logo" />
     </div>
     <div class="navbar">
       <TabMenu :model="items" />
