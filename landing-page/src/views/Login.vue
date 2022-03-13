@@ -18,7 +18,7 @@ const handleOnSubmit = () => {
 
 <template>
   <div
-    class="surface-0 flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden pt-2"
+    class="surface-0 flex align-items-center justify-content-center overflow-hidden pt-2"
   >
     <div class="grid justify-content-center p-2 lg:p-0" style="min-width: 80%">
       <div class="col-12 xl:col-6 form_wrapper">
