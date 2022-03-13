@@ -21,7 +21,7 @@ namespace backend.Controllers
         {
             var exist = await _bloodRepository.GetByType(blood.blood_type);
             var id = "";
-            if (!exist)
+            if (exist == null)
             { 
                 id = await _bloodRepository.Create(blood);
             }

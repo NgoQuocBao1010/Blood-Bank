@@ -9,7 +9,8 @@ namespace backend.Models
         public string _id { get; set; }
         
         public string donate_date { get; set; }
-        public string volume { get; set; }
+        public int volume { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
         public string donor_id { get; set; }
     }
 }

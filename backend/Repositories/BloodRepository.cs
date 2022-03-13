@@ -33,12 +33,12 @@ namespace backend.Repositories
             return blood;
         }
         
-        public async Task<bool> GetByType(string blood_type)
+        public async Task<Blood> GetByType(string blood_type)
         {
             var filter = Builders<Blood>.Filter.Eq(b => b.blood_type, blood_type);
-            var blood = await _blood.Find(filter).ToListAsync();
+            var blood = await _blood.Find(filter).FirstOrDefaultAsync();
 
-            return blood.Count() > 0;
+            return blood;
         }
         
 
