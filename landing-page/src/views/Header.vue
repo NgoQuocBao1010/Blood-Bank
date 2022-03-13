@@ -55,5 +55,14 @@ const items = [
       }
     }
   }
+
+  .p-tabmenu
+    .p-tabmenu-nav
+    .p-tabmenuitem
+    .p-menuitem-link:not(.p-disabled):focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 0.2rem var(--PRIMARY_COLOR);
+  }
 }
 </style>
