@@ -571,24 +571,26 @@
     ]
   },
   "packageFolders": {
-    "/Users/trongbui/.nuget/packages/": {}
+    "C:\\Users\\tthun\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/trongbui/Projects.NET/backend/backend.csproj",
+      "projectUniqueName": "E:\\Blood-Bank\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/trongbui/Projects.NET/backend/backend.csproj",
-      "packagesPath": "/Users/trongbui/.nuget/packages/",
-      "outputPath": "/Users/trongbui/Projects.NET/backend/obj/",
+      "projectPath": "E:\\Blood-Bank\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\tthun\\.nuget\\packages\\",
+      "outputPath": "E:\\Blood-Bank\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/trongbui/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\tthun\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -634,7 +636,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.405/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }
