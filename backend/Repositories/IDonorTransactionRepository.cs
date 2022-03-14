@@ -17,7 +17,6 @@ namespace backend.Repositories
         
         // Update
         Task<bool> Update(string _id, DonorTransaction donorTransaction);
-        Task<bool> UpdateDonor(string _id, Donor donor);
         
         // Delete
         Task<bool> Delete(string _id);

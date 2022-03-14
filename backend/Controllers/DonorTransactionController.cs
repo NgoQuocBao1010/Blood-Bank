@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,10 +27,11 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(DonorTransaction donorTransaction)
         {
             var id = await _donorTransactionRepository.Create(donorTransaction);
-            
 
             var donor = await _donorRepository.Get(donorTransaction.donor_id);
-
+            donor.listTransaction.Add(donorTransaction);
+            await _donorRepository.Update(donorTransaction.donor_id, donor);
+            
             var blood = await _bloodRepository.GetByType(donor.blood_type);
             blood.quantity += donorTransaction.volume;
             await _bloodRepository.Update(blood._id, blood);
@@ -54,14 +56,48 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, DonorTransaction donorTransaction)
         {
-            var result = await _donorTransactionRepository.Update(id, donorTransaction);
+            bool result;
+            var transaction = await _donorTransactionRepository.Get(id);
+            if (transaction == null)
+            {
+                result = false;
+            }
+            else
+            {
+                var currentVolume = transaction.volume;
+
+                result = await _donorTransactionRepository.Update(id, donorTransaction);
+            
+                var donor = await _donorRepository.Get(donorTransaction.donor_id);
+                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+
+                await _donorRepository.Update(donorTransaction.donor_id, donor);
+            
+                var blood = await _bloodRepository.GetByType(donor.blood_type);
+                blood.quantity += (donorTransaction.volume - currentVolume);
+                await _bloodRepository.Update(blood._id, blood);
+            }
+           
             return new JsonResult(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _donorTransactionRepository.Delete(id);
+            bool result;
+            var donorTransaction = await _donorTransactionRepository.Get(id);
+            if (donorTransaction == null)
+            {
+                result = false;
+            }
+            else
+            {
+                result = await _donorTransactionRepository.Delete(id);
+                var donor = await _donorRepository.Get(donorTransaction.donor_id);
+                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+                await _donorRepository.Update(donorTransaction.donor_id, donor);
+            }
+
             return new JsonResult(result);
         }
     }

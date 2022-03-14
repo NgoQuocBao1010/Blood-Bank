@@ -33,7 +33,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var donor = await _donorRepository.Get(id);
-            donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
+            // donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
             return new JsonResult(donor);
         }
         
@@ -41,16 +41,17 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var donors = await _donorRepository.Get();
-            foreach (var donor in donors)
-            {
-                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
-            }
+            // foreach (var donor in donors)
+            // {
+            //     donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+            // }
             return new JsonResult(donors);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Donor donor)
-        {
+        {   
+            donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
             var result = await _donorRepository.Update(id, donor);
             return new JsonResult(result);
         }

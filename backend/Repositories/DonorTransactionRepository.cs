@@ -60,28 +60,10 @@ namespace backend.Repositories
                 .Set(d => d.donate_date, donorTransaction.donate_date)
                 .Set(d => d.volume, donorTransaction.volume)
                 .Set(d => d.donor_id, donorTransaction.donor_id);
-                
+
 
             var result = await _donorTransaction.UpdateOneAsync(filter, update);
-            
-            return result.ModifiedCount == 1;
-        }
-        
-        public async Task<bool> UpdateDonor(string _id, Donor donor)
-        {
-            var filter = Builders<Donor>.Filter.Eq(d => d._id, _id);
-            var update = Builders<Donor>.Update
-                .Set(d => d.dob, donor.dob)
-                .Set(d => d.gender, donor.gender)
-                .Set(d => d.address, donor.address)
-                .Set(d => d.phone, donor.phone)
-                .Set(d => d.email, donor.email)
-                .Set(d => d.blood_type, donor.blood_type)
-                .Set(d => d.listTransaction, donor.listTransaction);
-                
 
-            var result = await _donor.UpdateOneAsync(filter, update);
-            
             return result.ModifiedCount == 1;
         }
 
