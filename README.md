@@ -1,15 +1,13 @@
 # Blood-Bank
 
-## Front end (Clients) installation guide
-
-### Reccommend development environment
+### Front end development environment's recommendations
 
 ```
     Node version >= v14.17.4
     NPM >= v6.14.14
 ```
 
-### Run Admin Page
+### Admin Page installation guide
 
 1. Clone repo
 1. Install front-end dependencies
@@ -26,7 +24,7 @@
 
 1. If everything is successfull, Go to http://localhost:3000/
 
-### Run Landing Page
+### Landing Page installation guide
 
 1. Clone repo
 1. Install front-end dependencies
