@@ -15,6 +15,11 @@ const menu = [
         label: "Information",
         items: [
             {
+                label: "Donors",
+                icon: "fa-solid fa-user-group",
+                to: { name: "Donors" },
+            },
+            {
                 label: "About",
                 icon: "pi pi-fw pi-info-circle",
                 to: "/about",
