@@ -1,9 +1,12 @@
 <script setup>
+import { onBeforeMount } from "vue";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
-import ProgressBar from "primevue/progressbar";
+import InputNumber from "primevue/inputnumber";
+import MultiSelect from "primevue/multiselect";
+import DropDown from "primevue/dropdown";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 const donors = [
@@ -91,11 +94,39 @@ const donors = [
         id: "7b1ef3ec-a495-41ec-821d-a7c7ee50c161",
         name: "Quoc Bao 11",
         bloodType: "A",
-        date: "2022-09-2",
+        date: "2022-09-02",
+        amount: 50,
+        event: "event2",
+    },
+    {
+        id: "7b1ef3ec-a495-41ec-821d-afsdee50c161",
+        name: "Quoc Bao 12",
+        bloodType: "Rh",
+        date: "2022-09-02",
         amount: 50,
         event: "event2",
     },
 ];
+
+const bloodTypes = ["A", "B", "AB", "O", "Rh"];
+
+const events = $computed(() => {
+    const allEvents = donors.map((don) => don.event);
+    return [...new Set(allEvents)];
+});
+
+let filters = $ref(null);
+onBeforeMount(() => {
+    filters = {
+        name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        event: { value: null, matchMode: FilterMatchMode.EQUALS },
+        bloodType: { value: null, matchMode: FilterMatchMode.IN },
+        amount: {
+            value: null,
+            matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
+        },
+    };
+});
 </script>
 
 <template>
@@ -114,7 +145,9 @@ const donors = [
                     dataKey="id"
                     :rowHover="true"
                     removableSort
-                    filterDisplay="menu"
+                    filterDisplay="row"
+                    v-model:filters="filters"
+                    :filters="filters"
                     responsiveLayout="scroll"
                     :globalFilterFields="[
                         'name',
@@ -146,13 +179,25 @@ const donors = [
                     </template>
 
                     <!-- Empty data fallback -->
-                    <template #empty> No customers found. </template>
+                    <template #empty> No donors found. </template>
 
                     <!-- Columns -->
-                    <!-- Name column -->
+                    <!-- Donor's name -->
                     <Column field="name" header="Name" style="min-width: 12rem">
                         <template #body="{ data }">
                             {{ data.name }}
+                        </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText
+                                type="text"
+                                v-model="filterModel.value"
+                                @keydown.enter="filterCallback()"
+                                class="p-column-filter"
+                                :placeholder="`Search by name`"
+                                v-tooltip.top.focus="
+                                    'Press enter key to filter'
+                                "
+                            />
                         </template>
                     </Column>
 
@@ -178,6 +223,28 @@ const donors = [
                         <template #body="{ data }">
                             {{ data.event }}
                         </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <DropDown
+                                v-model="filterModel.value"
+                                @change="filterCallback"
+                                :options="events"
+                                placeholder="Choose Event"
+                                class="p-column-filter"
+                                :showClear="true"
+                            >
+                                <template #value="slotProps">
+                                    <span v-if="slotProps.value">
+                                        {{ slotProps.value }}
+                                    </span>
+                                    <span v-else>
+                                        {{ slotProps.placeholder }}
+                                    </span>
+                                </template>
+                                <template #option="slotProps">
+                                    <span>{{ slotProps.option }}</span>
+                                </template>
+                            </DropDown>
+                        </template>
                     </Column>
 
                     <!-- Blood Type -->
@@ -192,18 +259,51 @@ const donors = [
                                 Type {{ data.bloodType }}
                             </span>
                         </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <MultiSelect
+                                v-model="filterModel.value"
+                                @change="filterCallback()"
+                                :options="bloodTypes"
+                                optionLabel=""
+                                placeholder="Select blood type"
+                                class="p-column-filter"
+                            >
+                                <template #option="slotProps">
+                                    <span
+                                        :class="
+                                            'blood-badge type-' +
+                                            slotProps.option
+                                        "
+                                    >
+                                        Type {{ slotProps.option }}
+                                    </span>
+                                </template>
+                            </MultiSelect>
+                        </template>
                     </Column>
 
                     <!-- Amount -->
                     <Column
                         field="amount"
                         header="Amount"
+                        dataType="numeric"
                         :sortable="true"
                         :showFilterMatchModes="false"
                         style="min-width: 12rem"
                     >
                         <template #body="{ data }">
                             {{ data.amount }} ml
+                        </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputNumber
+                                v-model="filterModel.value"
+                                @keydown.enter="filterCallback()"
+                                class="p-column-filter"
+                                :placeholder="`Filter by amount (ml)`"
+                                v-tooltip.top.focus="
+                                    'Press enter key to filter'
+                                "
+                            />
                         </template>
                     </Column>
                 </DataTable>
@@ -239,6 +339,11 @@ const donors = [
     &.type-O {
         background: #b3e5fc;
         color: #23547b;
+    }
+
+    &.type-Rh {
+        background: #eccfff;
+        color: #694382;
     }
 }
 

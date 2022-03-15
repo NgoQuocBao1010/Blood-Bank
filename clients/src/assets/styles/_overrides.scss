@@ -83,6 +83,22 @@
     }
 }
 
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 1rem 0.2rem;
+}
+
+.p-column-filter-overlay
+    .p-column-filter-row-items
+    .p-column-filter-row-item:focus {
+    box-shadow: inset 0 0 0 0.15rem var(--primary-color) !important;
+}
+
+.p-column-filter-menu-button.p-column-filter-menu-button-active,
+.p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
+    background: rgba(var(--primary-color-rbg), 0.3) !important;
+}
+
+// Badge
 .p-badge {
     background: var(--primary-color);
 }
@@ -95,7 +111,9 @@
     width: 250px;
 }
 
+// Input Text
 .p-inputtext {
+    font-family: var(--font-family) !important;
     &:enabled:hover {
         border-color: var(--primary-color) !important;
     }
@@ -106,6 +124,35 @@
     }
 }
 
+// Multiselect
+.p-multiselect:not(.p-disabled):hover {
+    border-color: var(--primary-color);
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+    background: rgba(var(--primary-color-rbg), 0.1);
+}
+
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item:focus {
+    box-shadow: inset 0 0 0 0.15rem var(--primary-color) !important;
+}
+
+// Dropdown
+.p-dropdown:not(.p-disabled):hover {
+    border-color: var(--primary-color) !important;
+}
+
+// Checkbox
+.p-checkbox .p-checkbox-box.p-highlight {
+    border-color: var(--primary-color) !important;
+    background: var(--primary-color) !important;
+}
+
+// Focus state of element
+.p-focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.1rem var(--primary-color) !important;
+}
 @media (min-width: 992px) {
     .layout-wrapper {
         &.layout-static {
