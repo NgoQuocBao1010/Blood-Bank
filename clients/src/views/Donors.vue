@@ -13,6 +13,7 @@ const donors = [
         bloodType: "A",
         date: "2022-09-13",
         amount: 40,
+        event: "event1",
     },
     {
         id: "37121b27-ddff-4821-b57e-fa9ca36fa131",
@@ -20,6 +21,7 @@ const donors = [
         bloodType: "O",
         date: "2022-10-25",
         amount: 41,
+        event: "event2",
     },
     {
         id: "3fd4a632-95a2-41f8-b394-61943c034aad",
@@ -27,6 +29,7 @@ const donors = [
         bloodType: "AB",
         date: "2022-01-13",
         amount: 42,
+        event: "event3",
     },
     {
         id: "a33bca1a-8bbf-4cda-b7e4-868c9c8e9271",
@@ -34,6 +37,7 @@ const donors = [
         bloodType: "A",
         date: "2022-03-23",
         amount: 43,
+        event: "event4",
     },
     {
         id: "f3809f59-b68c-47ef-8d0a-be86a12c5e8c",
@@ -41,6 +45,7 @@ const donors = [
         bloodType: "B",
         date: "2022-04-03",
         amount: 44,
+        event: "event5",
     },
     {
         id: "16c6dfc3-f7ab-47c9-92d8-3e351adb986e",
@@ -48,6 +53,7 @@ const donors = [
         bloodType: "A",
         date: "2022-09-13",
         amount: 45,
+        event: "event1",
     },
     {
         id: "6da5caa2-fbba-451f-addb-e5e301e84af2",
@@ -55,6 +61,7 @@ const donors = [
         bloodType: "AB",
         date: "2022-09-13",
         amount: 46,
+        event: "event2",
     },
     {
         id: "8d5c1613-815f-4f0a-92b4-ce77ca13755d",
@@ -62,6 +69,7 @@ const donors = [
         bloodType: "O",
         date: "2021-09-13",
         amount: 47,
+        event: "event3",
     },
     {
         id: "f5c34b63-9512-4c4b-b12e-39962426eb5b",
@@ -69,6 +77,7 @@ const donors = [
         bloodType: "AB",
         date: "2021-12-13",
         amount: 48,
+        event: "event4",
     },
     {
         id: "ec4b9a70-5fec-4edb-aa40-30e71a9ea46b",
@@ -76,6 +85,7 @@ const donors = [
         bloodType: "B",
         date: "2022-06-13",
         amount: 49,
+        event: "event5",
     },
     {
         id: "7b1ef3ec-a495-41ec-821d-a7c7ee50c161",
@@ -83,6 +93,7 @@ const donors = [
         bloodType: "A",
         date: "2022-09-2",
         amount: 50,
+        event: "event2",
     },
 ];
 </script>
@@ -102,11 +113,13 @@ const donors = [
                     :rows="5"
                     dataKey="id"
                     :rowHover="true"
+                    removableSort
                     filterDisplay="menu"
                     responsiveLayout="scroll"
                     :globalFilterFields="[
                         'name',
                         'date',
+                        'event',
                         'bloodType',
                         'amount',
                     ]"
@@ -148,10 +161,22 @@ const donors = [
                         header="Date Donated"
                         filterField="date"
                         dataType="date"
+                        :sortable="true"
                         style="min-width: 10rem"
                     >
                         <template #body="{ data }">
                             {{ data.date }}
+                        </template>
+                    </Column>
+
+                    <!-- Event name -->
+                    <Column
+                        field="event"
+                        header="Event"
+                        style="min-width: 12rem"
+                    >
+                        <template #body="{ data }">
+                            {{ data.event }}
                         </template>
                     </Column>
 
@@ -173,6 +198,7 @@ const donors = [
                     <Column
                         field="amount"
                         header="Amount"
+                        :sortable="true"
                         :showFilterMatchModes="false"
                         style="min-width: 12rem"
                     >
