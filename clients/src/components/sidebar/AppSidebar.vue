@@ -12,17 +12,22 @@ const menu = [
         ],
     },
     {
-        label: "Information",
+        label: "Management",
         items: [
             {
                 label: "Donors",
                 icon: "fa-solid fa-user-group",
                 to: { name: "Donors" },
             },
+        ],
+    },
+    {
+        label: "Information",
+        items: [
             {
                 label: "About",
                 icon: "pi pi-fw pi-info-circle",
-                to: "/about",
+                to: { name: "About" },
             },
             {
                 label: "View Source",
