@@ -35,7 +35,10 @@ main {
 }
 
 .header {
-  padding: 20px 60px;
+}
+
+.content {
+  margin-top: 120px;
 }
 
 .footer {
