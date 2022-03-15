@@ -8,11 +8,18 @@ const router = createRouter({
             name: "Dashboard",
             component: () => import("./views/Dashboard.vue"),
         },
+        // Management
         {
             path: "/donors-management",
-            name: "Donors",
+            name: "Donors Management",
             component: () => import("./views/management/Donors.vue"),
         },
+        {
+            path: "/blood-management",
+            name: "Blood Management",
+            component: () => import("./views/management/Blood.vue"),
+        },
+        // Information
         {
             path: "/about",
             name: "About",
