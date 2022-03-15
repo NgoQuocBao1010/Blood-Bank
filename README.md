@@ -41,7 +41,7 @@
 
 1. If everything is successfull, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**
 
-<br/>
-```
-    ⚠️ **Please re-install all the dependencies every time you test.**
+```markdown
+    NOTES
+    ⚠️ Please re-install all the dependencies every time you test.
 ```
