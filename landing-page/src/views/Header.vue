@@ -12,7 +12,9 @@ const items = [
 <template>
   <div class="navbar_header">
     <div class="logo">
-      <img src="../assets/images/logo.png" alt="logo" />
+      <a href="#">
+        <img src="../assets/images/logo.png" alt="logo" />
+      </a>
     </div>
     <div class="navbar">
       <TabMenu :model="items" />
@@ -22,17 +24,35 @@ const items = [
 
 <style lang="scss">
 .navbar_header {
-  margin-right: 100px;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6rem;
+  padding: 0 60px;
+  background-color: var(--surface-card);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  box-shadow: 0px 3px 5px rgb(0 0 0 / 2%), 0px 0px 2px rgb(0 0 0 / 5%),
+    0px 1px 4px rgb(0 0 0 / 8%);
 
-  .logo img {
-    background-color: #fff;
-    width: 150px;
+  .logo {
+    display: flex;
+    align-items: center;
+    color: var(--surface-900);
+    font-size: 1.5rem;
+    font-weight: 500;
+    width: 300px;
+    border-radius: 12px;
+
+    img {
+      height: 6rem;
+    }
   }
 
   .navbar {
+    margin: 0 0 0 auto;
     .p-tabmenu .p-tabmenu-nav {
       border: none;
 
