@@ -7,7 +7,9 @@
         "install-client": "cd clients && npm i",
         "start-client": "cd clients && npm run dev",
         "install-lp": "cd landing-page && npm i",
-        "start-lp": "cd landing-page && npm run dev"
+        "start-lp": "cd landing-page && npm run dev",
+        "install-sakai": "cd sakai-vue && npm i",
+        "preview-sakai": "cd sakai-vue && npm run serve"
     },
     "repository": {
         "type": "git",

@@ -3,50 +3,42 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import AppNavbar from "./components/navbar/AppNavbar.vue";
 import AppSidebar from "./components/sidebar/AppSidebar.vue";
-import Footer from "./components/Footer.vue";
+import AppFooter from "./components/AppFooter.vue";
 
 let sidebarHide = $ref(null);
 
 const winWidth =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
 
 onMounted(() => {
-  // Hide sidebar if window's width is lower than 1280
-  sidebarHide = winWidth <= 1280 ? true : false;
+    // Hide sidebar if window's width is lower than 1280
+    sidebarHide = winWidth <= 1280 ? true : false;
 });
 </script>
 
 <template>
-  <main
-    class="layout-wrapper layout-static"
-    :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
-  >
-    <!-- Navbar -->
-    <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
+    <main
+        class="layout-wrapper layout-static"
+        :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
+    >
+        <!-- Navbar -->
+        <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
 
-    <!-- Sidebar -->
-    <div class="layout-sidebar">
-      <AppSidebar />
-    </div>
+        <!-- Sidebar -->
+        <div class="layout-sidebar">
+            <AppSidebar />
+        </div>
 
-    <!-- Main -->
-    <div class="layout-main-container">
-      <div class="layout-main">
-        <router-view />
-      </div>
-      <Footer />
-    </div>
-  </main>
+        <!-- Main -->
+        <div class="layout-main-container">
+            <div class="layout-main">
+                <router-view />
+            </div>
+            <AppFooter v-once />
+        </div>
+    </main>
 </template>
 
-<style lang="scss">
-.my-btn {
-  margin: 1rem 0;
-  width: max-content;
-  &:focus {
-    box-shadow: none !important;
-  }
-}
-</style>
+<style lang="scss"></style>
