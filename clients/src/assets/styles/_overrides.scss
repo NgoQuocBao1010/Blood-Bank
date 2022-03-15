@@ -148,6 +148,20 @@
     background: var(--primary-color) !important;
 }
 
+// Calendar
+.p-datepicker .p-datepicker-header .p-datepicker-prev:focus,
+.p-datepicker .p-datepicker-header .p-datepicker-next:focus {
+    box-shadow: 0 0 0 0.2rem var(--primary-color) !important;
+}
+
+.p-datepicker table td > span.p-highlight {
+    background: rgba(var(--primary-color-rbg), 0.2) !important;
+}
+
+.p-datepicker table td > span:focus {
+    box-shadow: 0 0 0 0.2rem var(--primary-color) !important;
+}
+
 // Focus state of element
 .p-focus {
     border-color: var(--primary-color) !important;

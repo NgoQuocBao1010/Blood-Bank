@@ -1,20 +1,22 @@
 <script setup>
 import { onBeforeMount } from "vue";
+import dayjs from "dayjs";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Button from "primevue/button";
+import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
-import { FilterMatchMode, FilterOperator } from "primevue/api";
+import { FilterMatchMode } from "primevue/api";
 
 const donors = [
     {
         id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
         name: "Quoc Bao 1",
         bloodType: "A",
-        date: "2022-09-13",
+        date: new Date("2022-09-13"),
         amount: 40,
         event: "event1",
     },
@@ -22,7 +24,7 @@ const donors = [
         id: "37121b27-ddff-4821-b57e-fa9ca36fa131",
         name: "Quoc Bao 2",
         bloodType: "O",
-        date: "2022-10-25",
+        date: new Date("2022-10-25"),
         amount: 41,
         event: "event2",
     },
@@ -30,7 +32,7 @@ const donors = [
         id: "3fd4a632-95a2-41f8-b394-61943c034aad",
         name: "Quoc Bao 3",
         bloodType: "AB",
-        date: "2022-01-13",
+        date: new Date("2022-01-13"),
         amount: 42,
         event: "event3",
     },
@@ -38,7 +40,7 @@ const donors = [
         id: "a33bca1a-8bbf-4cda-b7e4-868c9c8e9271",
         name: "Quoc Bao 4",
         bloodType: "A",
-        date: "2022-03-23",
+        date: new Date("2022-03-23"),
         amount: 43,
         event: "event4",
     },
@@ -46,7 +48,7 @@ const donors = [
         id: "f3809f59-b68c-47ef-8d0a-be86a12c5e8c",
         name: "Quoc Bao 5",
         bloodType: "B",
-        date: "2022-04-03",
+        date: new Date("2022-04-03"),
         amount: 44,
         event: "event5",
     },
@@ -54,7 +56,7 @@ const donors = [
         id: "16c6dfc3-f7ab-47c9-92d8-3e351adb986e",
         name: "Quoc Bao 6",
         bloodType: "A",
-        date: "2022-09-13",
+        date: new Date("2022-09-13"),
         amount: 45,
         event: "event1",
     },
@@ -62,7 +64,7 @@ const donors = [
         id: "6da5caa2-fbba-451f-addb-e5e301e84af2",
         name: "Quoc Bao 7",
         bloodType: "AB",
-        date: "2022-09-13",
+        date: new Date("2022-09-13"),
         amount: 46,
         event: "event2",
     },
@@ -70,7 +72,7 @@ const donors = [
         id: "8d5c1613-815f-4f0a-92b4-ce77ca13755d",
         name: "Quoc Bao 8",
         bloodType: "O",
-        date: "2021-09-13",
+        date: new Date("2021-09-13"),
         amount: 47,
         event: "event3",
     },
@@ -78,7 +80,7 @@ const donors = [
         id: "f5c34b63-9512-4c4b-b12e-39962426eb5b",
         name: "Quoc Bao 9",
         bloodType: "AB",
-        date: "2021-12-13",
+        date: new Date("2021-12-13"),
         amount: 48,
         event: "event4",
     },
@@ -86,7 +88,7 @@ const donors = [
         id: "ec4b9a70-5fec-4edb-aa40-30e71a9ea46b",
         name: "Quoc Bao 10",
         bloodType: "B",
-        date: "2022-06-13",
+        date: new Date("2022-06-13"),
         amount: 49,
         event: "event5",
     },
@@ -94,7 +96,7 @@ const donors = [
         id: "7b1ef3ec-a495-41ec-821d-a7c7ee50c161",
         name: "Quoc Bao 11",
         bloodType: "A",
-        date: "2022-09-02",
+        date: new Date("2022-09-02"),
         amount: 50,
         event: "event2",
     },
@@ -102,7 +104,7 @@ const donors = [
         id: "7b1ef3ec-a495-41ec-821d-afsdee50c161",
         name: "Quoc Bao 12",
         bloodType: "Rh",
-        date: "2022-09-02",
+        date: new Date("2022-09-02"),
         amount: 50,
         event: "event2",
     },
@@ -115,10 +117,18 @@ const events = $computed(() => {
     return [...new Set(allEvents)];
 });
 
+const formatDate = (date) => {
+    // Format date object
+    const day = dayjs(date);
+    return day.format("DD/MM/YYYY");
+};
+
 let filters = $ref(null);
-onBeforeMount(() => {
+const initFilter = () => {
     filters = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        date: { value: null, matchMode: FilterMatchMode.DATE_IS },
         event: { value: null, matchMode: FilterMatchMode.EQUALS },
         bloodType: { value: null, matchMode: FilterMatchMode.IN },
         amount: {
@@ -126,6 +136,12 @@ onBeforeMount(() => {
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
         },
     };
+};
+const clearFilter = () => {
+    initFilter();
+};
+onBeforeMount(() => {
+    initFilter();
 });
 </script>
 
@@ -166,6 +182,7 @@ onBeforeMount(() => {
                                 type="button"
                                 icon="pi pi-filter-slash"
                                 label="Clear"
+                                @click="clearFilter()"
                                 class="p-button-outlined mb-2"
                             />
                             <span class="p-input-icon-left mb-2">
@@ -173,6 +190,7 @@ onBeforeMount(() => {
                                 <InputText
                                     placeholder="Keyword Search"
                                     style="width: 100%"
+                                    v-model="filters['global'].value"
                                 />
                             </span>
                         </div>
@@ -204,13 +222,21 @@ onBeforeMount(() => {
                     <!-- Date donated -->
                     <Column
                         header="Date Donated"
-                        filterField="date"
+                        field="date"
                         dataType="date"
                         :sortable="true"
                         style="min-width: 10rem"
                     >
                         <template #body="{ data }">
-                            {{ data.date }}
+                            {{ formatDate(data.date) }}
+                        </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <Calendar
+                                v-model="filterModel.value"
+                                dateFormat="mm/dd/yy"
+                                placeholder="mm/dd/yyyy"
+                                @date-select="filterCallback()"
+                            />
                         </template>
                     </Column>
 
