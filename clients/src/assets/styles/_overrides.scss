@@ -84,7 +84,7 @@
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-    padding: 1rem 0.2rem;
+    padding-right: 0.5rem;
 }
 
 .p-column-filter-overlay
@@ -107,13 +107,10 @@
     box-shadow: 0 0 0 0.2rem var(--primary-color);
 }
 
-.layout-sidebar {
-    width: 250px;
-}
-
 // Input Text
 .p-inputtext {
     font-family: var(--font-family) !important;
+
     &:enabled:hover {
         border-color: var(--primary-color) !important;
     }
@@ -167,6 +164,12 @@
     border-color: var(--primary-color) !important;
     box-shadow: 0 0 0 0.1rem var(--primary-color) !important;
 }
+
+// Layout Override
+.layout-sidebar {
+    width: 250px;
+}
+
 @media (min-width: 992px) {
     .layout-wrapper {
         &.layout-static {
