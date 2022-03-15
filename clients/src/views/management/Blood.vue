@@ -98,170 +98,174 @@ const determineStockStatus = (value) => {
 <template>
     <div class="grid">
         <div class="col-12">
-            <!-- Page headers -->
-            <h2>Blood Management</h2>
+            <div class="card">
+                <!-- Page headers -->
+                <h2>Blood Management</h2>
 
-            <!-- Blood Table -->
-            <Datatable
-                :value="bloods"
-                dataKey="id"
-                v-model:expandedRows="expandedRows"
-                responsiveLayout="scroll"
-                removableSort
-                class="p-datatable-gridlines"
-            >
-                <!-- Table Header -->
-                <template #header>
-                    <div class="header-container">
-                        <div>
-                            <!-- Expand and Collapse all buttons -->
-                            <Button
-                                icon="pi pi-plus"
-                                label="Expand All"
-                                class="mr-2 mb-2"
-                                @click="expandAllRows()"
-                            />
-                            <Button
-                                icon="pi pi-minus"
-                                label="Collapse All"
-                                class="mb-2 mr-2"
-                                @click="expandedRows = null"
-                            />
+                <!-- Blood Table -->
+                <Datatable
+                    :value="bloods"
+                    dataKey="id"
+                    v-model:expandedRows="expandedRows"
+                    responsiveLayout="scroll"
+                    removableSort
+                    class="p-datatable-gridlines"
+                >
+                    <!-- Table Header -->
+                    <template #header>
+                        <div class="header-container">
+                            <div>
+                                <!-- Expand and Collapse all buttons -->
+                                <Button
+                                    icon="pi pi-plus"
+                                    label="Expand All"
+                                    class="mr-2 mb-2"
+                                    @click="expandAllRows()"
+                                />
+                                <Button
+                                    icon="pi pi-minus"
+                                    label="Collapse All"
+                                    class="mb-2 mr-2"
+                                    @click="expandedRows = null"
+                                />
+                            </div>
+
+                            <!-- Information Button -->
+                            <i
+                                class="information pi pi-info-circle mr-2 mb-2"
+                                ref="stockInfo"
+                                @click="toggleStockInfo"
+                            ></i>
+
+                            <!-- Stock Status Information -->
+                            <OverlayPanel ref="stockInfo" id="overlay_panel">
+                                <h5>Stock Status:</h5>
+
+                                <p>Out of stock: <span>0ml</span></p>
+                                <p>Low in stock: <span>&lt; 400ml</span></p>
+                                <p>
+                                    Good in stock:
+                                    <span>400ml &lt;= 700ml &lt; 1000ml</span>
+                                </p>
+                                <p>Great in stock: <span>&gt;= 1000ml</span></p>
+                            </OverlayPanel>
                         </div>
+                    </template>
 
-                        <!-- Information Button -->
-                        <i
-                            class="information pi pi-info-circle mr-2 mb-2"
-                            ref="stockInfo"
-                            @click="toggleStockInfo"
-                        ></i>
+                    <!-- Empty data fallback -->
+                    <template #empty>
+                        No data found. Probably a server problem.
+                    </template>
 
-                        <!-- Stock Status Information -->
-                        <OverlayPanel ref="stockInfo" id="overlay_panel">
-                            <h5>Stock Status:</h5>
+                    <!-- Expand Icon -->
+                    <Column :expander="true" headerStyle="width: 3rem" />
 
-                            <p>Out of stock: <span>0ml</span></p>
-                            <p>Low in stock: <span>&lt; 400ml</span></p>
-                            <p>
-                                Good in stock:
-                                <span>400ml &lt;= 700ml &lt; 1000ml</span>
+                    <!-- Blood Type Name -->
+                    <Column
+                        field="name"
+                        header="Name"
+                        style="min-width: 8rem !important"
+                    >
+                        <template #body="slotProps">
+                            {{ slotProps.data.name }}
+                        </template>
+                    </Column>
+
+                    <!-- Total Quantity Column -->
+                    <Column
+                        field="quantity"
+                        header="Total Quantity"
+                        :sortable="true"
+                        style="text-align: center"
+                    >
+                        <template #body="slotProps">
+                            <p style="text-align: center">
+                                {{ slotProps.data.quantity }} ml
                             </p>
-                            <p>Great in stock: <span>&gt;= 1000ml</span></p>
-                        </OverlayPanel>
-                    </div>
-                </template>
+                        </template>
+                    </Column>
 
-                <!-- Empty data fallback -->
-                <template #empty>
-                    No data found. Probably a server problem.
-                </template>
+                    <!-- Stock status Column -->
+                    <Column
+                        field="inStock"
+                        header="Stock status"
+                        header-style="width: 10rem"
+                        :sortable="true"
+                    >
+                        <template #body="slotProps">
+                            <p style="text-align: center">
+                                <i
+                                    class="fa-solid fa-circle-exclamation"
+                                    style="font-size: 1.5rem; color: #ff1818"
+                                    v-if="!slotProps.data.inStock"
+                                ></i>
+                                <i
+                                    class="fa-solid fa-circle-check"
+                                    style="font-size: 1.5rem; color: #00c897"
+                                    v-else
+                                ></i>
+                            </p>
+                        </template>
+                    </Column>
 
-                <!-- Expand Icon -->
-                <Column :expander="true" headerStyle="width: 3rem" />
+                    <!-- Expand Rows to a Datatable -->
+                    <template #expansion="slotProps">
+                        <div class="p-3">
+                            <!-- Row Expand Table Headers -->
+                            <p>Blood {{ slotProps.data.name }} details</p>
 
-                <!-- Blood Type Name -->
-                <Column
-                    field="name"
-                    header="Name"
-                    style="min-width: 8rem !important"
-                >
-                    <template #body="slotProps">
-                        {{ slotProps.data.name }}
-                    </template>
-                </Column>
-
-                <!-- Total Quantity Column -->
-                <Column
-                    field="quantity"
-                    header="Total Quantity"
-                    :sortable="true"
-                    style="text-align: center"
-                >
-                    <template #body="slotProps">
-                        <p style="text-align: center">
-                            {{ slotProps.data.quantity }} ml
-                        </p>
-                    </template>
-                </Column>
-
-                <!-- Stock status Column -->
-                <Column
-                    field="inStock"
-                    header="Stock status"
-                    header-style="width: 10rem"
-                    :sortable="true"
-                >
-                    <template #body="slotProps">
-                        <p style="text-align: center">
-                            <i
-                                class="fa-solid fa-circle-exclamation"
-                                style="font-size: 1.5rem; color: #ff1818"
-                                v-if="!slotProps.data.inStock"
-                            ></i>
-                            <i
-                                class="fa-solid fa-circle-check"
-                                style="font-size: 1.5rem; color: #00c897"
-                                v-else
-                            ></i>
-                        </p>
-                    </template>
-                </Column>
-
-                <!-- Expand Rows to a Datatable -->
-                <template #expansion="slotProps">
-                    <div class="p-3">
-                        <!-- Row Expand Table Headers -->
-                        <p>Blood {{ slotProps.data.name }} details</p>
-
-                        <!-- Expand Table -->
-                        <Datatable
-                            :value="slotProps.data.types"
-                            responsiveLayout="scroll"
-                        >
-                            <!-- Type -->
-                            <Column field="name" header="Type">
-                                <template #body="slotProps">
-                                    <span style="text-transform: capitalize">
-                                        {{ slotProps.data.bloodType }}
-                                        {{ slotProps.data.name }}
-                                    </span>
-                                </template>
-                            </Column>
-
-                            <!-- Quantity -->
-                            <Column
-                                field="quantity"
-                                header="Quantity"
-                                :sortable="true"
+                            <!-- Expand Table -->
+                            <Datatable
+                                :value="slotProps.data.types"
+                                responsiveLayout="scroll"
                             >
-                                <template #body="slotProps">
-                                    <p style="text-align: center">
-                                        {{ slotProps.data.quantity }} ml
-                                    </p>
-                                </template>
-                            </Column>
+                                <!-- Type -->
+                                <Column field="name" header="Type">
+                                    <template #body="slotProps">
+                                        <span
+                                            style="text-transform: capitalize"
+                                        >
+                                            {{ slotProps.data.bloodType }}
+                                            {{ slotProps.data.name }}
+                                        </span>
+                                    </template>
+                                </Column>
 
-                            <!-- Stock Status -->
-                            <Column
-                                field="status"
-                                header="Stock Status"
-                                header-style="width:15rem"
-                            >
-                                <template #body="slotProps">
-                                    <span
-                                        :class="
-                                            'stock-badge status-' +
-                                            slotProps.data.status
-                                        "
-                                    >
-                                        {{ slotProps.data.displayStatus }}
-                                    </span>
-                                </template>
-                            </Column>
-                        </Datatable>
-                    </div>
-                </template>
-            </Datatable>
+                                <!-- Quantity -->
+                                <Column
+                                    field="quantity"
+                                    header="Quantity"
+                                    :sortable="true"
+                                >
+                                    <template #body="slotProps">
+                                        <p style="text-align: center">
+                                            {{ slotProps.data.quantity }} ml
+                                        </p>
+                                    </template>
+                                </Column>
+
+                                <!-- Stock Status -->
+                                <Column
+                                    field="status"
+                                    header="Stock Status"
+                                    header-style="width:15rem"
+                                >
+                                    <template #body="slotProps">
+                                        <span
+                                            :class="
+                                                'stock-badge status-' +
+                                                slotProps.data.status
+                                            "
+                                        >
+                                            {{ slotProps.data.displayStatus }}
+                                        </span>
+                                    </template>
+                                </Column>
+                            </Datatable>
+                        </div>
+                    </template>
+                </Datatable>
+            </div>
         </div>
     </div>
 </template>

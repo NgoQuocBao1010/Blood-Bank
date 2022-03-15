@@ -149,8 +149,8 @@ onBeforeMount(() => {
     <div class="grid">
         <div class="col-12">
             <div class="card">
-                <!-- Table header -->
-                <h5>Donors Table</h5>
+                <!-- Page headers -->
+                <h2>Donors Management</h2>
 
                 <!-- Donors table -->
                 <DataTable
@@ -225,7 +225,7 @@ onBeforeMount(() => {
                         field="date"
                         dataType="date"
                         :sortable="true"
-                        style="min-width: 10rem"
+                        style="min-width: 12rem"
                     >
                         <template #body="{ data }">
                             {{ formatDate(data.date) }}
@@ -277,8 +277,7 @@ onBeforeMount(() => {
                     <Column
                         field="bloodType"
                         header="Blood Type"
-                        :filterMenuStyle="{ width: '14rem' }"
-                        style="min-width: 12rem"
+                        style="max-width: 14rem !important"
                     >
                         <template #body="{ data }">
                             <span :class="'blood-badge type-' + data.bloodType">
@@ -339,40 +338,7 @@ onBeforeMount(() => {
 </template>
 
 <style lang="scss" scoped>
-.blood-badge {
-    border-radius: var(--border-radius);
-    padding: 0.25em 0.5rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 0.3px;
-
-    &.type-A {
-        background: #c8e6c9;
-        color: #256029;
-    }
-
-    &.type-B {
-        background: #ffcdd2;
-        color: #c63737;
-    }
-
-    &.type-AB {
-        background: #feedaf;
-        color: #8a5340;
-    }
-
-    &.type-O {
-        background: #b3e5fc;
-        color: #23547b;
-    }
-
-    &.type-Rh {
-        background: #eccfff;
-        color: #694382;
-    }
-}
-
+@import "../../assets/styles/badge.scss";
 ::v-deep(.p-datatable-frozen-tbody) {
     font-weight: bold;
 }
