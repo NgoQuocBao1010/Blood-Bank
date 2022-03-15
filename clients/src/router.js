@@ -11,7 +11,7 @@ const router = createRouter({
         {
             path: "/donors-management",
             name: "Donors",
-            component: () => import("./views/Donors.vue"),
+            component: () => import("./views/management/Donors.vue"),
         },
         {
             path: "/about",

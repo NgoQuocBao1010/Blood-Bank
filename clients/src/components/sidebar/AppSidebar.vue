@@ -2,7 +2,7 @@
 import SidebarMenu from "./SidebarMenu.vue";
 const menu = [
     {
-        label: "Home",
+        label: "Overview",
         items: [
             {
                 label: "Dashboard",
