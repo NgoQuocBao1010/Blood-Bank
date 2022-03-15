@@ -92,10 +92,15 @@ namespace backend.Controllers
             }
             else
             {
+                var currentVolume = donorTransaction.volume;
                 result = await _donorTransactionRepository.Delete(id);
                 var donor = await _donorRepository.Get(donorTransaction.donor_id);
                 donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
                 await _donorRepository.Update(donorTransaction.donor_id, donor);
+                
+                var blood = await _bloodRepository.GetByType(donor.blood_type);
+                blood.quantity -= currentVolume;
+                await _bloodRepository.Update(blood._id, blood);
             }
 
             return new JsonResult(result);
