@@ -54,6 +54,7 @@ namespace backend.Repositories
             var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
             var update = Builders<Blood>.Update
                 .Set(b => b.blood_type, blood.blood_type)
+                .Set(b => b.type, blood.type)
                 .Set(b => b.quantity, blood.quantity)
                 .Set(b => b.description, blood.description);
 

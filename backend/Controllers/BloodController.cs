@@ -21,13 +21,13 @@ namespace backend.Controllers
         {
             var exist = await _bloodRepository.GetByType(blood.blood_type);
             var id = "";
-            if (exist == null)
-            { 
-                id = await _bloodRepository.Create(blood);
+            if (exist != null && exist.type.Equals(blood.type))
+            {
+                id = "Blood Type Exists!";
             }
             else
             {
-                id = "Blood Type Exists!";
+                id = await _bloodRepository.Create(blood);
             }
             return new JsonResult(id);
         }
