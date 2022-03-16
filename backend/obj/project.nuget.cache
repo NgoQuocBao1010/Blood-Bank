@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "n3uXDbpntO2Vi8RYaeLvAV99NOenSbJiHpb4FfZ6W9sKOwtom+4kN2h2ak6pYL+tr9sW2eqbqFo3PJ5OO9bjLg==",
+  "dgSpecHash": "1SREW6AjcsnJWqGFxcQe/r6fbMBuM7vja55O7QrB4Ld9E/zlz+IeArqZTpe/30FydXrtjc54zfmFszsWy1e/Sg==",
   "success": true,
   "projectFilePath": "/Users/trongbui/Projects.NET/backend/backend.csproj",
   "expectedPackageFiles": [
     "/Users/trongbui/.nuget/packages/dnsclient/1.4.0/dnsclient.1.4.0.nupkg.sha512",
+    "/Users/trongbui/.nuget/packages/dotenv.net/3.1.1/dotenv.net.3.1.1.nupkg.sha512",
     "/Users/trongbui/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "/Users/trongbui/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
     "/Users/trongbui/.nuget/packages/mongodb.bson/2.14.1/mongodb.bson.2.14.1.nupkg.sha512",

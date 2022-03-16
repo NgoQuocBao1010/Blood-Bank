@@ -42,3 +42,4 @@
 /Users/trongbui/Projects.NET/backend/obj/Debug/net5.0/ref/backend.dll
 /Users/trongbui/Projects.NET/backend/obj/Debug/net5.0/backend.pdb
 /Users/trongbui/Projects.NET/backend/obj/Debug/net5.0/backend.genruntimeconfig.cache
+/Users/trongbui/Projects.NET/backend/bin/Debug/net5.0/dotenv.net.dll

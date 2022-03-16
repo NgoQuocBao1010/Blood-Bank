@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Repositories;
+using dotenv.net;
+using dotenv.net.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,8 @@ namespace backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var env = DotEnv.Read();
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options
@@ -36,7 +40,8 @@ namespace backend
                     .AllowAnyMethod());
             });
             services.AddControllers();
-            services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
+            // services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
+            services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(env["MongoDB"]));
             services.AddTransient<IBloodEventRepository, BloodEventRepository>();
             services.AddTransient<IBloodRepository, BloodRepository>();
             services.AddTransient<IHospitalRepository, HospitalRepository>();

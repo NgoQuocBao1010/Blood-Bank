@@ -11,6 +11,15 @@
           "lib/netstandard2.1/DnsClient.dll": {}
         }
       },
+      "dotenv.net/3.1.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/dotenv.net.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/dotenv.net.dll": {}
+        }
+      },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
         "type": "package",
         "build": {
@@ -250,6 +259,20 @@
         "lib/netstandard2.0/DnsClient.xml",
         "lib/netstandard2.1/DnsClient.dll",
         "lib/netstandard2.1/DnsClient.xml"
+      ]
+    },
+    "dotenv.net/3.1.1": {
+      "sha512": "SjU7/mnA1+cYLf0Bnf+8XNYmzfWn6I//mhu84sgfnrM+bvt6/1GMZK0wfrDVY8wRoZACkcLbmT9h28dJ0MtlTA==",
+      "type": "package",
+      "path": "dotenv.net/3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dotenv.net.3.1.1.nupkg.sha512",
+        "dotenv.net.nuspec",
+        "lib/netstandard1.6/dotenv.net.dll",
+        "lib/netstandard2.0/dotenv.net.dll",
+        "lib/netstandard2.1/dotenv.net.dll"
       ]
     },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
@@ -567,7 +590,8 @@
   "projectFileDependencyGroups": {
     "net5.0": [
       "MongoDB.Driver >= 2.14.1",
-      "Swashbuckle.AspNetCore >= 5.6.3"
+      "Swashbuckle.AspNetCore >= 5.6.3",
+      "dotenv.net >= 3.1.1"
     ]
   },
   "packageFolders": {
@@ -614,6 +638,10 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[5.6.3, )"
+          },
+          "dotenv.net": {
+            "target": "Package",
+            "version": "[3.1.1, )"
           }
         },
         "imports": [

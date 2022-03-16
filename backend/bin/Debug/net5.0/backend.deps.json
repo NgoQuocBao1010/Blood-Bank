@@ -35,6 +35,7 @@
         "dependencies": {
           "MongoDB.Driver": "2.14.1",
           "Swashbuckle.AspNetCore": "5.6.3",
+          "dotenv.net": "3.1.1",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "5.0.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "5.0.0.0",
@@ -335,6 +336,17 @@
         },
         "compile": {
           "lib/netstandard2.1/DnsClient.dll": {}
+        }
+      },
+      "dotenv.net/3.1.1": {
+        "runtime": {
+          "lib/netstandard2.1/dotenv.net.dll": {
+            "assemblyVersion": "3.1.1.0",
+            "fileVersion": "3.1.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.1/dotenv.net.dll": {}
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/3.0.0": {},
@@ -2234,6 +2246,13 @@
       "sha512": "sha512-CO1NG1zQdV0nEAXmr/KppLZ0S1qkaPwV0kPX5YPgmYBtrBVh1XMYHM54IXy3RBJu1k4thFtpzwo4HNHqxiuFYw==",
       "path": "dnsclient/1.4.0",
       "hashPath": "dnsclient.1.4.0.nupkg.sha512"
+    },
+    "dotenv.net/3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SjU7/mnA1+cYLf0Bnf+8XNYmzfWn6I//mhu84sgfnrM+bvt6/1GMZK0wfrDVY8wRoZACkcLbmT9h28dJ0MtlTA==",
+      "path": "dotenv.net/3.1.1",
+      "hashPath": "dotenv.net.3.1.1.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "type": "package",
