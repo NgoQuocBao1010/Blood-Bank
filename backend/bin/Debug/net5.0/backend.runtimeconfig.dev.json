@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "/Users/trongbui/.dotnet/store/|arch|/|tfm|",
-      "/Users/trongbui/.nuget/packages"
-    ]
-  }
-}
