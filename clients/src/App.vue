@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import AppNavbar from "./components/navbar/AppNavbar.vue";
 import AppSidebar from "./components/sidebar/AppSidebar.vue";
-import Footer from "./components/Footer.vue";
+import AppFooter from "./components/AppFooter.vue";
 
 let sidebarHide = $ref(null);
 
@@ -36,17 +36,9 @@ onMounted(() => {
             <div class="layout-main">
                 <router-view />
             </div>
-            <Footer />
+            <AppFooter v-once />
         </div>
     </main>
 </template>
 
-<style lang="scss">
-.my-btn {
-    margin: 1rem 0;
-    width: max-content;
-    &:focus {
-        box-shadow: none !important;
-    }
-}
-</style>
+<style lang="scss"></style>
