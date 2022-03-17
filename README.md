@@ -41,7 +41,37 @@
 
 1. If everything is successfull, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**
 
+&nbsp;
+
 ```markdown
     NOTES
     ⚠️ Please re-install all the dependencies every time you test.
 ```
+
+&nbsp;
+&nbsp;
+
+## Server development environment's recommendations
+
+```
+    .NET v5.0
+    MongoDB v5.0.5
+```
+
+### Server installation guide (⚠️ Remember to install .NET and Mongo first)
+
+1. Clone repo
+
+1. Start landing-page's dev server
+
+    ```bash
+    npm run start-sv
+    ```
+
+    If you get permission denied error, run:
+
+    ```bash
+    sudo npm run start-sv
+    ```
+
+1. Server will run on localhost, port 5000. Using Postman or any API testing tool to make a GET request to server endpoint: http://localhost:5000/Blood
