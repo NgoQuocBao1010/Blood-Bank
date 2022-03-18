@@ -12,7 +12,7 @@ namespace backend.Repositories
 
         public UserRepository(IMongoClient client)
         {
-            var database = client.GetDatabase("User");
+            var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<User>(nameof(User));
 
             _user = collection;

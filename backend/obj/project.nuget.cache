@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "fPMZdNkjPeFx0gocECKRlKHbS9SPVgKPx0V/+r1IyfsC3UdDvZcjlCZU+r5doqzugRxc0zGYTcqaTybggtzngQ==",
+  "dgSpecHash": "ufPjcejBv2ZT4oRbL1z1/hRe6MfabgOGjicqH0kjRZpNKrl4xBlShxxzt+w2TNyTogtobuCWnSvWFNrsLaUhAg==",
   "success": true,
   "projectFilePath": "E:\\Blood-Bank\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tthun\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",
+    "C:\\Users\\tthun\\.nuget\\packages\\dotenv.net\\3.1.1\\dotenv.net.3.1.1.nupkg.sha512",
     "C:\\Users\\tthun\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\tthun\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\tthun\\.nuget\\packages\\mongodb.bson\\2.14.1\\mongodb.bson.2.14.1.nupkg.sha512",
