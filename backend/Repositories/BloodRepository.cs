@@ -33,12 +33,12 @@ namespace backend.Repositories
             return blood;
         }
         
-        public async Task<bool> GetByType(string blood_type)
+        public async Task<Blood> GetByType(string blood_type)
         {
             var filter = Builders<Blood>.Filter.Eq(b => b.blood_type, blood_type);
-            var blood = await _blood.Find(filter).ToListAsync();
+            var blood = await _blood.Find(filter).FirstOrDefaultAsync();
 
-            return blood.Count() > 0;
+            return blood;
         }
         
 
@@ -54,6 +54,7 @@ namespace backend.Repositories
             var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
             var update = Builders<Blood>.Update
                 .Set(b => b.blood_type, blood.blood_type)
+                .Set(b => b.type, blood.type)
                 .Set(b => b.quantity, blood.quantity)
                 .Set(b => b.description, blood.description);
 

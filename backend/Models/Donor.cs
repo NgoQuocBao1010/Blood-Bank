@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -15,5 +16,6 @@ namespace backend.Models
         public string phone { get; set; }
         public string email { get; set; }
         public string blood_type { get; set; }
+        public List<DonorTransaction> listTransaction { get; set; }
     }
 }

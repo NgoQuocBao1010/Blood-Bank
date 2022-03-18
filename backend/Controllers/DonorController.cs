@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -10,15 +12,19 @@ namespace backend.Controllers
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
+        private readonly IDonorTransactionRepository _donorTransactionRepository;
 
-        public DonorController(IDonorRepository donorRepository)
+        public DonorController(IDonorRepository donorRepository, IDonorTransactionRepository donorTransactionRepository)
         {
             _donorRepository = donorRepository;
+            _donorTransactionRepository = donorTransactionRepository;
         }
+        
 
         [HttpPost]
         public async Task<IActionResult> Create(Donor donor)
         {
+            donor.listTransaction = new List<DonorTransaction>();
             var id = await _donorRepository.Create(donor);
             return new JsonResult(id);
         }
@@ -27,19 +33,25 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var donor = await _donorRepository.Get(id);
+            // donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
             return new JsonResult(donor);
         }
         
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var donor = await _donorRepository.Get();
-            return new JsonResult(donor);
+            var donors = await _donorRepository.Get();
+            // foreach (var donor in donors)
+            // {
+            //     donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+            // }
+            return new JsonResult(donors);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Donor donor)
-        {
+        {   
+            donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
             var result = await _donorRepository.Update(id, donor);
             return new JsonResult(result);
         }

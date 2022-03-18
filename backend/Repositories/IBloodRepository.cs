@@ -11,7 +11,7 @@ namespace backend.Repositories
         
         // Read
         Task<Blood> Get(string _id);
-        Task<bool> GetByType(string blood_type);
+        Task<Blood> GetByType(string blood_type);
         Task<IEnumerable<Blood>> Get();
         
         // Update

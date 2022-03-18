@@ -2,7 +2,7 @@
 import SidebarMenu from "./SidebarMenu.vue";
 const menu = [
     {
-        label: "Home",
+        label: "Overview",
         items: [
             {
                 label: "Dashboard",
@@ -12,12 +12,27 @@ const menu = [
         ],
     },
     {
+        label: "Management",
+        items: [
+            {
+                label: "Blood",
+                icon: "fa-solid fa-droplet pi-fw",
+                to: { name: "Blood Management" },
+            },
+            {
+                label: "Donors",
+                icon: "fa-solid fa-user-group pi-fw",
+                to: { name: "Donors Management" },
+            },
+        ],
+    },
+    {
         label: "Information",
         items: [
             {
                 label: "About",
                 icon: "pi pi-fw pi-info-circle",
-                to: "/about",
+                to: { name: "About" },
             },
             {
                 label: "View Source",

@@ -8,12 +8,15 @@ namespace backend.Repositories
     public class DonorRepository : IDonorRepository
     {
         private readonly IMongoCollection<Donor> _donor;
+        private readonly IMongoCollection<DonorTransaction> _donorTransaction;
         public DonorRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Donor>(nameof(Donor));
+            var collection1 = database.GetCollection<DonorTransaction>(nameof(DonorTransaction));
 
             _donor = collection;
+            _donorTransaction = collection1;
         }
 
 
@@ -37,18 +40,26 @@ namespace backend.Repositories
 
             return donor;
         }
+        
+        public async Task<IEnumerable<DonorTransaction>> GetTransaction(string transactionId)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donor_id, transactionId);
+            var transaction = await _donorTransaction.Find(filter).ToListAsync();
+
+            return transaction;
+        }
 
         public async Task<bool> Update(string _id, Donor donor)
         {
-            var filter = Builders<Donor>.Filter.Eq(b => b._id, _id);
+            var filter = Builders<Donor>.Filter.Eq(d => d._id, _id);
             var update = Builders<Donor>.Update
                 .Set(d => d.dob, donor.dob)
                 .Set(d => d.gender, donor.gender)
                 .Set(d => d.address, donor.address)
                 .Set(d => d.phone, donor.phone)
                 .Set(d => d.email, donor.email)
-                .Set(d => d.blood_type, donor.blood_type);
-                
+                .Set(d => d.blood_type, donor.blood_type)
+                .Set(d => d.listTransaction, donor.listTransaction);
 
             var result = await _donor.UpdateOneAsync(filter, update);
             

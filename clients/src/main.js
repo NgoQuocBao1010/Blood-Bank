@@ -2,7 +2,6 @@ import "primevue/resources/themes/saga-purple/theme.css";
 import "primevue/resources/primevue.min.css";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
-
 import "./assets/styles/layout.scss";
 
 import { createApp } from "vue";
@@ -11,10 +10,11 @@ import PrimeVue from "primevue/config";
 import ConfirmationService from "primeVue/confirmationservice";
 import ToastService from "primeVue/toastservice";
 import Ripple from "primevue/ripple";
+import Tooltip from "primevue/tooltip";
 import StyleClass from "primevue/styleclass";
 
 import App from "./App.vue";
-import router from "./router";
+import router from "./router.js";
 
 const app = createApp(App);
 
@@ -24,6 +24,7 @@ app.use(router);
 // PrimeVue directives and services
 app.use(PrimeVue, { ripple: true });
 app.directive("ripple", Ripple);
+app.directive("tooltip", Tooltip);
 app.directive("styleclass", StyleClass);
 app.use(ConfirmationService);
 app.use(ToastService);
