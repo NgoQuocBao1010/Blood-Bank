@@ -22,13 +22,19 @@ namespace backend.Controllers
             var exist = await _userRepository.CheckUserEmail(user.email);
             var id = "";
             if (!exist)
-            { 
+            {
+                if (user.isAdmin)
+                {
+                    user.hospital_id = null;
+                }
+
                 id = await _userRepository.Create(user);
             }
             else
             {
                 id = "User Exists!";
             }
+
             return new JsonResult(id);
         }
 
