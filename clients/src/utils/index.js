@@ -1,16 +1,16 @@
-import * as XLSX from "xlsx";
+import { utils, writeFile } from "xlsx";
 
 const JSONtoExcel = (jsonData, name = "test") => {
-    const workbook = XLSX.utils.book_new();
-    workbook["!cols"] = [{ wch: 100 }];
+    const workbook = utils.book_new();
+    const worksheet = utils.json_to_sheet(jsonData);
 
-    XLSX.utils.book_append_sheet(
-        workbook,
-        XLSX.utils.json_to_sheet(jsonData, {}),
-        "sample"
-    );
+    // Set column width of each header
+    worksheet["!cols"] = new Array(Object.keys(jsonData[0]).length).fill({
+        wch: 20,
+    });
 
-    XLSX.writeFile(workbook, `${name}.xlsx`);
+    utils.book_append_sheet(workbook, worksheet, "sample");
+    writeFile(workbook, `${name}.xlsx`);
 };
 
 export { JSONtoExcel };
