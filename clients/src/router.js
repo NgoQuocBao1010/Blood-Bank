@@ -28,4 +28,10 @@ const router = createRouter({
     ],
 });
 
+/* Changing the name of tab */
+router.beforeEach((to, _, next) => {
+    document.title = `${to.name} | Judoh Admin`;
+    return next();
+});
+
 export default router;
