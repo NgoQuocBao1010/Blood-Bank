@@ -5,48 +5,75 @@ import Column from "primevue/column";
 import Button from "primevue/button";
 import OverlayPanel from "primevue/overlaypanel";
 
-let bloods = [
+import { BLOOD_TYPES } from "../../constants";
+
+// *** Mock database ***
+const bloodData = [
     {
-        id: "f665977b-5a21-4f7b-8875-65cf341c1e58",
+        id: "0ab35769-453b-4544-a2c5-759078731b5b",
         name: "A",
-        types: [
-            { name: "negative", quantity: 2000 },
-            { name: "positive", quantity: 700 },
-        ],
+        type: "positive",
+        quantity: 2000,
     },
     {
-        id: "f77dec5e-1b4d-4d8e-9db8-82c50219bfc8",
+        id: "dd6ed89c-178e-4d04-9d5e-00650e639fc0",
+        name: "A",
+        type: "negative",
+        quantity: 700,
+    },
+    {
+        id: "53192215-df3d-409a-83a3-cf6d831e9d6d",
         name: "B",
-        types: [
-            { name: "negative", quantity: 1500 },
-            { name: "positive", quantity: 1700 },
-        ],
+        type: "positive",
+        quantity: 1700,
     },
     {
-        id: "ea82a6b0-85f0-4701-a9f6-d8f0de14c7c8",
+        id: "d70b0b7b-7e92-4596-9e25-32d31ee6a898",
+        name: "B",
+        type: "negative",
+        quantity: 1500,
+    },
+    {
+        id: "1b0b6c62-2601-4bd4-b563-bfd99c10dd7f",
         name: "AB",
-        types: [
-            { name: "negative", quantity: 1600 },
-            { name: "positive", quantity: 1000 },
-        ],
+        type: "positive",
+        quantity: 1000,
     },
     {
-        id: "1b544f9f-30ba-4a6a-97e1-b66a429da14e",
+        id: "9fdb6041-e35b-49aa-b47b-326ff9c386f4",
+        name: "AB",
+        type: "negative",
+        quantity: 1600,
+    },
+    {
+        id: "e7abb462-442a-47d0-a724-740e70c3435c",
         name: "O",
-        types: [
-            { name: "negative", quantity: 2200 },
-            { name: "positive", quantity: 1700 },
-        ],
+        type: "positive",
+        quantity: 1700,
     },
     {
-        id: "d25b5c52-f51b-4f31-b948-23a798d8d45e",
+        id: "9a59d831-4036-420b-8dce-0f6cf86d16c9",
+        name: "O",
+        type: "negative",
+        quantity: 2200,
+    },
+    {
+        id: "12d3c310-79e9-4451-8a3d-1c4bfde1a949",
         name: "Rh",
-        types: [
-            { name: "negative", quantity: 0 },
-            { name: "positive", quantity: 40 },
-        ],
+        type: "positive",
+        quantity: 40,
+    },
+    {
+        id: "297397a3-c51c-4a42-b469-0061e64b1a92",
+        name: "Rh",
+        type: "negative",
+        quantity: 0,
     },
 ];
+// *** END getting data ***
+
+let bloods = $ref([]);
+
 let expandedRows = $ref([]);
 const expandAllRows = () => {
     expandedRows = bloods.filter((el) => el.id);
@@ -59,28 +86,49 @@ const toggleStockInfo = (event) => {
 };
 
 onBeforeMount(() => {
-    // Calculate each blood category's total quantity and stock status
-    bloods = bloods.map((bloodType) => {
-        const positive = bloodType.types.find((el) => el.name === "positive");
-        const negative = bloodType.types.find((el) => el.name === "negative");
-        const totalQuantity = positive.quantity + negative.quantity;
+    /* 
+        Calculate each blood category's total quantity and stock status
+        Example of a blood cell
+        {
+            id: str:id
+            name: str
+            quantity: int
+            inStock: bool
+            types: [
+                name: 'positive' | 'negative'
+                bloodType: str
+                status: 'low' | 'out' | 'good' | 'great'
+                displayStatus: str
+            ]
+        }
+    */
 
-        Object.assign(positive, {
-            ...determineStockStatus(positive.quantity),
-            bloodType: bloodType.name,
+    BLOOD_TYPES.forEach((name) => {
+        const data = bloodData.filter((el) => el.name === name);
+
+        const positiveData = data.find((el) => el.type === "positive");
+        const negativeData = data.find((el) => el.type === "negative");
+
+        bloods.push({
+            id: positiveData.id,
+            name: positiveData.name,
+            quantity: positiveData.quantity + negativeData.quantity,
+            inStock: true,
+            types: [
+                {
+                    name: "positive",
+                    bloodType: positiveData.name,
+                    quantity: positiveData.quantity,
+                    ...determineStockStatus(positiveData.quantity),
+                },
+                {
+                    name: "negative",
+                    bloodType: negativeData.name,
+                    quantity: negativeData.quantity,
+                    ...determineStockStatus(negativeData.quantity),
+                },
+            ],
         });
-        Object.assign(negative, {
-            ...determineStockStatus(negative.quantity),
-            bloodType: bloodType.name,
-        });
-
-        bloodType["inStock"] =
-            !["out", "low"].includes(positive["status"]) &&
-            !["out", "low"].includes(negative["status"]);
-        bloodType["quantity"] = totalQuantity;
-        bloodType["types"] = [positive, negative];
-
-        return bloodType;
     });
 });
 
