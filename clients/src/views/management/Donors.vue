@@ -11,6 +11,8 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
+import { JSONtoExcel } from "../../utils";
+
 const donors = [
     {
         id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
@@ -110,6 +112,31 @@ const donors = [
     },
 ];
 
+const downloadExcelFile = () => {
+    // Format data before convert to excel
+    let excelData = [...donors];
+
+    excelData = excelData.map((row) => {
+        row["Donor's Name"] = row["name"];
+        row["Blood Type"] = row["bloodType"];
+        row["Date Donated"] = row["date"];
+        row["Amount (ml)"] = row["amount"];
+        row["Event Name"] = row["event"];
+
+        delete row["id"];
+        delete row["name"];
+        delete row["bloodType"];
+        delete row["name"];
+        delete row["date"];
+        delete row["amount"];
+        delete row["event"];
+
+        return row;
+    });
+
+    JSONtoExcel(excelData, "donor_data");
+};
+
 const bloodTypes = ["A", "B", "AB", "O", "Rh"];
 
 const events = $computed(() => {
@@ -178,13 +205,24 @@ onBeforeMount(() => {
                         <div
                             class="flex justify-content-between flex-column sm:flex-row"
                         >
-                            <Button
-                                type="button"
-                                icon="pi pi-filter-slash"
-                                label="Clear"
-                                @click="clearFilter()"
-                                class="p-button-outlined mb-2"
-                            />
+                            <div>
+                                <Button
+                                    type="button"
+                                    icon="pi pi-filter-slash"
+                                    label="Clear"
+                                    @click="clearFilter()"
+                                    class="p-button-outlined mb-2 mr-2"
+                                />
+                                <Button
+                                    type="button"
+                                    icon="pi pi-file-excel"
+                                    label="Export to Excel"
+                                    @click="downloadExcelFile"
+                                    class="p-button-outlined mb-2"
+                                />
+                            </div>
+
+                            <!-- Search Input -->
                             <span class="p-input-icon-left mb-2">
                                 <i class="pi pi-search" />
                                 <InputText
