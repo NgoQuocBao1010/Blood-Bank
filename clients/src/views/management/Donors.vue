@@ -114,9 +114,9 @@ const donors = [
 
 const downloadExcelFile = () => {
     // Format data before convert to excel
-    let excelData = [...donors];
+    const excelData = donors.map((el) => {
+        let row = { ...el };
 
-    excelData = excelData.map((row) => {
         row["Donor's Name"] = row["name"];
         row["Blood Type"] = row["bloodType"];
         row["Date Donated"] = row["date"];
