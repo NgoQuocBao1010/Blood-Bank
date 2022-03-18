@@ -11,6 +11,7 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
+import { BLOOD_TYPES } from "../../constants";
 import { JSONtoExcel } from "../../utils";
 
 const donors = [
@@ -136,8 +137,6 @@ const downloadExcelFile = () => {
 
     JSONtoExcel(excelData, "donor_data");
 };
-
-const bloodTypes = ["A", "B", "AB", "O", "Rh"];
 
 const events = $computed(() => {
     const allEvents = donors.map((don) => don.event);
@@ -326,7 +325,7 @@ onBeforeMount(() => {
                             <MultiSelect
                                 v-model="filterModel.value"
                                 @change="filterCallback()"
-                                :options="bloodTypes"
+                                :options="BLOOD_TYPES"
                                 optionLabel=""
                                 placeholder="Select blood type"
                                 class="p-column-filter"
