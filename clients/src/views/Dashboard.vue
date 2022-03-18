@@ -1,7 +1,4 @@
 <script setup>
-import Button from "primevue/button";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
 import Chart from "primevue/chart";
 import Menu from "primevue/menu";
 
@@ -156,31 +153,31 @@ let menuItems = $ref([
             <!-- Activity table -->
             <div class="card">
                 <h5>Recent Activites</h5>
-                <DataTable
+                <PrimeVueTable
                     :value="activities"
                     :rows="5"
                     :paginator="true"
                     responsiveLayout="scroll"
                 >
-                    <Column field="type" header="Type"></Column>
-                    <Column
+                    <PrimeVueColumn field="type" header="Type"></PrimeVueColumn>
+                    <PrimeVueColumn
                         field="detail"
                         header="Detail"
                         :sortable="true"
-                    ></Column>
-                    <Column field="date" header="Date" :sortable="true">
-                    </Column>
-                    <Column>
+                    ></PrimeVueColumn>
+                    <PrimeVueColumn field="date" header="Date" :sortable="true">
+                    </PrimeVueColumn>
+                    <PrimeVueColumn>
                         <template #header> View </template>
                         <template #body>
-                            <Button
+                            <PrimeVueButton
                                 icon="pi pi-search"
                                 type="button"
                                 class="p-button-text"
-                            ></Button>
+                            ></PrimeVueButton>
                         </template>
-                    </Column>
-                </DataTable>
+                    </PrimeVueColumn>
+                </PrimeVueTable>
             </div>
 
             <!-- Blood Type Storage -->
@@ -190,11 +187,11 @@ let menuItems = $ref([
                 >
                     <h5>Blood Type Storage</h5>
                     <div>
-                        <Button
+                        <PrimeVueButton
                             icon="pi pi-ellipsis-v"
                             class="p-button-text p-button-plain p-button-rounded"
                             @click="$refs.menu2.toggle($event)"
-                        ></Button>
+                        ></PrimeVueButton>
                         <Menu
                             ref="menu2"
                             :popup="true"
@@ -330,11 +327,11 @@ let menuItems = $ref([
                 >
                     <h5>Notifications</h5>
                     <div>
-                        <Button
+                        <PrimeVueButton
                             icon="pi pi-ellipsis-v"
                             class="p-button-text p-button-plain p-button-rounded"
                             @click="$refs.menu1.toggle($event)"
-                        ></Button>
+                        ></PrimeVueButton>
                         <Menu
                             ref="menu1"
                             :popup="true"

@@ -1,9 +1,6 @@
 <script setup>
 import { onBeforeMount } from "vue";
 import dayjs from "dayjs";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -179,7 +176,7 @@ onBeforeMount(() => {
                 <h2>Donors Management</h2>
 
                 <!-- Donors table -->
-                <DataTable
+                <PrimeVueTable
                     :value="donors"
                     :paginator="true"
                     class="p-datatable-gridlines"
@@ -205,14 +202,14 @@ onBeforeMount(() => {
                             class="flex justify-content-between flex-column sm:flex-row"
                         >
                             <div>
-                                <Button
+                                <PrimeVueButton
                                     type="button"
                                     icon="pi pi-filter-slash"
                                     label="Clear"
                                     @click="clearFilter()"
                                     class="p-button-outlined mb-2 mr-2"
                                 />
-                                <Button
+                                <PrimeVueButton
                                     type="button"
                                     icon="pi pi-file-excel"
                                     label="Export to Excel"
@@ -238,7 +235,11 @@ onBeforeMount(() => {
 
                     <!-- Columns -->
                     <!-- Donor's name -->
-                    <Column field="name" header="Name" style="min-width: 12rem">
+                    <PrimeVueColumn
+                        field="name"
+                        header="Name"
+                        style="min-width: 12rem"
+                    >
                         <template #body="{ data }">
                             {{ data.name }}
                         </template>
@@ -254,10 +255,10 @@ onBeforeMount(() => {
                                 "
                             />
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Date donated -->
-                    <Column
+                    <PrimeVueColumn
                         header="Date Donated"
                         field="date"
                         dataType="date"
@@ -275,10 +276,10 @@ onBeforeMount(() => {
                                 @date-select="filterCallback()"
                             />
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Event name -->
-                    <Column
+                    <PrimeVueColumn
                         field="event"
                         header="Event"
                         style="min-width: 12rem"
@@ -308,10 +309,10 @@ onBeforeMount(() => {
                                 </template>
                             </DropDown>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Blood Type -->
-                    <Column
+                    <PrimeVueColumn
                         field="bloodType"
                         header="Blood Type"
                         style="max-width: 14rem !important"
@@ -342,10 +343,10 @@ onBeforeMount(() => {
                                 </template>
                             </MultiSelect>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Amount -->
-                    <Column
+                    <PrimeVueColumn
                         field="amount"
                         header="Amount"
                         dataType="numeric"
@@ -367,8 +368,8 @@ onBeforeMount(() => {
                                 "
                             />
                         </template>
-                    </Column>
-                </DataTable>
+                    </PrimeVueColumn>
+                </PrimeVueTable>
             </div>
         </div>
     </div>

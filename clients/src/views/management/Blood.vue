@@ -1,8 +1,5 @@
 <script setup>
 import { onBeforeMount } from "vue";
-import Datatable from "primevue/datatable";
-import Column from "primevue/column";
-import Button from "primevue/button";
 import OverlayPanel from "primevue/overlaypanel";
 
 import { BLOOD_TYPES } from "../../constants";
@@ -152,7 +149,7 @@ const determineStockStatus = (value) => {
                 <h2>Blood Management</h2>
 
                 <!-- Blood Table -->
-                <Datatable
+                <PrimeVueTable
                     :value="bloods"
                     dataKey="id"
                     v-model:expandedRows="expandedRows"
@@ -165,13 +162,13 @@ const determineStockStatus = (value) => {
                         <div class="header-container">
                             <div>
                                 <!-- Expand and Collapse all buttons -->
-                                <Button
+                                <PrimeVueButton
                                     icon="pi pi-plus"
                                     label="Expand All"
                                     class="mr-2 mb-2"
                                     @click="expandAllRows()"
                                 />
-                                <Button
+                                <PrimeVueButton
                                     icon="pi pi-minus"
                                     label="Collapse All"
                                     class="mb-2 mr-2"
@@ -207,10 +204,13 @@ const determineStockStatus = (value) => {
                     </template>
 
                     <!-- Expand Icon -->
-                    <Column :expander="true" headerStyle="width: 3rem" />
+                    <PrimeVueColumn
+                        :expander="true"
+                        headerStyle="width: 3rem"
+                    />
 
                     <!-- Blood Type Name -->
-                    <Column
+                    <PrimeVueColumn
                         field="name"
                         header="Name"
                         style="min-width: 8rem !important"
@@ -218,10 +218,10 @@ const determineStockStatus = (value) => {
                         <template #body="slotProps">
                             {{ slotProps.data.name }}
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Total Quantity Column -->
-                    <Column
+                    <PrimeVueColumn
                         field="quantity"
                         header="Total Quantity"
                         :sortable="true"
@@ -232,10 +232,10 @@ const determineStockStatus = (value) => {
                                 {{ slotProps.data.quantity }} ml
                             </p>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Stock status Column -->
-                    <Column
+                    <PrimeVueColumn
                         field="inStock"
                         header="Stock status"
                         header-style="width: 10rem"
@@ -255,7 +255,7 @@ const determineStockStatus = (value) => {
                                 ></i>
                             </p>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Expand Rows to a Datatable -->
                     <template #expansion="slotProps">
@@ -264,12 +264,12 @@ const determineStockStatus = (value) => {
                             <p>Blood {{ slotProps.data.name }} details</p>
 
                             <!-- Expand Table -->
-                            <Datatable
+                            <PrimeVueTable
                                 :value="slotProps.data.types"
                                 responsiveLayout="scroll"
                             >
                                 <!-- Type -->
-                                <Column field="name" header="Type">
+                                <PrimeVueColumn field="name" header="Type">
                                     <template #body="slotProps">
                                         <span
                                             style="text-transform: capitalize"
@@ -278,10 +278,10 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.name }}
                                         </span>
                                     </template>
-                                </Column>
+                                </PrimeVueColumn>
 
                                 <!-- Quantity -->
-                                <Column
+                                <PrimeVueColumn
                                     field="quantity"
                                     header="Quantity"
                                     :sortable="true"
@@ -291,10 +291,10 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.quantity }} ml
                                         </p>
                                     </template>
-                                </Column>
+                                </PrimeVueColumn>
 
                                 <!-- Stock Status -->
-                                <Column
+                                <PrimeVueColumn
                                     field="status"
                                     header="Stock Status"
                                     header-style="width:15rem"
@@ -309,11 +309,11 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.displayStatus }}
                                         </span>
                                     </template>
-                                </Column>
-                            </Datatable>
+                                </PrimeVueColumn>
+                            </PrimeVueTable>
                         </div>
                     </template>
-                </Datatable>
+                </PrimeVueTable>
             </div>
         </div>
     </div>
