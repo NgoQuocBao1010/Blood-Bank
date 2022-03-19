@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -42,6 +42,11 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var user = await _userRepository.Get(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
             return new JsonResult(user);
         }
 
@@ -49,6 +54,11 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var user = await _userRepository.Get();
+            if (user == null)
+            {
+                return NotFound();
+            }
+            
             return new JsonResult(user);
         }
 

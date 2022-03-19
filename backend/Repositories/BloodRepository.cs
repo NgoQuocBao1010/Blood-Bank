@@ -24,6 +24,11 @@ namespace backend.Repositories
             await _blood.InsertOneAsync(blood);
             return blood._id;
         }
+        
+        public void AddDefaultData(List<Blood> listBlood)
+        {
+            _blood.InsertManyAsync(listBlood);
+        }
 
         public Task<Blood> Get(string _id)
         {
@@ -33,9 +38,9 @@ namespace backend.Repositories
             return blood;
         }
         
-        public async Task<Blood> GetByType(string blood_type)
+        public async Task<Blood> GetByName(string name)
         {
-            var filter = Builders<Blood>.Filter.Eq(b => b.blood_type, blood_type);
+            var filter = Builders<Blood>.Filter.Eq(b => b.name, name);
             var blood = await _blood.Find(filter).FirstOrDefaultAsync();
 
             return blood;
@@ -53,11 +58,9 @@ namespace backend.Repositories
         {
             var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
             var update = Builders<Blood>.Update
-                .Set(b => b.blood_type, blood.blood_type)
+                .Set(b => b.name, blood.name)
                 .Set(b => b.type, blood.type)
-                .Set(b => b.quantity, blood.quantity)
-                .Set(b => b.description, blood.description);
-
+                .Set(b => b.quantity, blood.quantity);
             var result = await _blood.UpdateOneAsync(filter, update);
             
             return result.ModifiedCount == 1;
