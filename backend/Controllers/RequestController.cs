@@ -22,11 +22,16 @@ namespace backend.Controllers
             var result = await _requestRepository.Create(request);
             return new JsonResult(result);
         }
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             var result = await _requestRepository.Get(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             return new JsonResult(result);
         }
 
@@ -34,6 +39,11 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var result = await _requestRepository.Get();
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             return new JsonResult(result);
         }
 
@@ -41,6 +51,13 @@ namespace backend.Controllers
         public async Task<IActionResult> Update(string id, Request request)
         {
             var result = await _requestRepository.Update(id, request);
+            return new JsonResult(result);
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _requestRepository.Delete(id);
             return new JsonResult(result);
         }
     }
