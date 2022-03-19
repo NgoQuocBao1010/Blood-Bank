@@ -46,6 +46,8 @@ namespace backend
             services.AddTransient<IBloodRepository, BloodRepository>();
             services.AddTransient<IHospitalRepository, HospitalRepository>();
             services.AddTransient<IDonorRepository, DonorRepository>();
+            services.AddTransient<IRequestRepository, RequestRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDonorTransactionRepository, DonorTransactionRepository>();
         }
 
