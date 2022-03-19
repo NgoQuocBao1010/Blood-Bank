@@ -49,6 +49,7 @@ namespace backend
             services.AddTransient<IRequestRepository, RequestRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDonorTransactionRepository, DonorTransactionRepository>();
+            services.AddTransient<IEventSubmissionRepository, EventSubmissionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
