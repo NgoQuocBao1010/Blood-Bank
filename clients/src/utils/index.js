@@ -13,4 +13,15 @@ const JSONtoExcel = (jsonData, name = "test") => {
     writeFile(workbook, `${name}.xlsx`);
 };
 
-export { JSONtoExcel };
+const determineStockStatus = (value) => {
+    if (value === 0) return { status: "out", displayStatus: "out of stock" };
+
+    if (value <= 400) return { status: "low", displayStatus: "low in stock" };
+
+    if (value <= 700) return { status: "good", displayStatus: "good in stock" };
+
+    if (value > 700)
+        return { status: "great", displayStatus: "great in stock" };
+};
+
+export { JSONtoExcel, determineStockStatus };

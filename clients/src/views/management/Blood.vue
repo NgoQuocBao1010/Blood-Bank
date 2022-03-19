@@ -3,6 +3,7 @@ import { onBeforeMount } from "vue";
 import OverlayPanel from "primevue/overlaypanel";
 
 import { BLOOD_TYPES } from "../../constants";
+import { determineStockStatus } from "../../utils";
 
 // *** Mock database ***
 const bloodData = [
@@ -103,42 +104,46 @@ onBeforeMount(() => {
     BLOOD_TYPES.forEach((name) => {
         const data = bloodData.filter((el) => el.name === name);
 
+        // Evaluate stock status of blood type positive
         const positiveData = data.find((el) => el.type === "positive");
+        const {
+            status: positiveStockStatus,
+            displayStatus: positiveStatusDisplay,
+        } = determineStockStatus(positiveData.quantity);
+
+        // Evaluate stock status of blood type negative
         const negativeData = data.find((el) => el.type === "negative");
+        const {
+            status: negativeStockStatus,
+            displayStatus: negativeStatusDisplay,
+        } = determineStockStatus(negativeData.quantity);
 
         bloods.push({
             id: positiveData.id,
             name: positiveData.name,
             quantity: positiveData.quantity + negativeData.quantity,
-            inStock: true,
+            inStock:
+                !["out", "low"].includes(positiveStockStatus) &&
+                !["out", "low"].includes(negativeStatusDisplay),
             types: [
                 {
                     name: "positive",
                     bloodType: positiveData.name,
                     quantity: positiveData.quantity,
-                    ...determineStockStatus(positiveData.quantity),
+                    status: positiveStockStatus,
+                    displayStatus: positiveStatusDisplay,
                 },
                 {
                     name: "negative",
                     bloodType: negativeData.name,
                     quantity: negativeData.quantity,
-                    ...determineStockStatus(negativeData.quantity),
+                    status: negativeStockStatus,
+                    displayStatus: negativeStatusDisplay,
                 },
             ],
         });
     });
 });
-
-const determineStockStatus = (value) => {
-    if (value === 0) return { status: "out", displayStatus: "out of stock" };
-
-    if (value <= 400) return { status: "low", displayStatus: "low in stock" };
-
-    if (value <= 700) return { status: "good", displayStatus: "good in stock" };
-
-    if (value > 700)
-        return { status: "great", displayStatus: "great in stock" };
-};
 </script>
 
 <template>
