@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -6,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BloodController : ControllerBase
     {
         private readonly IBloodRepository _bloodRepository;
@@ -14,12 +16,13 @@ namespace backend.Controllers
         public BloodController(IBloodRepository bloodRepository)
         {
             _bloodRepository = bloodRepository;
+            AddDefaultData();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Blood blood)
         {
-            var exist = await _bloodRepository.GetByType(blood.blood_type);
+            var exist = await _bloodRepository.GetByName(blood.name);
             var id = "";
             if (exist != null && exist.type.Equals(blood.type))
             {
@@ -36,14 +39,42 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var blood = await _bloodRepository.Get(id);
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
         }
         
         [HttpGet("type/{blood_type}")]
         public async Task<IActionResult> GetByType(string blood_type)
         {
-            var blood = await _bloodRepository.GetByType(blood_type);
+            var blood = await _bloodRepository.GetByName(blood_type);
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
+        }
+
+        public void AddDefaultData()
+        {
+            var blood = _bloodRepository.Get();
+            if (blood.Result.Any()) return;
+            var bloodList = new List<Blood>
+            {
+                new Blood("A", "Positive", 0),
+                new Blood("A", "Negative", 0),
+                new Blood("B", "Positive", 0),
+                new Blood("B", "Negative", 0),
+                new Blood("O", "Positive", 0),
+                new Blood("O", "Negative", 0),
+                new Blood("AB", "Positive", 0),
+                new Blood("AB", "Negative", 0),
+                new Blood("Rh", "Positive", 0),
+                new Blood("Rh", "Negative", 0)
+            };
+            _bloodRepository.AddDefaultData(bloodList);
         }
         
         
@@ -51,6 +82,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var blood = await _bloodRepository.Get();
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
         }
 

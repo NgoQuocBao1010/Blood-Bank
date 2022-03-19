@@ -6,8 +6,7 @@ namespace backend.Models
 {
     public class Donor
     {
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
+        public string idNumber { get; set; }
         
         public string fullname { get; set; }
         public string dob { get; set; }

@@ -42,7 +42,7 @@ namespace backend
             services.AddControllers();
             // services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
             services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(env["MongoDB"]));
-            services.AddTransient<IBloodEventRepository, BloodEventRepository>();
+            services.AddTransient<IEventRepository, EventRepository>();
             services.AddTransient<IBloodRepository, BloodRepository>();
             services.AddTransient<IHospitalRepository, HospitalRepository>();
             services.AddTransient<IDonorRepository, DonorRepository>();
@@ -76,6 +76,8 @@ namespace backend
             {
                 endpoints.MapControllers();
             });
+            
+            
         }
     }
 }

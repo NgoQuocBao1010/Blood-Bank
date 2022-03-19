@@ -27,6 +27,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var hospital = await _hospitalRepository.Get(id);
+            if (hospital == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(hospital);
         }
         
@@ -34,6 +38,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var hospital = await _hospitalRepository.Get();
+            if (hospital == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(hospital);
         }
 

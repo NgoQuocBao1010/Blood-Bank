@@ -8,10 +8,11 @@ namespace backend.Repositories
     {
         // Create
         Task<string> Create(Blood blood);
+        void AddDefaultData(List<Blood> listBlood);
         
         // Read
         Task<Blood> Get(string _id);
-        Task<Blood> GetByType(string blood_type);
+        Task<Blood> GetByName(string name);
         Task<IEnumerable<Blood>> Get();
         
         // Update
