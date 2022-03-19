@@ -3,7 +3,7 @@ import { onBeforeMount } from "vue";
 import OverlayPanel from "primevue/overlaypanel";
 
 import { BLOOD_TYPES } from "../../constants";
-import { determineStockStatus } from "../../utils";
+import { determineStockStatus, JSONtoExcel } from "../../utils";
 
 // *** Mock database ***
 const bloodData = [
@@ -144,6 +144,25 @@ onBeforeMount(() => {
         });
     });
 });
+
+const downloadExcelFile = () => {
+    const excelData = bloodData.map((el) => {
+        const row = { ...el };
+
+        row["Blood Group"] = row["name"];
+        row["Blood Type"] = row["type"];
+        row["Quantity (ml)"] = row["quantity"];
+
+        delete row["id"];
+        delete row["name"];
+        delete row["type"];
+        delete row["quantity"];
+
+        return row;
+    });
+
+    JSONtoExcel(excelData, "blood_data");
+};
 </script>
 
 <template>
@@ -178,6 +197,14 @@ onBeforeMount(() => {
                                     label="Collapse All"
                                     class="mb-2 mr-2"
                                     @click="expandedRows = null"
+                                />
+                                <!-- Export to JSON button -->
+                                <PrimeVueButton
+                                    type="button"
+                                    icon="pi pi-file-excel"
+                                    label="Export to Excel"
+                                    @click="downloadExcelFile"
+                                    class="p-button-outlined mb-2"
                                 />
                             </div>
 
