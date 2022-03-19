@@ -10,24 +10,24 @@ namespace backend.Controllers
     [Route("[controller]")]
     public class BloodEventController : ControllerBase
     {
-        private readonly IBloodEventRepository _bloodEventRepository;
+        private readonly IEventRepository _eventRepository;
 
-        public BloodEventController(IBloodEventRepository bloodEventRepository)
+        public BloodEventController(IEventRepository eventRepository)
         {
-            _bloodEventRepository = bloodEventRepository;
+            _eventRepository = eventRepository;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(BloodEvent bloodEvent)
+        public async Task<IActionResult> Create(Event bloodEvent)
         {
-            var id = await _bloodEventRepository.Create(bloodEvent);
+            var id = await _eventRepository.Create(bloodEvent);
             return new JsonResult(id);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var bloodEvent = await _bloodEventRepository.Get(id);
+            var bloodEvent = await _eventRepository.Get(id);
 
             return new JsonResult(bloodEvent);
         }
@@ -35,21 +35,21 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var bloodEvent = await _bloodEventRepository.Get();
+            var bloodEvent = await _eventRepository.Get();
             return new JsonResult(bloodEvent);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, BloodEvent bloodEvent)
+        public async Task<IActionResult> Update(string id, Event bloodEvent)
         {
-            var result = await _bloodEventRepository.Update(id, bloodEvent);
+            var result = await _eventRepository.Update(id, bloodEvent);
             return new JsonResult(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _bloodEventRepository.Delete(id);
+            var result = await _eventRepository.Delete(id);
 
             return new JsonResult(result);
         }

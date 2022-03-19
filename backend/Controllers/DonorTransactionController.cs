@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DonorTransactionController : ControllerBase
     {
         private readonly IDonorTransactionRepository _donorTransactionRepository;
@@ -32,7 +32,7 @@ namespace backend.Controllers
             donor.listTransaction.Add(donorTransaction);
             await _donorRepository.Update(donorTransaction.donor_id, donor);
             
-            var blood = await _bloodRepository.GetByType(donor.blood_type);
+            var blood = await _bloodRepository.GetByName(donor.blood_type);
             blood.quantity += donorTransaction.volume;
             await _bloodRepository.Update(blood._id, blood);
             return new JsonResult(id);
@@ -69,11 +69,11 @@ namespace backend.Controllers
                 result = await _donorTransactionRepository.Update(id, donorTransaction);
             
                 var donor = await _donorRepository.Get(donorTransaction.donor_id);
-                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor.idNumber);
 
                 await _donorRepository.Update(donorTransaction.donor_id, donor);
             
-                var blood = await _bloodRepository.GetByType(donor.blood_type);
+                var blood = await _bloodRepository.GetByName(donor.blood_type);
                 blood.quantity += (donorTransaction.volume - currentVolume);
                 await _bloodRepository.Update(blood._id, blood);
             }
@@ -95,10 +95,10 @@ namespace backend.Controllers
                 var currentVolume = donorTransaction.volume;
                 result = await _donorTransactionRepository.Delete(id);
                 var donor = await _donorRepository.Get(donorTransaction.donor_id);
-                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
+                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor.idNumber);
                 await _donorRepository.Update(donorTransaction.donor_id, donor);
                 
-                var blood = await _bloodRepository.GetByType(donor.blood_type);
+                var blood = await _bloodRepository.GetByName(donor.blood_type);
                 blood.quantity -= currentVolume;
                 await _bloodRepository.Update(blood._id, blood);
             }

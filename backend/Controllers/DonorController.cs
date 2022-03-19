@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -33,7 +33,6 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var donor = await _donorRepository.Get(id);
-            // donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(id);
             return new JsonResult(donor);
         }
         
@@ -41,10 +40,6 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var donors = await _donorRepository.Get();
-            // foreach (var donor in donors)
-            // {
-            //     donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor._id);
-            // }
             return new JsonResult(donors);
         }
 

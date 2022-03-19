@@ -5,17 +5,17 @@ using MongoDB.Bson;
 
 namespace backend.Repositories
 {
-    public interface IBloodEventRepository
+    public interface IEventRepository
     {
         // Create
-        Task<string> Create(BloodEvent bloodEvent);
+        Task<string> Create(Event e);
         
         // Read
-        Task<BloodEvent> Get(string _id);
-        Task<IEnumerable<BloodEvent>> Get();
+        Task<Event> Get(string _id);
+        Task<IEnumerable<Event>> Get();
         
         // Update
-        Task<bool> Update(string _id, BloodEvent bloodEvent);
+        Task<bool> Update(string _id, Event e);
         
         // Delete
         Task<bool> Delete(string _id);

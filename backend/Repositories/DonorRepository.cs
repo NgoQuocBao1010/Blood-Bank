@@ -23,12 +23,12 @@ namespace backend.Repositories
         public async Task<string> Create(Donor donor)
         {
             await _donor.InsertOneAsync(donor);
-            return donor._id;
+            return donor.idNumber;
         }
 
-        public Task<Donor> Get(string _id)
+        public Task<Donor> Get(string idNumber)
         {
-            var filter = Builders<Donor>.Filter.Eq(d => d._id, _id);
+            var filter = Builders<Donor>.Filter.Eq(d => d.idNumber, idNumber);
             var donor = _donor.Find(filter).FirstOrDefaultAsync();
 
             return donor;
@@ -49,9 +49,9 @@ namespace backend.Repositories
             return transaction;
         }
 
-        public async Task<bool> Update(string _id, Donor donor)
+        public async Task<bool> Update(string idNumber, Donor donor)
         {
-            var filter = Builders<Donor>.Filter.Eq(d => d._id, _id);
+            var filter = Builders<Donor>.Filter.Eq(d => d.idNumber, idNumber);
             var update = Builders<Donor>.Update
                 .Set(d => d.dob, donor.dob)
                 .Set(d => d.gender, donor.gender)
@@ -66,9 +66,9 @@ namespace backend.Repositories
             return result.ModifiedCount == 1;
         }
 
-        public async Task<bool> Delete(string _id)
+        public async Task<bool> Delete(string idNumber)
         {
-            var filter = Builders<Donor>.Filter.Eq(d => d._id, _id);
+            var filter = Builders<Donor>.Filter.Eq(d => d.idNumber, idNumber);
             var result = await _donor.DeleteOneAsync(filter);
 
             return result.DeletedCount == 1;
