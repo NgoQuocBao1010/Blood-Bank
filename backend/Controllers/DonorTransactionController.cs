@@ -42,6 +42,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var donorTransaction = await _donorTransactionRepository.Get(id);
+            if (donorTransaction == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(donorTransaction);
         }
         
@@ -50,6 +54,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var donorTransaction = await _donorTransactionRepository.Get();
+            if (donorTransaction == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(donorTransaction);
         }
 

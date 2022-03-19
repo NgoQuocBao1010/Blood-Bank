@@ -7,7 +7,7 @@ using MongoDB.Bson;
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BloodEventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;

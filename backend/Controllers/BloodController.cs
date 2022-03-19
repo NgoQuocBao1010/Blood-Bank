@@ -39,6 +39,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var blood = await _bloodRepository.Get(id);
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
         }
         
@@ -46,6 +50,10 @@ namespace backend.Controllers
         public async Task<IActionResult> GetByType(string blood_type)
         {
             var blood = await _bloodRepository.GetByName(blood_type);
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
         }
 
@@ -74,6 +82,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var blood = await _bloodRepository.Get();
+            if (blood == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(blood);
         }
 

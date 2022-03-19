@@ -33,6 +33,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             var donor = await _donorRepository.Get(id);
+            if (donor == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(donor);
         }
         
@@ -40,6 +44,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Get()
         {
             var donors = await _donorRepository.Get();
+            if (donors == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(donors);
         }
 
