@@ -14,7 +14,7 @@ namespace backend.Repositories
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Blood>(nameof(Blood));
-
+            
             _blood = collection;
         }
 
@@ -24,10 +24,10 @@ namespace backend.Repositories
             await _blood.InsertOneAsync(blood);
             return blood._id;
         }
-        
+
         public void AddDefaultData(List<Blood> listBlood)
         {
-            _blood.InsertManyAsync(listBlood);
+            _blood.InsertMany(listBlood);
         }
 
         public Task<Blood> Get(string _id)
