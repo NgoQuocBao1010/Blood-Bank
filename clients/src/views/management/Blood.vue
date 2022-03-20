@@ -1,97 +1,167 @@
 <script setup>
 import { onBeforeMount } from "vue";
-import Datatable from "primevue/datatable";
-import Column from "primevue/column";
-import Button from "primevue/button";
 import OverlayPanel from "primevue/overlaypanel";
 
-let bloods = [
+import { BLOOD_TYPES } from "../../constants";
+import { determineStockStatus, JSONtoExcel } from "../../utils";
+
+// *** Mock database ***
+const bloodData = [
     {
-        id: "f665977b-5a21-4f7b-8875-65cf341c1e58",
+        id: "0ab35769-453b-4544-a2c5-759078731b5b",
         name: "A",
-        types: [
-            { name: "negative", quantity: 2000 },
-            { name: "positive", quantity: 700 },
-        ],
+        type: "positive",
+        quantity: 2000,
     },
     {
-        id: "f77dec5e-1b4d-4d8e-9db8-82c50219bfc8",
+        id: "dd6ed89c-178e-4d04-9d5e-00650e639fc0",
+        name: "A",
+        type: "negative",
+        quantity: 700,
+    },
+    {
+        id: "53192215-df3d-409a-83a3-cf6d831e9d6d",
         name: "B",
-        types: [
-            { name: "negative", quantity: 1500 },
-            { name: "positive", quantity: 1700 },
-        ],
+        type: "positive",
+        quantity: 1700,
     },
     {
-        id: "ea82a6b0-85f0-4701-a9f6-d8f0de14c7c8",
+        id: "d70b0b7b-7e92-4596-9e25-32d31ee6a898",
+        name: "B",
+        type: "negative",
+        quantity: 1500,
+    },
+    {
+        id: "1b0b6c62-2601-4bd4-b563-bfd99c10dd7f",
         name: "AB",
-        types: [
-            { name: "negative", quantity: 1600 },
-            { name: "positive", quantity: 1000 },
-        ],
+        type: "positive",
+        quantity: 1000,
     },
     {
-        id: "1b544f9f-30ba-4a6a-97e1-b66a429da14e",
+        id: "9fdb6041-e35b-49aa-b47b-326ff9c386f4",
+        name: "AB",
+        type: "negative",
+        quantity: 1600,
+    },
+    {
+        id: "e7abb462-442a-47d0-a724-740e70c3435c",
         name: "O",
-        types: [
-            { name: "negative", quantity: 2200 },
-            { name: "positive", quantity: 1700 },
-        ],
+        type: "positive",
+        quantity: 1700,
     },
     {
-        id: "d25b5c52-f51b-4f31-b948-23a798d8d45e",
+        id: "9a59d831-4036-420b-8dce-0f6cf86d16c9",
+        name: "O",
+        type: "negative",
+        quantity: 2200,
+    },
+    {
+        id: "12d3c310-79e9-4451-8a3d-1c4bfde1a949",
         name: "Rh",
-        types: [
-            { name: "negative", quantity: 0 },
-            { name: "positive", quantity: 40 },
-        ],
+        type: "positive",
+        quantity: 40,
+    },
+    {
+        id: "297397a3-c51c-4a42-b469-0061e64b1a92",
+        name: "Rh",
+        type: "negative",
+        quantity: 0,
     },
 ];
+// *** END getting data ***
+
+let bloods = $ref([]);
+
 let expandedRows = $ref([]);
 const expandAllRows = () => {
     expandedRows = bloods.filter((el) => el.id);
 };
 
-const stockInfo = $ref();
+const stockInfo = $ref(null);
 const toggleStockInfo = (event) => {
+    // Toggle info button about stock status
     stockInfo.toggle(event);
 };
 
 onBeforeMount(() => {
-    // Calculate each blood category's total quantity and stock status
-    bloods = bloods.map((bloodType) => {
-        const positive = bloodType.types.find((el) => el.name === "positive");
-        const negative = bloodType.types.find((el) => el.name === "negative");
-        const totalQuantity = positive.quantity + negative.quantity;
+    /* 
+        Calculate each blood category's total quantity and stock status
+        Example of a blood cell
+        {
+            id: str:id
+            name: str
+            quantity: int
+            inStock: bool
+            types: [
+                name: 'positive' | 'negative'
+                bloodType: str
+                status: 'low' | 'out' | 'good' | 'great'
+                displayStatus: str
+            ]
+        }
+    */
 
-        Object.assign(positive, {
-            ...determineStockStatus(positive.quantity),
-            bloodType: bloodType.name,
+    BLOOD_TYPES.forEach((name) => {
+        const data = bloodData.filter((el) => el.name === name);
+
+        // Evaluate stock status of blood type positive
+        const positiveData = data.find((el) => el.type === "positive");
+        const {
+            status: positiveStockStatus,
+            displayStatus: positiveStatusDisplay,
+        } = determineStockStatus(positiveData.quantity);
+
+        // Evaluate stock status of blood type negative
+        const negativeData = data.find((el) => el.type === "negative");
+        const {
+            status: negativeStockStatus,
+            displayStatus: negativeStatusDisplay,
+        } = determineStockStatus(negativeData.quantity);
+
+        bloods.push({
+            id: positiveData.id,
+            name: positiveData.name,
+            quantity: positiveData.quantity + negativeData.quantity,
+            inStock:
+                !["out", "low"].includes(positiveStockStatus) &&
+                !["out", "low"].includes(negativeStatusDisplay),
+            types: [
+                {
+                    name: "positive",
+                    bloodType: positiveData.name,
+                    quantity: positiveData.quantity,
+                    status: positiveStockStatus,
+                    displayStatus: positiveStatusDisplay,
+                },
+                {
+                    name: "negative",
+                    bloodType: negativeData.name,
+                    quantity: negativeData.quantity,
+                    status: negativeStockStatus,
+                    displayStatus: negativeStatusDisplay,
+                },
+            ],
         });
-        Object.assign(negative, {
-            ...determineStockStatus(negative.quantity),
-            bloodType: bloodType.name,
-        });
-
-        bloodType["inStock"] =
-            !["out", "low"].includes(positive["status"]) &&
-            !["out", "low"].includes(negative["status"]);
-        bloodType["quantity"] = totalQuantity;
-        bloodType["types"] = [positive, negative];
-
-        return bloodType;
     });
 });
 
-const determineStockStatus = (value) => {
-    if (value === 0) return { status: "out", displayStatus: "out of stock" };
+const downloadExcelFile = () => {
+    const excelData = bloodData.map((el) => {
+        const row = { ...el };
 
-    if (value <= 400) return { status: "low", displayStatus: "low in stock" };
+        row["Blood Group"] = row["name"];
+        row["Blood Type"] = row["type"];
+        row["Quantity (ml)"] = row["quantity"];
 
-    if (value <= 700) return { status: "good", displayStatus: "good in stock" };
+        delete row["id"];
+        delete row["name"];
+        delete row["type"];
+        delete row["quantity"];
 
-    if (value > 700)
-        return { status: "great", displayStatus: "great in stock" };
+        return row;
+    });
+
+    JSONtoExcel(excelData, "blood_data");
 };
 </script>
 
@@ -103,7 +173,7 @@ const determineStockStatus = (value) => {
                 <h2>Blood Management</h2>
 
                 <!-- Blood Table -->
-                <Datatable
+                <PrimeVueTable
                     :value="bloods"
                     dataKey="id"
                     v-model:expandedRows="expandedRows"
@@ -116,17 +186,25 @@ const determineStockStatus = (value) => {
                         <div class="header-container">
                             <div>
                                 <!-- Expand and Collapse all buttons -->
-                                <Button
+                                <PrimeVueButton
                                     icon="pi pi-plus"
                                     label="Expand All"
                                     class="mr-2 mb-2"
                                     @click="expandAllRows()"
                                 />
-                                <Button
+                                <PrimeVueButton
                                     icon="pi pi-minus"
                                     label="Collapse All"
                                     class="mb-2 mr-2"
                                     @click="expandedRows = null"
+                                />
+                                <!-- Export to JSON button -->
+                                <PrimeVueButton
+                                    type="button"
+                                    icon="pi pi-file-excel"
+                                    label="Export to Excel"
+                                    @click="downloadExcelFile"
+                                    class="p-button-outlined mb-2"
                                 />
                             </div>
 
@@ -158,10 +236,13 @@ const determineStockStatus = (value) => {
                     </template>
 
                     <!-- Expand Icon -->
-                    <Column :expander="true" headerStyle="width: 3rem" />
+                    <PrimeVueColumn
+                        :expander="true"
+                        headerStyle="width: 3rem"
+                    />
 
                     <!-- Blood Type Name -->
-                    <Column
+                    <PrimeVueColumn
                         field="name"
                         header="Name"
                         style="min-width: 8rem !important"
@@ -169,10 +250,10 @@ const determineStockStatus = (value) => {
                         <template #body="slotProps">
                             {{ slotProps.data.name }}
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Total Quantity Column -->
-                    <Column
+                    <PrimeVueColumn
                         field="quantity"
                         header="Total Quantity"
                         :sortable="true"
@@ -183,10 +264,10 @@ const determineStockStatus = (value) => {
                                 {{ slotProps.data.quantity }} ml
                             </p>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Stock status Column -->
-                    <Column
+                    <PrimeVueColumn
                         field="inStock"
                         header="Stock status"
                         header-style="width: 10rem"
@@ -206,7 +287,7 @@ const determineStockStatus = (value) => {
                                 ></i>
                             </p>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Expand Rows to a Datatable -->
                     <template #expansion="slotProps">
@@ -215,12 +296,12 @@ const determineStockStatus = (value) => {
                             <p>Blood {{ slotProps.data.name }} details</p>
 
                             <!-- Expand Table -->
-                            <Datatable
+                            <PrimeVueTable
                                 :value="slotProps.data.types"
                                 responsiveLayout="scroll"
                             >
                                 <!-- Type -->
-                                <Column field="name" header="Type">
+                                <PrimeVueColumn field="name" header="Type">
                                     <template #body="slotProps">
                                         <span
                                             style="text-transform: capitalize"
@@ -229,10 +310,10 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.name }}
                                         </span>
                                     </template>
-                                </Column>
+                                </PrimeVueColumn>
 
                                 <!-- Quantity -->
-                                <Column
+                                <PrimeVueColumn
                                     field="quantity"
                                     header="Quantity"
                                     :sortable="true"
@@ -242,10 +323,10 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.quantity }} ml
                                         </p>
                                     </template>
-                                </Column>
+                                </PrimeVueColumn>
 
                                 <!-- Stock Status -->
-                                <Column
+                                <PrimeVueColumn
                                     field="status"
                                     header="Stock Status"
                                     header-style="width:15rem"
@@ -260,11 +341,11 @@ const determineStockStatus = (value) => {
                                             {{ slotProps.data.displayStatus }}
                                         </span>
                                     </template>
-                                </Column>
-                            </Datatable>
+                                </PrimeVueColumn>
+                            </PrimeVueTable>
                         </div>
                     </template>
-                </Datatable>
+                </PrimeVueTable>
             </div>
         </div>
     </div>

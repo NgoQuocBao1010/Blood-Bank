@@ -1,15 +1,15 @@
 <script setup>
 import { onBeforeMount } from "vue";
 import dayjs from "dayjs";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Button from "primevue/button";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
+
+import { BLOOD_TYPES } from "../../constants";
+import { JSONtoExcel } from "../../utils";
 
 const donors = [
     {
@@ -110,7 +110,30 @@ const donors = [
     },
 ];
 
-const bloodTypes = ["A", "B", "AB", "O", "Rh"];
+const downloadExcelFile = () => {
+    // Format data before convert to excel
+    const excelData = donors.map((el) => {
+        let row = { ...el };
+
+        row["Donor's Name"] = row["name"];
+        row["Blood Type"] = row["bloodType"];
+        row["Date Donated"] = row["date"];
+        row["Amount (ml)"] = row["amount"];
+        row["Event Name"] = row["event"];
+
+        delete row["id"];
+        delete row["name"];
+        delete row["bloodType"];
+        delete row["name"];
+        delete row["date"];
+        delete row["amount"];
+        delete row["event"];
+
+        return row;
+    });
+
+    JSONtoExcel(excelData, "donor_data");
+};
 
 const events = $computed(() => {
     const allEvents = donors.map((don) => don.event);
@@ -153,7 +176,7 @@ onBeforeMount(() => {
                 <h2>Donors Management</h2>
 
                 <!-- Donors table -->
-                <DataTable
+                <PrimeVueTable
                     :value="donors"
                     :paginator="true"
                     class="p-datatable-gridlines"
@@ -178,13 +201,24 @@ onBeforeMount(() => {
                         <div
                             class="flex justify-content-between flex-column sm:flex-row"
                         >
-                            <Button
-                                type="button"
-                                icon="pi pi-filter-slash"
-                                label="Clear"
-                                @click="clearFilter()"
-                                class="p-button-outlined mb-2"
-                            />
+                            <div>
+                                <PrimeVueButton
+                                    type="button"
+                                    icon="pi pi-filter-slash"
+                                    label="Clear"
+                                    @click="clearFilter()"
+                                    class="p-button-outlined mb-2 mr-2"
+                                />
+                                <PrimeVueButton
+                                    type="button"
+                                    icon="pi pi-file-excel"
+                                    label="Export to Excel"
+                                    @click="downloadExcelFile"
+                                    class="p-button-outlined mb-2"
+                                />
+                            </div>
+
+                            <!-- Search Input -->
                             <span class="p-input-icon-left mb-2">
                                 <i class="pi pi-search" />
                                 <InputText
@@ -201,7 +235,11 @@ onBeforeMount(() => {
 
                     <!-- Columns -->
                     <!-- Donor's name -->
-                    <Column field="name" header="Name" style="min-width: 12rem">
+                    <PrimeVueColumn
+                        field="name"
+                        header="Name"
+                        style="min-width: 12rem"
+                    >
                         <template #body="{ data }">
                             {{ data.name }}
                         </template>
@@ -217,10 +255,10 @@ onBeforeMount(() => {
                                 "
                             />
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Date donated -->
-                    <Column
+                    <PrimeVueColumn
                         header="Date Donated"
                         field="date"
                         dataType="date"
@@ -238,10 +276,10 @@ onBeforeMount(() => {
                                 @date-select="filterCallback()"
                             />
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Event name -->
-                    <Column
+                    <PrimeVueColumn
                         field="event"
                         header="Event"
                         style="min-width: 12rem"
@@ -271,10 +309,10 @@ onBeforeMount(() => {
                                 </template>
                             </DropDown>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Blood Type -->
-                    <Column
+                    <PrimeVueColumn
                         field="bloodType"
                         header="Blood Type"
                         style="max-width: 14rem !important"
@@ -288,7 +326,7 @@ onBeforeMount(() => {
                             <MultiSelect
                                 v-model="filterModel.value"
                                 @change="filterCallback()"
-                                :options="bloodTypes"
+                                :options="BLOOD_TYPES"
                                 optionLabel=""
                                 placeholder="Select blood type"
                                 class="p-column-filter"
@@ -305,10 +343,10 @@ onBeforeMount(() => {
                                 </template>
                             </MultiSelect>
                         </template>
-                    </Column>
+                    </PrimeVueColumn>
 
                     <!-- Amount -->
-                    <Column
+                    <PrimeVueColumn
                         field="amount"
                         header="Amount"
                         dataType="numeric"
@@ -330,8 +368,8 @@ onBeforeMount(() => {
                                 "
                             />
                         </template>
-                    </Column>
-                </DataTable>
+                    </PrimeVueColumn>
+                </PrimeVueTable>
             </div>
         </div>
     </div>

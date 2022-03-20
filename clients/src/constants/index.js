@@ -4,4 +4,6 @@ const THEMES = {
     darkColor: "#1e2d50",
 };
 
-export { THEMES };
+const BLOOD_TYPES = ["A", "B", "AB", "O", "Rh"];
+
+export { THEMES, BLOOD_TYPES };

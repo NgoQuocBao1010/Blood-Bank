@@ -7,6 +7,9 @@ import "./assets/styles/layout.scss";
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import Button from "primevue/button";
 import ConfirmationService from "primeVue/confirmationservice";
 import ToastService from "primeVue/toastservice";
 import Ripple from "primevue/ripple";
@@ -21,12 +24,15 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 
-// PrimeVue directives and services
+// PrimeVue directives, services and components
 app.use(PrimeVue, { ripple: true });
 app.directive("ripple", Ripple);
 app.directive("tooltip", Tooltip);
 app.directive("styleclass", StyleClass);
 app.use(ConfirmationService);
 app.use(ToastService);
+app.component("PrimeVueTable", DataTable);
+app.component("PrimeVueColumn", Column);
+app.component("PrimeVueButton", Button);
 
 app.mount("#app");
