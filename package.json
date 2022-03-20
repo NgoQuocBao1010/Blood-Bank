@@ -4,13 +4,12 @@
     "description": "<br/>",
     "main": "index.js",
     "scripts": {
-        "install-client": "cd clients && npm i",
-        "start-client": "cd clients && npm run dev",
+        "install-admin": "cd clients && npm i",
+        "start-admin": "cd clients && npm run dev",
         "install-lp": "cd landing-page && npm i",
         "start-lp": "cd landing-page && npm run dev",
         "start-sv": "cd backend && dotnet run",
-        "install-sakai": "cd sakai-vue && npm i",
-        "preview-sakai": "cd sakai-vue && npm run serve"
+        "install-all": "npm run install-admin && npm run install-lp"
     },
     "repository": {
         "type": "git",
