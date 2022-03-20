@@ -38,6 +38,8 @@ main {
 }
 
 .content {
+  min-width: 100vh;
+  min-height: 100vh;
   margin-top: 120px;
 }
 
