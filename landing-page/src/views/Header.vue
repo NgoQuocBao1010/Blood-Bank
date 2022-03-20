@@ -59,6 +59,7 @@ const items = [
       .p-tabmenuitem {
         .p-menuitem-link:hover {
           background-color: var(--PRIMARY_COLOR);
+          transition: background-color linear 0.2s, color linear 0.2s;
         }
       }
 

@@ -2,6 +2,7 @@
   --PRIMARY_COLOR: #f07279;
   --SECONDARY_COLOR: #f79ca4;
   --DARK_BLUE: #1e2d50;
+  --LIGHT_BLUE: #284996;
   --DARK_PINK: #b6555a;
 }
 
@@ -44,8 +45,6 @@
     color: #292929;
   }
 
-  p {
-  }
   .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
     background: #fff;
     border-bottom: 1px solid var(--PRIMARY_COLOR);
@@ -118,104 +117,134 @@
 
 .p-dataview-header {
   .p-selectbutton .p-button.p-highlight {
-    background: var(--DARK_BLUE);
-    border-color: var(--DARK_BLUE);
+    background: var(--PRIMARY_COLOR);
+    border-color: var(--PRIMARY_COLOR);
     color: #ffffff;
   }
   .p-button:focus {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3f5e91, 0 1px 2px 0 black;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--SECONDARY_COLOR),
+      0 1px 2px 0 black;
+  }
+
+  .p-button:hover {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--SECONDARY_COLOR),
+      0 1px 2px 0 black;
   }
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: #eff6ff;
-  border-color: #eff6ff;
-  color: var(--DARK_BLUE);
+  background: #f8d4d7;
+  border-color: var(--PRIMARY_COLOR);
+  color: var(--PRIMARY_COLOR);
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+  background: #f8d4d7;
+  border-color: var(--PRIMARY_COLOR);
+  color: var(--PRIMARY_COLOR);
+}
+
+.p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+  background: #f8d4d7;
+  border-color: var(--PRIMARY_COLOR);
+  color: #343a40;
 }
 
 .p-link:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 0.2rem var(--DARK_BLUE);
+  box-shadow: 0 0 0 0.2rem var(--SECONDARY_COLOR);
 }
 
 .form-donation {
-  .p-inputtext:hover {
-    border-color: var(--DARK_BLUE);
-  }
+  .card {
+    .p-inputtext:hover {
+      border-color: var(--DARK_BLUE);
+    }
 
-  .p-inputtext:enabled:focus {
-    outline: 0 none;
-    outline-offset: 0;
-    box-shadow: 0 0 0 0.2rem var(--DARK_BLUE);
-    border-color: var(--DARK_BLUE);
-  }
+    .p-inputtext:enabled:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem var(--LIGHT_BLUE);
+      border-color: var(--LIGHT_BLUE);
+    }
 
-  .p-button:enabled:hover {
-    background: var(--DARK_BLUE);
-    color: #ffffff;
-    border-color: var(--DARK_BLUE);
-  }
+    .p-button {
+      color: #ffffff;
+      background: var(--DARK_BLUE);
+      border: 1px solid var(--DARK_BLUE);
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+        box-shadow 0.2s;
+      border-radius: 6px;
+    }
 
-  .p-button {
-    color: #ffffff;
-    background: var(--DARK_BLUE);
-    border: 1px solid var(--DARK_BLUE);
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s,
-      box-shadow 0.2s;
-    border-radius: 6px;
-  }
+    .p-button:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--DARK_BLUE),
+        0 1px 2px 0 black;
+    }
 
-  .p-button:focus {
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--DARK_BLUE), 0 1px 2px 0 black;
-  }
+    .p-button:enabled:hover {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--DARK_BLUE),
+        0 1px 2px 0 black;
+      background-color: var(--LIGHT_BLUE);
+      color: #ffffff;
+    }
 
-  .p-radiobutton .p-radiobutton-box.p-highlight {
-    border-color: var(--DARK_BLUE);
-    background: var(--DARK_BLUE);
-  }
+    .p-button.p-component.p-button-text:hover {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--DARK_BLUE),
+        0 1px 2px 0 black;
+      background-color: var(--LIGHT_BLUE);
+      color: #ffffff;
+      border-color: var(--DARK_BLUE);
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
 
-  .p-button.p-component.p-button-text:hover {
-    background: var(--DARK_BLUE);
-    color: #ffffff;
-    border-color: var(--DARK_BLUE);
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-  }
+    .p-radiobutton .p-radiobutton-box.p-highlight {
+      border-color: var(--DARK_BLUE);
+      background: var(--DARK_BLUE);
+    }
 
-  .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
-    border-color: var(--DARK_BLUE);
-  }
+    .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+      border-color: var(--DARK_BLUE);
+    }
 
-  .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
-    box-shadow: 0 0 0 0.2rem #3d5792;
-  }
+    .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
+      box-shadow: 0 0 0 0.2rem #3d5792;
+    }
 
-  .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
-    border-color: var(--DARK_BLUE);
-    background: var(--DARK_BLUE);
-    color: #ffffff;
-  }
+    .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+      border-color: var(--DARK_BLUE);
+      background: var(--DARK_BLUE);
+      color: #ffffff;
+    }
 
-  .p-checkbox .p-checkbox-box.p-highlight {
-    border-color: var(--DARK_BLUE);
-    background: var(--DARK_BLUE);
-  }
+    .p-checkbox .p-checkbox-box.p-highlight {
+      border-color: var(--DARK_BLUE);
+      background: var(--DARK_BLUE);
+    }
 
-  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
-    border-color: var(--DARK_BLUE);
-  }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+      border-color: var(--DARK_BLUE);
+    }
 
-  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
-    border-color: var(--DARK_BLUE);
-    background: var(--DARK_BLUE);
-    color: #ffffff;
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+      border-color: var(--DARK_BLUE);
+      background: var(--DARK_BLUE);
+      color: #ffffff;
+    }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem #4074b4;
+      border-color: var(--DARK_BLUE);
+    }
   }
-  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
-    outline: 0 none;
-    outline-offset: 0;
-    box-shadow: 0 0 0 0.2rem #4074b4;
-    border-color: var(--DARK_BLUE);
+  .p-tag {
+    background: var(--SECONDARY_COLOR) !important;
   }
 }

@@ -57,7 +57,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-1.png"
+            src="../../assets/images/about-img-1.png"
             class="w-9"
             alt="mockup mobile"
           />
@@ -154,7 +154,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-2.jpeg"
+            src="../../assets/images/about-img-2.jpeg"
             class="w-11 pt-4"
             alt="mockup"
           />
@@ -167,7 +167,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-3.jpeg"
+            src="../../assets/images/about-img-3.jpeg"
             class="w-9"
             alt="mockup mobile"
           />
@@ -271,7 +271,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-4.jpeg"
+            src="../../assets/images/about-img-4.jpeg"
             class="w-11 pt-4"
             alt="mockup"
           />
@@ -284,7 +284,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-5.jpeg"
+            src="../../assets/images/about-img-5.jpeg"
             class="w-9"
             alt="mockup mobile"
           />
@@ -381,7 +381,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-6.jpeg"
+            src="../../assets/images/about-img-6.jpeg"
             class="w-11 pt-4"
             alt="mockup"
           />
@@ -394,7 +394,7 @@ const handleClick = (itemId) => {
           style="border-radius: 8px; background-color: var(--PRIMARY_COLOR)"
         >
           <img
-            src="../assets/images/about-img-7.jpeg"
+            src="../../assets/images/about-img-7.jpeg"
             class="w-9"
             alt="mockup mobile"
           />
