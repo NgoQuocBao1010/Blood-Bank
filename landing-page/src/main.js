@@ -8,6 +8,7 @@ import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
+import "./assets/styles/badges.scss";
 import "./assets/styles/override.scss";
 
 import App from "./App.vue";

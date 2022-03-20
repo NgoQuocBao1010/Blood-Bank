@@ -3,6 +3,12 @@ import Button from "primevue/button";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { ref } from "@vue/reactivity";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const onClick = () => {
+  router.push({ path: "donate" });
+};
 
 const products = ref([
   {
@@ -64,7 +70,7 @@ const products = ref([
           stimulates the production of new blood cells and in turn, helps in
           maintaining good health.
         </p>
-        <Button label="Donate Now" />
+        <Button @click="onClick" label="Donate Now" />
       </div>
       <div class="blood_table">
         <DataTable :value="products" showGridlines responsiveLayout="scroll">
@@ -124,6 +130,7 @@ const products = ref([
         button:hover {
           background-color: var(--SECONDARY_COLOR);
           color: #fff;
+          transition: background-color linear 0.2s, color linear 0.2s;
         }
       }
     }
