@@ -42,13 +42,14 @@ namespace backend
             services.AddControllers();
             // services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(Configuration.GetConnectionString("MongoDb")));
             services.AddSingleton<IMongoClient, MongoClient>(sp => new MongoClient(env["MongoDB"]));
-            services.AddTransient<IBloodEventRepository, BloodEventRepository>();
+            services.AddTransient<IEventRepository, EventRepository>();
             services.AddTransient<IBloodRepository, BloodRepository>();
             services.AddTransient<IHospitalRepository, HospitalRepository>();
             services.AddTransient<IDonorRepository, DonorRepository>();
             services.AddTransient<IRequestRepository, RequestRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDonorTransactionRepository, DonorTransactionRepository>();
+            services.AddTransient<IEventSubmissionRepository, EventSubmissionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +76,8 @@ namespace backend
             {
                 endpoints.MapControllers();
             });
+            
+            
         }
     }
 }
