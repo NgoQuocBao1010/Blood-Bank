@@ -19,6 +19,11 @@ const router = createRouter({
             name: "Blood Management",
             component: () => import("./views/management/Blood.vue"),
         },
+        {
+            path: "/events-management",
+            name: "Events Management",
+            component: () => import("./views/management/Events.vue"),
+        },
         // Information
         {
             path: "/about",

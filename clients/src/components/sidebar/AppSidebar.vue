@@ -24,6 +24,11 @@ const menu = [
                 icon: "fa-solid fa-user-group pi-fw",
                 to: { name: "Donors Management" },
             },
+            {
+                label: "Events",
+                icon: "fa-solid fa-calendar-days pi-fw",
+                to: { name: "Events Management" },
+            },
         ],
     },
     {
