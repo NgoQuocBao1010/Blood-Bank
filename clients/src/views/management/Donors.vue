@@ -1,6 +1,5 @@
 <script setup>
 import { onBeforeMount } from "vue";
-import dayjs from "dayjs";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -9,7 +8,7 @@ import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
 import { BLOOD_TYPES } from "../../constants";
-import { JSONtoExcel } from "../../utils";
+import { JSONtoExcel, formatDate } from "../../utils";
 
 const donors = [
     {
@@ -139,12 +138,6 @@ const events = $computed(() => {
     const allEvents = donors.map((don) => don.event);
     return [...new Set(allEvents)];
 });
-
-const formatDate = (date) => {
-    // Format date object
-    const day = dayjs(date);
-    return day.format("DD/MM/YYYY");
-};
 
 let filters = $ref(null);
 const initFilter = () => {

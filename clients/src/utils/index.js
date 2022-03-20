@@ -1,4 +1,5 @@
 import { utils, writeFile } from "xlsx";
+import dayjs from "dayjs";
 
 const JSONtoExcel = (jsonData, name = "test") => {
     const workbook = utils.book_new();
@@ -24,4 +25,10 @@ const determineStockStatus = (value) => {
         return { status: "great", displayStatus: "great in stock" };
 };
 
-export { JSONtoExcel, determineStockStatus };
+const formatDate = (date) => {
+    // Format date object
+    const day = dayjs(date);
+    return day.format("DD/MM/YYYY");
+};
+
+export { JSONtoExcel, determineStockStatus, formatDate };
