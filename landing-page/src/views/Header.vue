@@ -1,5 +1,6 @@
 <script setup>
 import TabMenu from "primevue/tabmenu";
+import { useRouter } from "vue-router";
 
 const items = [
   { label: "HOME", to: "/" },
@@ -12,9 +13,9 @@ const items = [
 <template>
   <div class="navbar_header">
     <div class="logo">
-      <a href="#">
+      <router-link to="/">
         <img src="../assets/images/logo.png" alt="logo" />
-      </a>
+      </router-link>
     </div>
     <div class="navbar">
       <TabMenu :model="items" />
