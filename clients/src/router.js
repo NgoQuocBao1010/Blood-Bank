@@ -35,6 +35,13 @@ const router = createRouter({
             name: "Blood Requests",
             component: () => import("./views/acitivity/BloodRequests.vue"),
         },
+        // Detail
+        {
+            path: "/events/detail/:id",
+            name: "Event Detail",
+            component: () => import("./views/detail/EventDetail.vue"),
+            props: true,
+        },
         // Information
         {
             path: "/about",

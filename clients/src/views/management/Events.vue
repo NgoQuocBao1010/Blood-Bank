@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
@@ -7,6 +8,8 @@ import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
 import { formatDate } from "../../utils";
+
+const router = useRouter();
 
 const eventsData = [
     {
@@ -116,6 +119,11 @@ onBeforeMount(() => {
 
     initFilters();
 });
+
+const goToEventDetail = (payload) => {
+    const { id: eventId } = payload.data;
+    router.push({ name: "Event Detail", params: { id: eventId } });
+};
 </script>
 
 <template>
@@ -131,9 +139,11 @@ onBeforeMount(() => {
                     data-key="id"
                     class="p-datatable-gridlines"
                     :rows="5"
-                    :paginator="true"
                     :row-hover="true"
+                    rowStyle="cursor: pointer"
+                    @row-click="goToEventDetail"
                     responsive-layout="scroll"
+                    :paginator="true"
                     removable-sort
                     filterDisplay="row"
                     v-model:filters="filters"
