@@ -152,6 +152,10 @@
     background: var(--primary-color) !important;
 }
 
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    border-color: var(--primary-color) !important;
+}
+
 // Calendar
 .p-datepicker .p-datepicker-header .p-datepicker-prev:focus,
 .p-datepicker .p-datepicker-header .p-datepicker-next:focus {
