@@ -11,6 +11,7 @@ const menu = [
             },
         ],
     },
+    // Management
     {
         label: "Management",
         items: [
@@ -31,6 +32,23 @@ const menu = [
             },
         ],
     },
+    // Activity
+    {
+        label: "Activity",
+        items: [
+            {
+                label: "Donation",
+                icon: "fa-solid fa-hand-holding-droplet fa-droplet pi-fw",
+                to: { name: "Donation Requests" },
+            },
+            {
+                label: "Blood Requests",
+                icon: "fa-solid fa-hospital pi-fw",
+                to: { name: "Blood Requests" },
+            },
+        ],
+    },
+    // Information
     {
         label: "Information",
         items: [
