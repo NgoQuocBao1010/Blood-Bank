@@ -1,0 +1,91 @@
+data
+    - Donor (approve, reject): 
+        {
+            id (CMND),
+            name (donor name),
+            dateDonated: int -> string,
+            phone,
+            address,
+            dob,
+            gender,
+            email,
+            event: {
+                id: 
+                name: 
+            },
+            blood: {
+                name,
+                type,
+                amount: int,
+                status,
+                rejectReason
+            }
+        }
+
+    
+    - Blood:
+        {
+            id,
+            name,
+            type,
+            quantity (int),
+        },
+
+    
+    - Events:
+        {
+            id,
+            name,
+            location: {
+                city: str,
+                address: str,
+            },
+            startDate: int -> str,
+            duration: int,
+            detail: str,
+        },
+    
+    - Donor Success
+        {
+            id (CMND),
+            name (donor name),
+            dateDonated: int -> string,
+            phone,
+            address,
+            dob,
+            gender,
+            email,
+            event: {
+                id: 
+                name: 
+            },
+            blood: {
+                name,
+                type,
+            }
+        }
+
+    
+    - List transaction (donorID):
+        listTransactions: 
+        [
+            {
+                event: {
+                    id,
+                    name,
+                    location: {
+                        city: str,
+                        address: str,
+                    },
+                    startDate: int -> str,
+                    duration: int,
+                    detail: str,
+                },
+                
+                blood: {
+                    amount: int,
+                    status,
+                    rejectReason
+                }
+            }
+        ]
