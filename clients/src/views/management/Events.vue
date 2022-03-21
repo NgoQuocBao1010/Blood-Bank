@@ -283,6 +283,7 @@ onBeforeMount(() => {
                         field="duration"
                         dataType="number"
                         :sortable="true"
+                        style="min-width: 10rem"
                     >
                         <template #body="{ data }">
                             {{ data.duration }} days

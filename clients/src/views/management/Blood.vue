@@ -5,7 +5,7 @@ import OverlayPanel from "primevue/overlaypanel";
 import { BLOOD_TYPES } from "../../constants";
 import { determineStockStatus, JSONtoExcel } from "../../utils";
 
-// *** Mock database ***
+// *** Mock data ***
 const bloodData = [
     {
         id: "0ab35769-453b-4544-a2c5-759078731b5b",
@@ -68,7 +68,7 @@ const bloodData = [
         quantity: 0,
     },
 ];
-// *** END getting data ***
+// *** END of mock data ***
 
 let bloods = $ref([]);
 
