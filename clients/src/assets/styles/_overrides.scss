@@ -176,6 +176,11 @@
     content: none !important;
 }
 
+// Dialog
+.p-dialog .p-dialog-header .p-dialog-header-icon:focus {
+    box-shadow: 0 0 0 0.2rem var(--primary-color) !important;
+}
+
 // Focus state of element
 .p-focus {
     border-color: var(--primary-color) !important;
