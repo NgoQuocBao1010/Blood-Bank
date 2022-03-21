@@ -187,6 +187,12 @@
     box-shadow: 0 0 0 0.1rem var(--primary-color) !important;
 }
 
+// File upload
+.p-fileupload-choose:not(.p-disabled):hover {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
 // Layout Override
 .layout-sidebar {
     width: 250px;

@@ -1,5 +1,6 @@
 <script setup>
 import { onBeforeMount } from "vue";
+import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -11,15 +12,15 @@ import { useToast } from "primevue/usetoast";
 import { FilterMatchMode } from "primevue/api";
 
 import { BLOOD_TYPES } from "../../constants";
-import { JSONtoExcel, formatDate } from "../../utils";
+import { JSONtoExcel, excelToJson, formatDate } from "../../utils";
 
 // *** Mock data ***
-const donors = [
+const donorsData = [
     {
         id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
         name: "Quoc Bao 1",
         bloodType: "A",
-        date: new Date("2022-09-13"),
+        date: new Date("2022-09-13").getTime(),
         amount: 40,
         event: "event1",
     },
@@ -27,7 +28,7 @@ const donors = [
         id: "37121b27-ddff-4821-b57e-fa9ca36fa131",
         name: "Quoc Bao 2",
         bloodType: "O",
-        date: new Date("2022-10-25"),
+        date: new Date("2022-10-25").getTime(),
         amount: 41,
         event: "event2",
     },
@@ -35,7 +36,7 @@ const donors = [
         id: "3fd4a632-95a2-41f8-b394-61943c034aad",
         name: "Quoc Bao 3",
         bloodType: "AB",
-        date: new Date("2022-01-13"),
+        date: new Date("2022-01-13").getTime(),
         amount: 42,
         event: "event3",
     },
@@ -43,7 +44,7 @@ const donors = [
         id: "a33bca1a-8bbf-4cda-b7e4-868c9c8e9271",
         name: "Quoc Bao 4",
         bloodType: "A",
-        date: new Date("2022-03-23"),
+        date: new Date("2022-03-23").getTime(),
         amount: 43,
         event: "event4",
     },
@@ -51,7 +52,7 @@ const donors = [
         id: "f3809f59-b68c-47ef-8d0a-be86a12c5e8c",
         name: "Quoc Bao 5",
         bloodType: "B",
-        date: new Date("2022-04-03"),
+        date: new Date("2022-04-03").getTime(),
         amount: 44,
         event: "event5",
     },
@@ -59,7 +60,7 @@ const donors = [
         id: "16c6dfc3-f7ab-47c9-92d8-3e351adb986e",
         name: "Quoc Bao 6",
         bloodType: "A",
-        date: new Date("2022-09-13"),
+        date: new Date("2022-09-13").getTime(),
         amount: 45,
         event: "event1",
     },
@@ -67,7 +68,7 @@ const donors = [
         id: "6da5caa2-fbba-451f-addb-e5e301e84af2",
         name: "Quoc Bao 7",
         bloodType: "AB",
-        date: new Date("2022-09-13"),
+        date: new Date("2022-09-13").getTime(),
         amount: 46,
         event: "event2",
     },
@@ -75,7 +76,7 @@ const donors = [
         id: "8d5c1613-815f-4f0a-92b4-ce77ca13755d",
         name: "Quoc Bao 8",
         bloodType: "O",
-        date: new Date("2021-09-13"),
+        date: new Date("2021-09-13").getTime(),
         amount: 47,
         event: "event3",
     },
@@ -83,7 +84,7 @@ const donors = [
         id: "f5c34b63-9512-4c4b-b12e-39962426eb5b",
         name: "Quoc Bao 9",
         bloodType: "AB",
-        date: new Date("2021-12-13"),
+        date: new Date("2021-12-13").getTime(),
         amount: 48,
         event: "event4",
     },
@@ -91,7 +92,7 @@ const donors = [
         id: "ec4b9a70-5fec-4edb-aa40-30e71a9ea46b",
         name: "Quoc Bao 10",
         bloodType: "B",
-        date: new Date("2022-06-13"),
+        date: new Date("2022-06-13").getTime(),
         amount: 49,
         event: "event5",
     },
@@ -99,7 +100,7 @@ const donors = [
         id: "7b1ef3ec-a495-41ec-821d-a7c7ee50c161",
         name: "Quoc Bao 11",
         bloodType: "A",
-        date: new Date("2022-09-02"),
+        date: new Date("2022-09-02").getTime(),
         amount: 50,
         event: "event2",
     },
@@ -107,7 +108,7 @@ const donors = [
         id: "7b1ef3ec-a495-41ec-821d-afsdee50c161",
         name: "Quoc Bao 12",
         bloodType: "Rh",
-        date: new Date("2022-09-02"),
+        date: new Date("2022-09-02").getTime(),
         amount: 50,
         event: "event2",
     },
@@ -119,6 +120,8 @@ const events = $computed(() => {
 // *** END of mock data ***
 
 const toast = useToast();
+
+let donors = $ref(null);
 
 // Filter configurations
 let filters = $ref(null);
@@ -187,19 +190,31 @@ const requestActions = () => {
     closeDialogs();
 };
 
-// Before mouting action
+// Uploaded excel
+const onSelectExcel = (event) => {
+    const excelFile = event.files[0];
+
+    excelToJson(excelFile);
+};
+
 onBeforeMount(() => {
+    // Convert int to date
+    donors = donorsData.map((row) => {
+        let donor = { ...row };
+        donor["date"] = new Date(donor["date"]);
+        return donor;
+    });
     initFilter();
 });
 
 const downloadExcelFile = () => {
     // Format data before convert to excel
-    const excelData = donors.map((el) => {
+    const excelData = donorsData.map((el) => {
         let row = { ...el };
 
         row["Donor's Name"] = row["name"];
         row["Blood Type"] = row["bloodType"];
-        row["Date Donated"] = row["date"];
+        row["Date Donated (dd/mm/yyyy)"] = formatDate(row["date"]);
         row["Amount (ml)"] = row["amount"];
         row["Event Name"] = row["event"];
 
@@ -251,20 +266,29 @@ const downloadExcelFile = () => {
                         <div
                             class="flex justify-content-between flex-column sm:flex-row"
                         >
-                            <div>
+                            <div class="flex">
                                 <PrimeVueButton
                                     type="button"
                                     icon="pi pi-filter-slash"
                                     label="Clear"
-                                    @click="clearFilter()"
+                                    @click="clearFilter"
                                     class="p-button-outlined mb-2 mr-2"
                                 />
+
                                 <PrimeVueButton
                                     type="button"
                                     icon="pi pi-file-excel"
                                     label="Export to Excel"
                                     @click="downloadExcelFile"
-                                    class="p-button-outlined mb-2"
+                                    class="p-button-outlined mb-2 mr-2"
+                                />
+
+                                <FileUpload
+                                    mode="basic"
+                                    @select="onSelectExcel($event)"
+                                    name="requestFiles"
+                                    choose-label="Upload Excel File"
+                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                 />
                             </div>
 
@@ -421,7 +445,7 @@ const downloadExcelFile = () => {
                     </PrimeVueColumn>
 
                     <!-- Approve | Reject column -->
-                    <PrimeVueColumn header="Actions">
+                    <PrimeVueColumn>
                         <template #body="{ data }">
                             <PrimeVueButton
                                 type="button"
