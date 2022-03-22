@@ -13,68 +13,68 @@ const router = useRouter();
 
 const eventsData = [
     {
-        id: "f822bdb0-6b7e-4681-8c62-93520c3accfc",
+        _id: "f822bdb0-6b7e-4681-8c62-93520c3accfc",
         name: "Health and Wellbeing at work",
         location: {
             city: "Can Tho",
             address: "Can Tho University",
         },
-        startDate: new Date("02/11/2021"),
+        startDate: new Date("02/11/2021").getTime().toString(),
         duration: 3,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
     {
-        id: "c75f46e3-8726-4a39-bbea-1d11d411ce72",
+        _id: "c75f46e3-8726-4a39-bbea-1d11d411ce72",
         name: "Tell me, do you bleed?",
         location: {
             city: "Ho Chi Minh",
             address: "Somewhere",
         },
-        startDate: new Date("12/10/2021"),
+        startDate: new Date("12/10/2021").getTime().toString(),
         duration: 4,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
     {
-        id: "54a60992-ec21-42c0-807d-7ad4e5b698d5",
+        _id: "54a60992-ec21-42c0-807d-7ad4e5b698d5",
         name: "We are donors",
         location: {
             city: "Ho Chi Minh",
             address: "Somewhere",
         },
-        startDate: new Date("04/07/2021"),
+        startDate: new Date("04/07/2021").getTime().toString(),
         duration: 4,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
     {
-        id: "b641b947-9846-46b3-a3a1-fef365d93bf6",
+        _id: "b641b947-9846-46b3-a3a1-fef365d93bf6",
         name: "Judoh Blood Donations",
         location: {
             city: "Ho Chi Minh",
             address: "Somewhere",
         },
-        startDate: new Date("03/01/2022"),
+        startDate: new Date("03/01/2022").getTime().toString(),
         duration: 50,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
     {
-        id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf065",
+        _id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf065",
         name: "Judoh Blood Donations - Summer Edition",
         location: {
             city: "Da Nang",
             address: "Somewhere",
         },
-        startDate: new Date("02/06/2022"),
+        startDate: new Date("02/06/2022").getTime().toString(),
         duration: 3,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
     {
-        id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf066",
+        _id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf066",
         name: "Judoh Blood Donations - Chrismas Edition",
         location: {
             city: "Da Nang",
             address: "Somewhere",
         },
-        startDate: new Date("12/20/2022"),
+        startDate: new Date("12/20/2022").getTime().toString(),
         duration: 3,
         detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
     },
@@ -83,6 +83,8 @@ const eventsData = [
 const events = $ref(null);
 const EVENT_STATUS = ["passed", "ongoing", "upcoming"];
 let cities = $ref([]);
+
+// Filter configurations
 const filters = $ref(null);
 const initFilters = () => {
     filters = {
@@ -96,9 +98,12 @@ const initFilters = () => {
 const clearFilter = () => {
     initFilters();
 };
+
 onBeforeMount(() => {
     events = eventsData.map((row) => {
         const event = { ...row };
+
+        event["startDate"] = new Date(parseInt(event["startDate"]));
 
         // Check status of the event
         const endDate = dayjs(event.startDate).add(event.duration, "day");
@@ -120,9 +125,10 @@ onBeforeMount(() => {
     initFilters();
 });
 
-const goToEventDetail = (payload) => {
-    const { id: eventId } = payload.data;
-    router.push({ name: "Event Detail", params: { id: eventId } });
+const onRowClick = (payload) => {
+    // Go to event detail when click a row in the table
+    const { _id: eventId } = payload.data;
+    router.push({ name: "Event Detail", params: { _id: eventId } });
 };
 </script>
 
@@ -136,12 +142,12 @@ const goToEventDetail = (payload) => {
                 <!-- Events table -->
                 <PrimeVueTable
                     :value="events"
-                    data-key="id"
+                    data-key="_id"
                     class="p-datatable-gridlines"
                     :rows="5"
                     :row-hover="true"
                     rowStyle="cursor: pointer"
-                    @row-click="goToEventDetail"
+                    @row-click="onRowClick"
                     responsive-layout="scroll"
                     :paginator="true"
                     removable-sort
