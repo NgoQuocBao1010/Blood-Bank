@@ -1,7 +1,7 @@
 data
-    - Donor (approve, reject): 
+    - Donor: 
         {
-            id (CMND),
+            _id (CMND),
             name (donor name),
             dateDonated: int -> string,
             phone,
@@ -10,7 +10,7 @@ data
             gender,
             email,
             event: {
-                id: 
+                _id: 
                 name: 
             },
             blood: {
@@ -21,20 +21,18 @@ data
                 rejectReason
             }
         }
-
     
     - Blood:
         {
-            id,
+            _id,
             name,
             type,
             quantity (int),
         },
 
-    
     - Events:
         {
-            id,
+            _id,
             name,
             location: {
                 city: str,
@@ -45,9 +43,9 @@ data
             detail: str,
         },
     
-    - Donor Success
+    - Donor Success (approve, reject)
         {
-            id (CMND),
+            _id (CMND),
             name (donor name),
             dateDonated: int -> string,
             phone,
@@ -55,23 +53,24 @@ data
             dob,
             gender,
             email,
-            event: {
-                id: 
-                name: 
-            },
-            blood: {
-                name,
-                type,
+            transaction: {
+                eventDonated: {
+                    _id,
+                    name
+                },
+                bloodName,
+                bloodType,
+                amount,
+                dateDonated
             }
         }
 
-    
-    - List transaction (donorID):
+    - List transaction (donor_id):
         listTransactions: 
         [
             {
                 event: {
-                    id,
+                    _id,
                     name,
                     location: {
                         city: str,
