@@ -61,7 +61,7 @@ namespace backend.Controllers
         {
             var blood = _bloodRepository.Get();
             if (blood.Result.Any()) return;
-            var bloodList = new List<Blood>
+            var listBlood = new List<Blood>
             {
                 new Blood("A", "Positive", 0),
                 new Blood("A", "Negative", 0),
@@ -74,7 +74,7 @@ namespace backend.Controllers
                 new Blood("Rh", "Positive", 0),
                 new Blood("Rh", "Negative", 0)
             };
-            _bloodRepository.AddDefaultData(bloodList);
+            _bloodRepository.AddDefaultData(listBlood);
         }
         
         
