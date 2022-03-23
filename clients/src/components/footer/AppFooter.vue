@@ -4,7 +4,7 @@
     <div class="layout-footer">
         <img
             alt="Logo"
-            src="../assets/images/logo.png"
+            src="../../assets/images/logo.png"
             height="50"
             class="mr-2"
         />

@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import AppNavbar from "./components/navbar/AppNavbar.vue";
 import AppSidebar from "./components/sidebar/AppSidebar.vue";
-import AppFooter from "./components/AppFooter.vue";
+import AppFooter from "./components/footer/AppFooter.vue";
 
 let sidebarHide = $ref(null);
 
