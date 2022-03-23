@@ -1,75 +1,12 @@
 <script setup>
 import { onBeforeMount } from "vue";
+import axios from "axios";
 import OverlayPanel from "primevue/overlaypanel";
 
 import { BLOOD_TYPES } from "../../constants";
 import { determineStockStatus, JSONtoExcel } from "../../utils";
 
-// *** Mock data ***
-const bloodData = [
-    {
-        id: "0ab35769-453b-4544-a2c5-759078731b5b",
-        name: "A",
-        type: "positive",
-        quantity: 2000,
-    },
-    {
-        id: "dd6ed89c-178e-4d04-9d5e-00650e639fc0",
-        name: "A",
-        type: "negative",
-        quantity: 700,
-    },
-    {
-        id: "53192215-df3d-409a-83a3-cf6d831e9d6d",
-        name: "B",
-        type: "positive",
-        quantity: 1700,
-    },
-    {
-        id: "d70b0b7b-7e92-4596-9e25-32d31ee6a898",
-        name: "B",
-        type: "negative",
-        quantity: 1500,
-    },
-    {
-        id: "1b0b6c62-2601-4bd4-b563-bfd99c10dd7f",
-        name: "AB",
-        type: "positive",
-        quantity: 1000,
-    },
-    {
-        id: "9fdb6041-e35b-49aa-b47b-326ff9c386f4",
-        name: "AB",
-        type: "negative",
-        quantity: 1600,
-    },
-    {
-        id: "e7abb462-442a-47d0-a724-740e70c3435c",
-        name: "O",
-        type: "positive",
-        quantity: 1700,
-    },
-    {
-        id: "9a59d831-4036-420b-8dce-0f6cf86d16c9",
-        name: "O",
-        type: "negative",
-        quantity: 2200,
-    },
-    {
-        id: "12d3c310-79e9-4451-8a3d-1c4bfde1a949",
-        name: "Rh",
-        type: "positive",
-        quantity: 40,
-    },
-    {
-        id: "297397a3-c51c-4a42-b469-0061e64b1a92",
-        name: "Rh",
-        type: "negative",
-        quantity: 0,
-    },
-];
-// *** END of mock data ***
-
+let bloodData = null;
 let bloods = $ref([]);
 
 let expandedRows = $ref([]);
@@ -83,7 +20,7 @@ const toggleStockInfo = (event) => {
     stockInfo.toggle(event);
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
     /* 
         Calculate each blood category's total quantity and stock status
         Example of a blood cell
@@ -101,18 +38,21 @@ onBeforeMount(() => {
         }
     */
 
+    const response = await axios.get("http://localhost:5000/api/Blood");
+    bloodData = response.data;
+
     BLOOD_TYPES.forEach((name) => {
         const data = bloodData.filter((el) => el.name === name);
 
         // Evaluate stock status of blood type positive
-        const positiveData = data.find((el) => el.type === "positive");
+        const positiveData = data.find((el) => el.type === "Positive");
         const {
             status: positiveStockStatus,
             displayStatus: positiveStatusDisplay,
         } = determineStockStatus(positiveData.quantity);
 
         // Evaluate stock status of blood type negative
-        const negativeData = data.find((el) => el.type === "negative");
+        const negativeData = data.find((el) => el.type === "Negative");
         const {
             status: negativeStockStatus,
             displayStatus: negativeStatusDisplay,
