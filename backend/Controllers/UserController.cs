@@ -25,7 +25,7 @@ namespace backend.Controllers
             if (user.Result.Any()) return;
             var listUser = new List<User>
             {
-                new ("admin", "admin", true)
+                new ("admin@gmail.com", "admin", true)
             };
 
             _userRepository.AddDefaultData(listUser);
