@@ -11,7 +11,7 @@ let bloods = $ref([]);
 
 let expandedRows = $ref([]);
 const expandAllRows = () => {
-    expandedRows = bloods.filter((el) => el.id);
+    expandedRows = bloods.filter((el) => el._id);
 };
 
 const stockInfo = $ref(null);
@@ -59,7 +59,7 @@ onBeforeMount(async () => {
         } = determineStockStatus(negativeData.quantity);
 
         bloods.push({
-            id: positiveData.id,
+            _id: positiveData._id,
             name: positiveData.name,
             quantity: positiveData.quantity + negativeData.quantity,
             inStock:
@@ -115,7 +115,7 @@ const downloadExcelFile = () => {
                 <!-- Blood Table -->
                 <PrimeVueTable
                     :value="bloods"
-                    dataKey="id"
+                    dataKey="_id"
                     v-model:expandedRows="expandedRows"
                     responsiveLayout="scroll"
                     removableSort
@@ -131,12 +131,14 @@ const downloadExcelFile = () => {
                                     label="Expand All"
                                     class="mr-2 mb-2"
                                     @click="expandAllRows()"
+                                    :disabled="expandedRows.length > 0"
                                 />
                                 <PrimeVueButton
                                     icon="pi pi-minus"
                                     label="Collapse All"
                                     class="mb-2 mr-2"
-                                    @click="expandedRows = null"
+                                    @click="expandedRows = []"
+                                    :disabled="expandedRows.length === 0"
                                 />
                                 <!-- Export to JSON button -->
                                 <PrimeVueButton
