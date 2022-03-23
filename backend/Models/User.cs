@@ -14,5 +14,12 @@ namespace backend.Models
         
         [BsonRepresentation(BsonType.ObjectId)]
         public string hospital_id { get; set; }
+
+        public User(string email, string password, bool isAdmin)
+        {
+            this.email = email;
+            this.password = password;
+            this.isAdmin = isAdmin;
+        }
     }
 }

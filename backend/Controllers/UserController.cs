@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +16,20 @@ namespace backend.Controllers
         public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+            AddDefaultData();
         }
+        
+        public void AddDefaultData()
+        {
+            var user = _userRepository.Get();
+            if (user.Result.Any()) return;
+            var listUser = new List<User>
+            {
+                new ("admin", "admin", true)
+            };
+
+            _userRepository.AddDefaultData(listUser);
+        } 
 
         [HttpPost]
         public async Task<IActionResult> Create(User user)
