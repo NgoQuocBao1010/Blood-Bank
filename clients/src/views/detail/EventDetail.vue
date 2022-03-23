@@ -75,30 +75,36 @@ onBeforeMount(() => {
 
                     <!-- Overview information -->
                     <Divider>
-                        <b class="app-highlight">Overview</b>
+                        <b class="app-highlight" style="padding-inline: 1rem">
+                            Overview
+                        </b>
                     </Divider>
                     <ul class="event-overview">
                         <!-- Start date -->
                         <li>
                             <b>Start Date: </b>
-                            <span>{{ formatDate(event.startDate) }}</span>
+                            <span class="info">{{
+                                formatDate(event.startDate)
+                            }}</span>
                         </li>
                         <!-- Duration -->
                         <li>
                             <b>Duration: </b>
-                            <span>{{ event.duration }} days</span>
+                            <span class="info">{{ event.duration }} days</span>
                         </li>
                         <!-- Status -->
                         <li>
                             <b>Status: </b>
-                            <span :class="`event-badge event-${event.status}`">
+                            <span
+                                :class="`info event-badge event-${event.status}`"
+                            >
                                 {{ event.status }}
                             </span>
                         </li>
                         <!-- Address -->
                         <li>
                             <b>Address: </b>
-                            <span>
+                            <span class="info">
                                 {{ event.location.address }},
                                 {{ event.location.city }}
                             </span>
@@ -107,7 +113,9 @@ onBeforeMount(() => {
 
                     <!-- Event detail -->
                     <Divider>
-                        <b class="app-highlight">Event Description</b>
+                        <b class="app-highlight" style="padding-inline: 1rem">
+                            Event Description
+                        </b>
                     </Divider>
                     <p>{{ event.detail }}</p>
                 </div>
@@ -118,12 +126,6 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 @import "../../assets/styles/badge.scss";
-
-.flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .card {
     display: flex;
 
@@ -148,6 +150,10 @@ onBeforeMount(() => {
 
             li {
                 line-height: 2;
+
+                span.info {
+                    margin-left: 0.5rem;
+                }
             }
         }
     }

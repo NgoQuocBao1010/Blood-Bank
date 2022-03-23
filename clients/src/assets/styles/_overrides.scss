@@ -53,6 +53,10 @@
     box-shadow: inset 0 0 0 0.15rem var(--primary-color) !important;
 }
 
+.p-toast .p-toast-message .p-toast-icon-close:focus {
+    box-shadow: none;
+}
+
 // Ripple in button ?
 // .p-ink-active {
 //     background-color: rgba(var(--primary-color-rbg), 0.4) !important;
@@ -212,6 +216,12 @@
 .app-highlight {
     font-weight: bold;
     color: var(--primary-color);
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 992px) {

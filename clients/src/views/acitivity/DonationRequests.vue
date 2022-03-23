@@ -183,7 +183,7 @@ const initFilter = () => {
         },
         "transaction.blood.type": {
             value: null,
-            matchMode: FilterMatchMode.IN,
+            matchMode: FilterMatchMode.EQUALS,
         },
         "transaction.amount": {
             value: null,
@@ -308,6 +308,7 @@ const downloadExcelFile = () => {
                         'transaction.dateDonated',
                         'transaction._event.name',
                         'transaction.blood.name',
+                        'transaction.blood.type',
                         'transaction.amount',
                     ]"
                 >
@@ -385,7 +386,7 @@ const downloadExcelFile = () => {
                     <PrimeVueColumn
                         field="_id"
                         header="Personal ID"
-                        style="max-width: 12rem"
+                        style="min-width: 200px; max-width: 14rem"
                     >
                         <template #body="{ data }">
                             {{ data._id }}
@@ -410,7 +411,7 @@ const downloadExcelFile = () => {
                         field="transaction.dateDonated"
                         dataType="date"
                         :sortable="true"
-                        style="width: 14rem !important"
+                        style="min-width: 200px; width: 14rem !important"
                     >
                         <template #body="{ data }">
                             {{ formatDate(data.transaction.dateDonated) }}
@@ -429,7 +430,7 @@ const downloadExcelFile = () => {
                     <PrimeVueColumn
                         field="transaction._event.name"
                         header="Event"
-                        style="min-width: 12rem"
+                        style="min-width: 300px; max-width: 14rem"
                     >
                         <template #body="{ data }">
                             {{ data.transaction._event.name }}
@@ -499,6 +500,7 @@ const downloadExcelFile = () => {
                     <PrimeVueColumn
                         field="transaction.blood.type"
                         header="Blood Type"
+                        style="min-width: 200px"
                     >
                         <template #body="{ data }">
                             {{ data.transaction.blood.type }}
@@ -507,7 +509,7 @@ const downloadExcelFile = () => {
                             <DropDown
                                 v-model="filterModel.value"
                                 @change="filterCallback"
-                                :options="['positive', 'negative']"
+                                :options="['Positive', 'Negative']"
                                 class="p-column-filter"
                                 style="height: 2.2rem"
                                 :showClear="true"
@@ -534,7 +536,7 @@ const downloadExcelFile = () => {
                         dataType="numeric"
                         :sortable="true"
                         :showFilterMatchModes="false"
-                        style="max-width: 10rem"
+                        style="min-width: 200px; max-width: 10rem"
                     >
                         <template #body="{ data }">
                             {{ data.transaction.amount }} ml
@@ -544,7 +546,6 @@ const downloadExcelFile = () => {
                                 v-model="filterModel.value"
                                 @keydown.enter="filterCallback()"
                                 class="p-column-filter"
-                                :placeholder="`Filter`"
                                 v-tooltip.top.focus="
                                     'Press enter key to filter'
                                 "
