@@ -11,8 +11,8 @@ import { FilterMatchMode } from "primevue/api";
 import { BLOOD_TYPES } from "../constants";
 import { formatDate } from "../utils";
 
-const { donors, participants } = defineProps({
-    donors: {
+const { donorsData, participants } = defineProps({
+    donorsData: {
         type: Array,
         required: true,
     },
@@ -22,8 +22,9 @@ const { donors, participants } = defineProps({
     },
 });
 
+let donors = $ref(null);
 const events = participants
-    ? [...new Set(donors.map((don) => don.transaction._event.name))]
+    ? [...new Set(donorsData.map((don) => don.transaction._event.name))]
     : null;
 
 let selectedDonors = $ref([]);
@@ -62,6 +63,11 @@ const clearFilter = () => {
 };
 
 onBeforeMount(() => {
+    donors = donorsData.map((row) => {
+        let donor = { ...row };
+        donor.transaction.dateDonated = new Date(donor.transaction.dateDonated);
+        return donor;
+    });
     initFilter();
 });
 </script>
@@ -138,6 +144,7 @@ onBeforeMount(() => {
         <PrimeVueColumn
             selectionMode="multiple"
             headerStyle="width: 2rem"
+            v-if="participants"
         ></PrimeVueColumn>
 
         <!-- Donor's name -->
@@ -204,6 +211,7 @@ onBeforeMount(() => {
             field="transaction._event.name"
             header="Event"
             style="min-width: 250px; max-width: 12rem"
+            v-if="participants"
         >
             <template #body="{ data }">
                 {{ data.transaction._event.name }}

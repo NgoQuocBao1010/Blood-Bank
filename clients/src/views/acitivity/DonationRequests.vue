@@ -1,6 +1,4 @@
 <script setup>
-import { onBeforeMount } from "vue";
-
 import DonorTable from "../../components/DonorTable.vue";
 
 // *** Mock data ***
@@ -143,17 +141,6 @@ const donorsData = [
     },
 ];
 // *** END of mock data ***
-
-let donors = $ref(null);
-
-onBeforeMount(() => {
-    // Convert int to date
-    donors = donorsData.map((row) => {
-        let donor = { ...row };
-        donor.transaction.dateDonated = new Date(donor.transaction.dateDonated);
-        return donor;
-    });
-});
 </script>
 
 <template>
@@ -164,7 +151,7 @@ onBeforeMount(() => {
                 <h2>Donation Requests Monitor</h2>
 
                 <!-- Donors table -->
-                <DonorTable :donors="donors" :participants="true" />
+                <DonorTable :donorsData="donorsData" :participants="true" />
             </div>
         </div>
     </div>
