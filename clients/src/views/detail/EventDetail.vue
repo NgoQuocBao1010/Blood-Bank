@@ -165,7 +165,7 @@ const props = defineProps({
     _id: String,
 });
 
-const event = $ref(null);
+let event = $ref(null);
 let showDonorTable = $ref(false);
 
 // Naviagtion settings
@@ -173,7 +173,7 @@ const home = $ref({
     icon: "fa-solid fa-calendar-days",
     to: { name: "Events Management" },
 });
-const items = $ref(null);
+let items = $ref(null);
 
 onBeforeMount(() => {
     event = { ...data };

@@ -80,12 +80,12 @@ const eventsData = [
     },
 ];
 
-const events = $ref(null);
+let events = $ref(null);
 const EVENT_STATUS = ["passed", "ongoing", "upcoming"];
 let cities = $ref([]);
 
 // Filter configurations
-const filters = $ref(null);
+let filters = $ref(null);
 const initFilters = () => {
     filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
