@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, watch } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
@@ -160,6 +160,14 @@ const events = $computed(() => {
 // *** END of mock data ***
 
 let donors = $ref(null);
+let selectedDonors = $ref([]);
+watch(
+    () => selectedDonors,
+    () => {
+        console.log(selectedDonors);
+    }
+);
+
 const toast = useToast();
 
 // Filter configurations
@@ -299,6 +307,7 @@ const downloadExcelFile = () => {
                     :rowHover="true"
                     removableSort
                     filterDisplay="row"
+                    v-model:selection="selectedDonors"
                     v-model:filters="filters"
                     :filters="filters"
                     responsiveLayout="scroll"
@@ -359,6 +368,13 @@ const downloadExcelFile = () => {
                     <template #empty> No donors found. </template>
 
                     <!-- Columns -->
+
+                    <!-- Selection column -->
+                    <PrimeVueColumn
+                        selectionMode="multiple"
+                        headerStyle="width: 2rem"
+                    ></PrimeVueColumn>
+
                     <!-- Donor's name -->
                     <PrimeVueColumn
                         field="name"
@@ -430,7 +446,7 @@ const downloadExcelFile = () => {
                     <PrimeVueColumn
                         field="transaction._event.name"
                         header="Event"
-                        style="min-width: 300px; max-width: 14rem"
+                        style="min-width: 250px; max-width: 12rem"
                     >
                         <template #body="{ data }">
                             {{ data.transaction._event.name }}
@@ -536,7 +552,7 @@ const downloadExcelFile = () => {
                         dataType="numeric"
                         :sortable="true"
                         :showFilterMatchModes="false"
-                        style="min-width: 200px; max-width: 10rem"
+                        style="min-width: 180px; max-width: 10rem"
                     >
                         <template #body="{ data }">
                             {{ data.transaction.amount }} ml
@@ -552,6 +568,23 @@ const downloadExcelFile = () => {
                             />
                         </template>
                     </PrimeVueColumn>
+
+                    <!-- Table's footer -->
+                    <template #footer>
+                        <PrimeVueButton
+                            type="button"
+                            icon="pi pi-check-circle"
+                            label="Approve"
+                            class="p-button p-button-sm mr-2 approve-btn"
+                        />
+
+                        <PrimeVueButton
+                            type="button"
+                            icon="pi pi-times-circle"
+                            label="Reject"
+                            class="p-button p-button-sm reject-btn"
+                        />
+                    </template>
                 </PrimeVueTable>
             </div>
         </div>
