@@ -192,6 +192,7 @@ onBeforeMount(() => {
             dataType="date"
             :sortable="true"
             style="min-width: 200px; width: 14rem !important"
+            v-if="participants"
         >
             <template #body="{ data }">
                 {{ formatDate(data.transaction.dateDonated) }}

@@ -1,11 +1,14 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { defineAsyncComponent, onBeforeMount } from "vue";
 import dayjs from "dayjs";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
 
-import DonorTable from "../../components/DonorTable.vue";
 import { formatDate } from "../../utils";
+
+const AsyncDonorTable = defineAsyncComponent({
+    loader: () => import("../../components/DonorTable.vue"),
+});
 
 // *** Mock data ***
 const data = {
@@ -163,6 +166,7 @@ const props = defineProps({
 });
 
 const event = $ref(null);
+let showDonorTable = $ref(false);
 
 // Naviagtion settings
 const home = $ref({
@@ -262,8 +266,21 @@ onBeforeMount(() => {
 
             <!-- Event participants -->
             <div class="card">
-                <h2>Events Participants</h2>
-                <DonorTable :donorsData="donorsData" />
+                <div
+                    class="flex-center"
+                    style="width: 100%"
+                    v-if="!showDonorTable"
+                >
+                    <PrimeVueButton
+                        label="Show Event Participants"
+                        @click="showDonorTable = !showDonorTable"
+                    />
+                </div>
+
+                <template v-else>
+                    <h2>Events Participants</h2>
+                    <AsyncDonorTable :donorsData="donorsData" />
+                </template>
             </div>
         </div>
     </div>
