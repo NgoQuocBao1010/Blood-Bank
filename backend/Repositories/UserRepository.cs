@@ -62,5 +62,10 @@ namespace backend.Repositories
             var result = await _user.DeleteOneAsync(filter);
             return result.DeletedCount == 1;
         }
+
+        public void AddDefaultData(IEnumerable<User> listUser)
+        {
+            _user.InsertMany(listUser);
+        }
     }
 }
