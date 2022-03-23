@@ -17,111 +17,150 @@ import { JSONtoExcel, excelToJson, formatDate } from "../../utils";
 // *** Mock data ***
 const donorsData = [
     {
-        id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
+        _id: "800000100001",
         name: "Quoc Bao 1",
-        bloodType: "A",
-        date: new Date("2022-09-13").getTime(),
-        amount: 40,
-        event: "event1",
+        transaction: {
+            _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
+            blood: {
+                name: "O",
+                type: "Negative",
+            },
+            _event: {
+                _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
+                name: "event",
+            },
+            amount: 500,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "37121b27-ddff-4821-b57e-fa9ca36fa131",
-        name: "Quoc Bao 2",
-        bloodType: "O",
-        date: new Date("2022-10-25").getTime(),
-        amount: 41,
-        event: "event2",
+        _id: "800000000001",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
+            blood: {
+                name: "A",
+                type: "Positive",
+            },
+            _event: {
+                _id: "de169f18-226d-48e0-9579-b18184e2c260",
+                name: "event1",
+            },
+            amount: 420,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "3fd4a632-95a2-41f8-b394-61943c034aad",
-        name: "Quoc Bao 3",
-        bloodType: "AB",
-        date: new Date("2022-01-13").getTime(),
-        amount: 42,
-        event: "event3",
+        _id: "800000000002",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "6f05348f-5e55-408f-9c70-dddc105e8c7a",
+            blood: {
+                name: "A",
+                type: "Negative",
+            },
+            _event: {
+                _id: "7cae7784-7523-47ae-b1a4-42308f8fb348",
+                name: "event",
+            },
+            amount: 421,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "a33bca1a-8bbf-4cda-b7e4-868c9c8e9271",
-        name: "Quoc Bao 4",
-        bloodType: "A",
-        date: new Date("2022-03-23").getTime(),
-        amount: 43,
-        event: "event4",
+        _id: "800000000003",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "f1a2b6d8-cd3b-41ce-b313-d2388e6ed898",
+            blood: {
+                name: "A",
+                type: "Positive",
+            },
+            _event: {
+                _id: "c31675bc-09c6-40d8-8a1f-6a0bc86e5def",
+                name: "event1",
+            },
+            amount: 422,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "f3809f59-b68c-47ef-8d0a-be86a12c5e8c",
-        name: "Quoc Bao 5",
-        bloodType: "B",
-        date: new Date("2022-04-03").getTime(),
-        amount: 44,
-        event: "event5",
+        _id: "800000000004",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "1bbd4313-efd5-4624-b569-f0b55b656171",
+            blood: {
+                name: "AB",
+                type: "Positive",
+            },
+            _event: {
+                _id: "6957e9d6-2309-45ed-879e-684c87d9fe43",
+                name: "event2",
+            },
+            amount: 423,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "16c6dfc3-f7ab-47c9-92d8-3e351adb986e",
-        name: "Quoc Bao 6",
-        bloodType: "A",
-        date: new Date("2022-09-13").getTime(),
-        amount: 45,
-        event: "event1",
+        _id: "800000000005",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "80ee995b-d0ac-471c-97ab-9e1223264051",
+            blood: {
+                name: "B",
+                type: "Positive",
+            },
+            _event: {
+                _id: "30ea460a-62c4-4fc0-8a7b-450f63c65af3",
+                name: "event2",
+            },
+            amount: 424,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "6da5caa2-fbba-451f-addb-e5e301e84af2",
-        name: "Quoc Bao 7",
-        bloodType: "AB",
-        date: new Date("2022-09-13").getTime(),
-        amount: 46,
-        event: "event2",
+        _id: "800000000006",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "97733c03-99cf-4a7b-a76b-114380d5ee0f",
+            blood: {
+                name: "AB",
+                type: "Negative",
+            },
+            _event: {
+                _id: "371ceacf-0470-4874-ac18-d84330baa688",
+                name: "event",
+            },
+            amount: 425,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
     {
-        id: "8d5c1613-815f-4f0a-92b4-ce77ca13755d",
-        name: "Quoc Bao 8",
-        bloodType: "O",
-        date: new Date("2021-09-13").getTime(),
-        amount: 47,
-        event: "event3",
-    },
-    {
-        id: "f5c34b63-9512-4c4b-b12e-39962426eb5b",
-        name: "Quoc Bao 9",
-        bloodType: "AB",
-        date: new Date("2021-12-13").getTime(),
-        amount: 48,
-        event: "event4",
-    },
-    {
-        id: "ec4b9a70-5fec-4edb-aa40-30e71a9ea46b",
-        name: "Quoc Bao 10",
-        bloodType: "B",
-        date: new Date("2022-06-13").getTime(),
-        amount: 49,
-        event: "event5",
-    },
-    {
-        id: "7b1ef3ec-a495-41ec-821d-a7c7ee50c161",
-        name: "Quoc Bao 11",
-        bloodType: "A",
-        date: new Date("2022-09-02").getTime(),
-        amount: 50,
-        event: "event2",
-    },
-    {
-        id: "7b1ef3ec-a495-41ec-821d-afsdee50c161",
-        name: "Quoc Bao 12",
-        bloodType: "Rh",
-        date: new Date("2022-09-02").getTime(),
-        amount: 50,
-        event: "event2",
+        _id: "800000000007",
+        name: "Quoc Bao",
+        transaction: {
+            _id: "da3c90a4-ac58-4200-976b-19cd6e61655a",
+            blood: {
+                name: "B",
+                type: "Negative",
+            },
+            _event: {
+                _id: "dbb32e45-6ad3-443b-892d-769362b551f5",
+                name: "event2",
+            },
+            amount: 426,
+            dateDonated: new Date("2022-09-13").getTime(),
+        },
     },
 ];
 const events = $computed(() => {
-    const allEvents = donors.map((don) => don.event);
+    const allEvents = donorsData.map((don) => don.transaction._event.name);
     return [...new Set(allEvents)];
 });
 // *** END of mock data ***
 
-const toast = useToast();
-
 let donors = $ref(null);
+const toast = useToast();
 
 // Filter configurations
 let filters = $ref(null);
@@ -129,10 +168,24 @@ const initFilter = () => {
     filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        date: { value: null, matchMode: FilterMatchMode.DATE_IS },
-        event: { value: null, matchMode: FilterMatchMode.EQUALS },
-        bloodType: { value: null, matchMode: FilterMatchMode.IN },
-        amount: {
+        _id: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        "transaction.dateDonated": {
+            value: null,
+            matchMode: FilterMatchMode.DATE_IS,
+        },
+        "transaction._event.name": {
+            value: null,
+            matchMode: FilterMatchMode.EQUALS,
+        },
+        "transaction.blood.name": {
+            value: null,
+            matchMode: FilterMatchMode.IN,
+        },
+        "transaction.blood.type": {
+            value: null,
+            matchMode: FilterMatchMode.IN,
+        },
+        "transaction.amount": {
             value: null,
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
         },
@@ -175,7 +228,7 @@ const closeDialogs = () => {
 const requestActions = () => {
     const { id, rejectReason } = selectedRequestPayload;
 
-    const donor = donors.find((el) => el.id === id);
+    const donor = donors.find((el) => el._id === id);
 
     toast.add({
         severity: selectedRequestPayload.approve ? "info" : "error",
@@ -185,10 +238,20 @@ const requestActions = () => {
         detail: selectedRequestPayload.approve
             ? `Blood donation from donor ${donor.name} approved!`
             : `Blood donation from donor ${donor.name} rejected because ${rejectReason}`,
-        life: 3000,
+        life: 20000,
     });
     closeDialogs();
 };
+
+onBeforeMount(() => {
+    // Convert int to date
+    donors = donorsData.map((row) => {
+        let donor = { ...row };
+        donor.transaction.dateDonated = new Date(donor.transaction.dateDonated);
+        return donor;
+    });
+    initFilter();
+});
 
 // Uploaded excel
 const onSelectExcel = (event) => {
@@ -197,39 +260,25 @@ const onSelectExcel = (event) => {
     excelToJson(excelFile);
 };
 
-onBeforeMount(() => {
-    // Convert int to date
-    donors = donorsData.map((row) => {
-        let donor = { ...row };
-        donor["date"] = new Date(donor["date"]);
-        return donor;
-    });
-    initFilter();
-});
-
 const downloadExcelFile = () => {
     // Format data before convert to excel
-    const excelData = donorsData.map((el) => {
-        let row = { ...el };
-
-        row["Donor's Name"] = row["name"];
-        row["Blood Type"] = row["bloodType"];
-        row["Date Donated (dd/mm/yyyy)"] = formatDate(row["date"]);
-        row["Amount (ml)"] = row["amount"];
-        row["Event Name"] = row["event"];
-
-        delete row["id"];
-        delete row["name"];
-        delete row["bloodType"];
-        delete row["name"];
-        delete row["date"];
-        delete row["amount"];
-        delete row["event"];
-
-        return row;
-    });
-
-    JSONtoExcel(excelData, "donor_request_data");
+    // const excelData = donorsData.map((el) => {
+    //     let row = { ...el };
+    //     row["Donor's Name"] = row["name"];
+    //     row["Blood Type"] = row["bloodType"];
+    //     row["Date Donated (dd/mm/yyyy)"] = formatDate(row["date"]);
+    //     row["Amount (ml)"] = row["amount"];
+    //     row["Event Name"] = row["event"];
+    //     delete row["id"];
+    //     delete row["name"];
+    //     delete row["bloodType"];
+    //     delete row["name"];
+    //     delete row["date"];
+    //     delete row["amount"];
+    //     delete row["event"];
+    //     return row;
+    // });
+    // JSONtoExcel(excelData, "donor_request_data");
 };
 </script>
 
@@ -246,7 +295,7 @@ const downloadExcelFile = () => {
                     :paginator="true"
                     class="p-datatable-gridlines"
                     :rows="5"
-                    dataKey="id"
+                    dataKey="_id"
                     :rowHover="true"
                     removableSort
                     filterDisplay="row"
@@ -255,10 +304,11 @@ const downloadExcelFile = () => {
                     responsiveLayout="scroll"
                     :globalFilterFields="[
                         'name',
-                        'date',
-                        'event',
-                        'bloodType',
-                        'amount',
+                        '_id',
+                        'transaction.dateDonated',
+                        'transaction._event.name',
+                        'transaction.blood.name',
+                        'transaction.amount',
                     ]"
                 >
                     <!-- Header of the table -->
@@ -331,16 +381,39 @@ const downloadExcelFile = () => {
                         </template>
                     </PrimeVueColumn>
 
-                    <!-- Date donated -->
+                    <!-- Personal ID -->
                     <PrimeVueColumn
-                        header="Date Donated"
-                        field="date"
-                        dataType="date"
-                        :sortable="true"
+                        field="_id"
+                        header="Personal ID"
                         style="max-width: 12rem"
                     >
                         <template #body="{ data }">
-                            {{ formatDate(data.date) }}
+                            {{ data._id }}
+                        </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText
+                                type="text"
+                                v-model="filterModel.value"
+                                @keydown.enter="filterCallback()"
+                                class="p-column-filter"
+                                :placeholder="`Search by ID`"
+                                v-tooltip.top.focus="
+                                    'Press enter key to filter'
+                                "
+                            />
+                        </template>
+                    </PrimeVueColumn>
+
+                    <!-- Date donated -->
+                    <PrimeVueColumn
+                        header="Date Donated"
+                        field="transaction.dateDonated"
+                        dataType="date"
+                        :sortable="true"
+                        style="width: 14rem !important"
+                    >
+                        <template #body="{ data }">
+                            {{ formatDate(data.transaction.dateDonated) }}
                         </template>
                         <template #filter="{ filterModel, filterCallback }">
                             <Calendar
@@ -354,20 +427,20 @@ const downloadExcelFile = () => {
 
                     <!-- Event name -->
                     <PrimeVueColumn
-                        field="event"
+                        field="transaction._event.name"
                         header="Event"
                         style="min-width: 12rem"
                     >
                         <template #body="{ data }">
-                            {{ data.event }}
+                            {{ data.transaction._event.name }}
                         </template>
                         <template #filter="{ filterModel, filterCallback }">
                             <DropDown
                                 v-model="filterModel.value"
                                 @change="filterCallback"
                                 :options="events"
-                                placeholder="Select Event"
                                 class="p-column-filter"
+                                style="height: 2.2rem"
                                 :showClear="true"
                             >
                                 <template #value="slotProps">
@@ -385,15 +458,20 @@ const downloadExcelFile = () => {
                         </template>
                     </PrimeVueColumn>
 
-                    <!-- Blood Type -->
+                    <!-- Blood Name -->
                     <PrimeVueColumn
-                        field="bloodType"
-                        header="Blood Type"
-                        style="max-width: 14rem !important"
+                        field="transaction.blood.name"
+                        header="Blood Name"
+                        style="width: 8rem"
                     >
                         <template #body="{ data }">
-                            <span :class="'blood-badge type-' + data.bloodType">
-                                Type {{ data.bloodType }}
+                            <span
+                                :class="
+                                    'blood-badge type-' +
+                                    data.transaction.blood.name
+                                "
+                            >
+                                Type {{ data.transaction.blood.name }}
                             </span>
                         </template>
                         <template #filter="{ filterModel, filterCallback }">
@@ -401,8 +479,6 @@ const downloadExcelFile = () => {
                                 v-model="filterModel.value"
                                 @change="filterCallback()"
                                 :options="BLOOD_TYPES"
-                                optionLabel=""
-                                placeholder="Select type"
                                 class="p-column-filter"
                             >
                                 <template #option="slotProps">
@@ -419,9 +495,41 @@ const downloadExcelFile = () => {
                         </template>
                     </PrimeVueColumn>
 
+                    <!-- Blood Type -->
+                    <PrimeVueColumn
+                        field="transaction.blood.type"
+                        header="Blood Type"
+                    >
+                        <template #body="{ data }">
+                            {{ data.transaction.blood.type }}
+                        </template>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <DropDown
+                                v-model="filterModel.value"
+                                @change="filterCallback"
+                                :options="['positive', 'negative']"
+                                class="p-column-filter"
+                                style="height: 2.2rem"
+                                :showClear="true"
+                            >
+                                <template #value="slotProps">
+                                    <span v-if="slotProps.value">
+                                        {{ slotProps.value }}
+                                    </span>
+                                    <span v-else>
+                                        {{ slotProps.placeholder }}
+                                    </span>
+                                </template>
+                                <template #option="slotProps">
+                                    <span>{{ slotProps.option }}</span>
+                                </template>
+                            </DropDown>
+                        </template>
+                    </PrimeVueColumn>
+
                     <!-- Amount -->
                     <PrimeVueColumn
-                        field="amount"
+                        field="transaction.amount"
                         header="Amount (ml)"
                         dataType="numeric"
                         :sortable="true"
@@ -429,7 +537,7 @@ const downloadExcelFile = () => {
                         style="max-width: 10rem"
                     >
                         <template #body="{ data }">
-                            {{ data.amount }} ml
+                            {{ data.transaction.amount }} ml
                         </template>
                         <template #filter="{ filterModel, filterCallback }">
                             <InputNumber
@@ -440,27 +548,6 @@ const downloadExcelFile = () => {
                                 v-tooltip.top.focus="
                                     'Press enter key to filter'
                                 "
-                            />
-                        </template>
-                    </PrimeVueColumn>
-
-                    <!-- Approve | Reject column -->
-                    <PrimeVueColumn>
-                        <template #body="{ data }">
-                            <PrimeVueButton
-                                type="button"
-                                icon="pi pi-check-circle"
-                                label="Approve"
-                                class="p-button p-button-sm mr-2 approve-btn"
-                                @click="openDiaglog(data.id, true)"
-                            />
-
-                            <PrimeVueButton
-                                type="button"
-                                icon="pi pi-times-circle"
-                                label="Reject"
-                                class="p-button p-button-sm reject-btn"
-                                @click="openDiaglog(data.id, false)"
                             />
                         </template>
                     </PrimeVueColumn>
