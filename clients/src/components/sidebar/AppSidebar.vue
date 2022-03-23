@@ -11,6 +11,7 @@ const menu = [
             },
         ],
     },
+    // Management
     {
         label: "Management",
         items: [
@@ -24,8 +25,30 @@ const menu = [
                 icon: "fa-solid fa-user-group pi-fw",
                 to: { name: "Donors Management" },
             },
+            {
+                label: "Events",
+                icon: "fa-solid fa-calendar-days pi-fw",
+                to: { name: "Events Management" },
+            },
         ],
     },
+    // Activity
+    {
+        label: "Activity",
+        items: [
+            {
+                label: "Donation",
+                icon: "fa-solid fa-hand-holding-droplet fa-droplet pi-fw",
+                to: { name: "Donation Requests" },
+            },
+            {
+                label: "Blood Requests",
+                icon: "fa-solid fa-hospital pi-fw",
+                to: { name: "Blood Requests" },
+            },
+        ],
+    },
+    // Information
     {
         label: "Information",
         items: [

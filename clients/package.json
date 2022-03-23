@@ -6,6 +6,7 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "chart.js": "^3.7.1",
     "dayjs": "^1.11.0",
     "pinia": "^2.0.9",

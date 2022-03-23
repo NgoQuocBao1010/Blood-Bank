@@ -1,7 +1,16 @@
-# Vue 3 + Vite
+### Landing Page installation guide
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+1. Clone repo
+1. Install landing-page dependencies
 
-## Recommended IDE Setup
+    ```bash
+    npm run install-lp
+    ```
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+1. Start landing-page's dev server
+
+    ```bash
+    npm run start-lp
+    ```
+
+1. If everything is successfull, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**

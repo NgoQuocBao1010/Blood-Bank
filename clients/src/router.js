@@ -19,6 +19,29 @@ const router = createRouter({
             name: "Blood Management",
             component: () => import("./views/management/Blood.vue"),
         },
+        {
+            path: "/events-management",
+            name: "Events Management",
+            component: () => import("./views/management/Events.vue"),
+        },
+        // Activity
+        {
+            path: "/donation-requests",
+            name: "Donation Requests",
+            component: () => import("./views/acitivity/DonationRequests.vue"),
+        },
+        {
+            path: "/blood-requests",
+            name: "Blood Requests",
+            component: () => import("./views/acitivity/BloodRequests.vue"),
+        },
+        // Detail
+        {
+            path: "/events/detail/:_id",
+            name: "Event Detail",
+            component: () => import("./views/detail/EventDetail.vue"),
+            props: true,
+        },
         // Information
         {
             path: "/about",
