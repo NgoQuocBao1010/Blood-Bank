@@ -2,7 +2,7 @@
 
 1. GET successful donors, expected JSON return:
 
-    ```json
+    ```
     {
         _id (CMND),
         name (donor name),
@@ -22,7 +22,7 @@
 
 1. GET paticipants waiting for approved
 
-    ```json
+    ```
     {
         _id (CMND),
         name (donor name),
@@ -54,7 +54,7 @@
 ## Events
 
 1. GET events data
-    ```json
+    ```
     {
         _id,
         name,
