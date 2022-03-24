@@ -8,38 +8,17 @@ import { FilterMatchMode } from "primevue/api";
 
 import { formatDate } from "../../utils";
 
-const data = [
-    {
-        _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
-        _event: {
-            _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
-            name: "event",
-        },
-        amount: 500,
-        dateDonated: new Date("2021-09-13").getTime().toString(),
+const { transactionData, participants } = defineProps({
+    transactionData: {
+        type: Array,
+        required: true,
     },
-    {
-        _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
-        _event: {
-            _id: "de169f18-226d-48e0-9579-b18184e2c260",
-            name: "event1",
-        },
-        amount: 420,
-        dateDonated: new Date("2021-09-13").getTime(),
-    },
-    {
-        _id: "6f05348f-5e55-408f-9c70-dddc105e8c7a",
-        _event: {
-            _id: "7cae7784-7523-47ae-b1a4-42308f8fb348",
-            name: "event",
-        },
-        amount: 421,
-        dateDonated: new Date("2021-09-13").getTime(),
-    },
-];
+});
 
 let transactions = $ref(null);
-const events = data ? [...new Set(data.map((row) => row._event.name))] : [];
+const events = transactionData
+    ? [...new Set(transactionData.map((row) => row._event.name))]
+    : [];
 
 // Filter configurations
 let filters = $ref(null);
@@ -65,7 +44,7 @@ const clearFilter = () => {
 };
 
 onBeforeMount(() => {
-    transactions = data.map((row) => {
+    transactions = transactionData.map((row) => {
         let transaction = { ...row };
 
         transaction.dateDonated = new Date(parseInt(transaction.dateDonated));
@@ -127,11 +106,7 @@ onBeforeMount(() => {
         <!-- Columns -->
 
         <!-- Event name -->
-        <PrimeVueColumn
-            field="_event.name"
-            header="Event"
-            style="min-width: 20rem"
-        >
+        <PrimeVueColumn field="_event.name" header="Event">
             <template #body="{ data }">
                 {{ data._event.name }}
             </template>
