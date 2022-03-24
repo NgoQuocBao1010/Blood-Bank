@@ -1,11 +1,14 @@
 <script setup>
-import { onBeforeMount, watch } from "vue";
+import { onBeforeMount, reactive } from "vue";
 import { useRouter } from "vue-router";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
+import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import Calendar from "primevue/calendar";
 import { useToast } from "primevue/usetoast";
+import useVuelidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 
 import { PRIMARY_CITIES } from "../../constants";
 
@@ -29,15 +32,27 @@ const { _id, eventData } = defineProps({
 });
 
 let formData = $ref({
-    name: null,
+    name: "",
     location: {
-        city: null,
-        address: null,
+        city: "",
+        address: "",
     },
     startDate: new Date(),
     duration: 1,
-    detail: null,
+    detail: "",
     posterImg: null,
+});
+
+const formRules = $computed(() => {
+    return {
+        name: { required },
+        duration: { required },
+        location: {
+            city: { required },
+            address: { required },
+        },
+        detail: { required },
+    };
 });
 
 onBeforeMount(() => {
@@ -45,13 +60,31 @@ onBeforeMount(() => {
     // Fetch data if there is no passed props
     const { name } = router.currentRoute.value;
     if (name === "Event Edit" && _id) {
-        formData = eventData ? JSON.parse(eventData) : fectchData;
+        if (eventData) {
+            fixingVuevalidateBugs(JSON.parse(eventData));
+        } else {
+            fixingVuevalidateBugs(fectchData);
+        }
     }
 });
 
+const $v = $(useVuelidate(formRules, formData));
 const toast = useToast();
 let submitting = $ref(false);
-const submitData = () => {
+const submitData = async () => {
+    // Form validation
+    const isCorrect = await $v.$validate();
+    if (!isCorrect) {
+        toast.add({
+            severity: "error",
+            summary: "Form Error",
+            detail: "Please fix your form 🙏",
+            life: 3000,
+        });
+
+        return;
+    }
+    // Make API call to server
     submitting = true;
 
     setTimeout(() => {
@@ -64,8 +97,18 @@ const submitData = () => {
             life: 3000,
         });
 
-        router.push({ name: "Events Management" });
+        // router.push({ name: "Events Management" });
     }, 2000);
+};
+
+// Helpers
+const fixingVuevalidateBugs = (data) => {
+    formData.name = data.name;
+    formData.detail = data.detail;
+    formData.location.city = data.location.city;
+    formData.location.address = data.location.address;
+    formData.duration = data.duration;
+    formData.startDate = new Date(parseInt(data.startDate));
 };
 </script>
 
@@ -84,7 +127,26 @@ const submitData = () => {
                             v-model="formData.name"
                             id="event-name"
                             type="text"
+                            :class="{ 'p-invalid': $v.name.$error }"
                         />
+                        <span v-if="$v.name.$error" class="app-form-error">
+                            This field is required
+                        </span>
+                    </div>
+
+                    <!-- Event detail -->
+                    <div class="field col-12">
+                        <label for="event-detail">Event description</label>
+                        <Textarea
+                            v-model="formData.detail"
+                            :autoResize="true"
+                            rows="5"
+                            cols="30"
+                            :class="{ 'p-invalid': $v.detail.$error }"
+                        />
+                        <span v-if="$v.detail.$error" class="app-form-error">
+                            This field is required
+                        </span>
                     </div>
 
                     <!-- Start Date -->
@@ -106,7 +168,11 @@ const submitData = () => {
                             :min="1"
                             :show-buttons="true"
                             :suffix="formData.duration === 1 ? ` day` : ` days`"
+                            :class="{ 'p-invalid': $v.duration.$error }"
                         />
+                        <span v-if="$v.duration.$error" class="app-form-error">
+                            This field is required
+                        </span>
                     </div>
 
                     <!-- City -->
@@ -117,7 +183,14 @@ const submitData = () => {
                             v-model="formData.location.city"
                             :options="PRIMARY_CITIES"
                             placeholder="Select One"
+                            :class="{ 'p-invalid': $v.location.city.$error }"
                         ></Dropdown>
+                        <span
+                            v-if="$v.location.city.$error"
+                            class="app-form-error"
+                        >
+                            This field is required
+                        </span>
                     </div>
 
                     <!-- Address -->
@@ -127,7 +200,14 @@ const submitData = () => {
                             id="address"
                             type="text"
                             v-model="formData.location.address"
+                            :class="{ 'p-invalid': $v.location.address.$error }"
                         />
+                        <span
+                            v-if="$v.location.address.$error"
+                            class="app-form-error"
+                        >
+                            This field is required
+                        </span>
                     </div>
 
                     <!-- Event Poster -->
@@ -152,11 +232,6 @@ const submitData = () => {
                         />
                     </div>
                 </div>
-
-                <br />
-                <br />
-
-                {{ formData }}
             </div>
         </div>
     </div>

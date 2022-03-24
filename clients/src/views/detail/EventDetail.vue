@@ -273,7 +273,8 @@ onBeforeMount(() => {
                             },
                         }"
                         v-ripple
-                        class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon"
+                        class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon edit-btn"
+                        v-if="event['status'] !== 'passed'"
                     >
                         <i class="fa-solid fa-pen-to-square"></i>
                         Edit
@@ -309,6 +310,7 @@ onBeforeMount(() => {
     &__content {
         flex: 1 1 50%;
         padding: 1rem;
+        position: relative;
 
         img {
             width: 25rem;
@@ -332,6 +334,12 @@ onBeforeMount(() => {
                     margin-left: 0.5rem;
                 }
             }
+        }
+
+        .edit-btn {
+            position: absolute;
+            top: -1rem;
+            right: -1rem;
         }
     }
 }

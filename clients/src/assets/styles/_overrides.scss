@@ -231,6 +231,13 @@
     color: var(--primary-color);
 }
 
+.app-form-error {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--primary-color);
+}
+
 .app-router-link-icon {
     i {
         margin-right: 0.5rem;
