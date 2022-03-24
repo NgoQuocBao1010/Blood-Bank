@@ -42,6 +42,12 @@ const router = createRouter({
             component: () => import("./views/detail/EventDetail.vue"),
             props: true,
         },
+        {
+            path: "/donors/detail/:_id",
+            name: "Donor Detail",
+            component: () => import("./views/detail/DonorDetail.vue"),
+            props: true,
+        },
         // Information
         {
             path: "/about",
