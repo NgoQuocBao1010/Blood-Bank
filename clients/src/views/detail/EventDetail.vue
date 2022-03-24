@@ -7,7 +7,7 @@ import Divider from "primevue/divider";
 import { formatDate } from "../../utils";
 
 const AsyncDonorTable = defineAsyncComponent({
-    loader: () => import("../../components/DonorTable.vue"),
+    loader: () => import("../../components/tables/DonorTable.vue"),
 });
 
 // *** Mock data ***

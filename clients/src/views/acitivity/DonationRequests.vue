@@ -1,5 +1,5 @@
 <script setup>
-import DonorTable from "../../components/DonorTable.vue";
+import DonorTable from "../../components/tables/DonorTable.vue";
 
 // *** Mock data ***
 const donorsData = [
