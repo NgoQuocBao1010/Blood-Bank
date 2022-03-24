@@ -137,7 +137,16 @@ const onRowClick = (payload) => {
         <div class="col-12">
             <div class="card">
                 <!-- Page header -->
-                <h2>Events Management</h2>
+                <div
+                    class="flex justify-content-between align-content-center"
+                    style="width: 100%"
+                >
+                    <h2>Events Management</h2>
+                    <p class="app-note">
+                        * Left click to any row to see more information about
+                        the event *
+                    </p>
+                </div>
 
                 <!-- Events table -->
                 <PrimeVueTable

@@ -18,8 +18,8 @@ const data = {
         city: "Can Tho",
         address: "Can Tho University",
     },
-    startDate: new Date("02/11/2021").getTime().toString(),
-    duration: 3,
+    startDate: new Date("02/11/2022").getTime().toString(),
+    duration: 300,
     detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
 };
 const donorsData = [
@@ -177,7 +177,7 @@ let items = $ref(null);
 
 onBeforeMount(() => {
     event = { ...data };
-    event["startDate"] = new Date();
+    event["startDate"] = new Date(parseInt(event["startDate"]));
 
     const endDate = dayjs(event.startDate).add(event.duration, "day");
     if (dayjs().isAfter(endDate, "day")) {
@@ -226,9 +226,9 @@ onBeforeMount(() => {
                         <!-- Start date -->
                         <li>
                             <b>Start Date: </b>
-                            <span class="info">{{
-                                formatDate(event.startDate)
-                            }}</span>
+                            <span class="info">
+                                {{ formatDate(event.startDate) }}
+                            </span>
                         </li>
                         <!-- Duration -->
                         <li>
