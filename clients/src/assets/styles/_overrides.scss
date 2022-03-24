@@ -227,10 +227,10 @@
 
 body::-webkit-scrollbar,
 .scrollbar-style::-webkit-scrollbar {
-    width: 0.8em;
+    width: 0.6em;
 
     &-track {
-        background: rgba(var(--primary-color-rbg), 0.3) !important;
+        background: transparent;
         border-radius: 1000px;
         margin-block: 10px;
     }

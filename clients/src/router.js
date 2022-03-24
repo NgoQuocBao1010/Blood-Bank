@@ -28,12 +28,12 @@ const router = createRouter({
         {
             path: "/donation-requests",
             name: "Donation Requests",
-            component: () => import("./views/acitivity/DonationRequests.vue"),
+            component: () => import("./views/activity/DonationRequests.vue"),
         },
         {
             path: "/blood-requests",
             name: "Blood Requests",
-            component: () => import("./views/acitivity/BloodRequests.vue"),
+            component: () => import("./views/activity/BloodRequests.vue"),
         },
         // Detail
         {
