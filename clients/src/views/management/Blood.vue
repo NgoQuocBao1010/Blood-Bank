@@ -8,6 +8,7 @@ import { determineStockStatus, JSONtoExcel } from "../../utils";
 
 let bloodData = null;
 let bloods = $ref([]);
+let fetchingData = $ref(true);
 
 let expandedRows = $ref([]);
 const expandAllRows = () => {
@@ -21,24 +22,8 @@ const toggleStockInfo = (event) => {
 };
 
 onBeforeMount(async () => {
-    /* 
-        Calculate each blood category's total quantity and stock status
-        Example of a blood cell
-        {
-            id: str:id
-            name: str
-            quantity: int
-            inStock: bool
-            types: [
-                name: 'positive' | 'negative'
-                bloodType: str
-                status: 'low' | 'out' | 'good' | 'great'
-                displayStatus: str
-            ]
-        }
-    */
-
     const response = await axios.get("http://localhost:5000/api/Blood");
+    fetchingData = false;
     bloodData = response.data;
 
     BLOOD_TYPES.forEach((name) => {
@@ -115,6 +100,7 @@ const downloadExcelFile = () => {
                 <!-- Blood Table -->
                 <PrimeVueTable
                     :value="bloods"
+                    :loading="fetchingData"
                     dataKey="_id"
                     v-model:expandedRows="expandedRows"
                     responsiveLayout="scroll"
@@ -175,6 +161,11 @@ const downloadExcelFile = () => {
                     <!-- Empty data fallback -->
                     <template #empty>
                         No data found. Probably a server problem.
+                    </template>
+
+                    <!-- Loading fallback -->
+                    <template #loading>
+                        <h4 style="text-align: center">Fetching data ...</h4>
                     </template>
 
                     <!-- Expand Icon -->
