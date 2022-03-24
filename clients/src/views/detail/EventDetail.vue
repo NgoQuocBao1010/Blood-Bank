@@ -1,5 +1,6 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
+import { RouterLink } from "vue-router";
 import dayjs from "dayjs";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
@@ -15,7 +16,7 @@ const data = {
     _id: "f822bdb0-6b7e-4681-8c62-93520c3accfc",
     name: "Health and Wellbeing at work",
     location: {
-        city: "Can Tho",
+        city: "Cần Thơ",
         address: "Can Tho University",
     },
     startDate: new Date("02/11/2022").getTime().toString(),
@@ -261,6 +262,22 @@ onBeforeMount(() => {
                         </b>
                     </Divider>
                     <p>{{ event.detail }}</p>
+
+                    <!-- Edit Button -->
+                    <RouterLink
+                        :to="{
+                            name: 'Event Edit',
+                            params: {
+                                _id,
+                                eventData: JSON.stringify(data),
+                            },
+                        }"
+                        v-ripple
+                        class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon"
+                    >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        Edit
+                    </RouterLink>
                 </div>
             </div>
 

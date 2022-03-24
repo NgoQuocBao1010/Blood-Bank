@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, RouterLink } from "vue-router";
 import dayjs from "dayjs";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
@@ -183,6 +183,15 @@ const onRowClick = (payload) => {
                                     class="p-button-outlined mb-2 mr-2"
                                     @click="clearFilter"
                                 />
+
+                                <RouterLink
+                                    :to="{ name: 'Event Create' }"
+                                    v-ripple
+                                    class="p-button p-component mb-2 p-ripple app-router-link-icon"
+                                >
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    New Events
+                                </RouterLink>
                             </div>
 
                             <!-- Search Input -->

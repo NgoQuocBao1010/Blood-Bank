@@ -136,6 +136,12 @@
     }
 }
 
+.p-inputnumber {
+    .p-inputtext:enabled:focus {
+        box-shadow: none !important;
+    }
+}
+
 // Multiselect
 .p-multiselect:not(.p-disabled):hover {
     border-color: var(--primary-color);
@@ -223,6 +229,12 @@
     font-weight: bold;
     font-style: italic;
     color: var(--primary-color);
+}
+
+.app-router-link-icon {
+    i {
+        margin-right: 0.5rem;
+    }
 }
 
 body::-webkit-scrollbar,

@@ -48,6 +48,18 @@ const router = createRouter({
             component: () => import("./views/detail/DonorDetail.vue"),
             props: true,
         },
+        // Form
+        {
+            path: "/event/new/",
+            name: "Event Create",
+            component: () => import("./views/form/EventForm.vue"),
+        },
+        {
+            path: "/event/edit/:_id",
+            name: "Event Edit",
+            component: () => import("./views/form/EventForm.vue"),
+            props: true,
+        },
         // Information
         {
             path: "/about",
