@@ -225,6 +225,22 @@
     color: var(--primary-color);
 }
 
+body::-webkit-scrollbar,
+.scrollbar-style::-webkit-scrollbar {
+    width: 0.8em;
+
+    &-track {
+        background: rgba(var(--primary-color-rbg), 0.3) !important;
+        border-radius: 1000px;
+        margin-block: 10px;
+    }
+
+    &-thumb {
+        background: var(--primary-color);
+        border-radius: 1000px;
+    }
+}
+
 .flex-center {
     display: flex;
     align-items: center;

@@ -120,6 +120,7 @@ onBeforeMount(() => {
                         name="requestFiles"
                         choose-label="Upload Excel File"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        v-if="participants"
                     />
                 </div>
 

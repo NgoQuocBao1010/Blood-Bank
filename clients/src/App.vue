@@ -27,7 +27,7 @@ onMounted(() => {
         <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
 
         <!-- Sidebar -->
-        <div class="layout-sidebar">
+        <div class="layout-sidebar scrollbar-style">
             <AppSidebar />
         </div>
 
