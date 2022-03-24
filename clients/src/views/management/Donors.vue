@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 import InputText from "primevue/inputtext";
-import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
@@ -24,6 +24,7 @@ const donors = [
     },
 ];
 
+// Filter configuration
 let filters = $ref(null);
 const initFilter = () => {
     filters = {
@@ -38,6 +39,14 @@ const initFilter = () => {
 const clearFilter = () => {
     initFilter();
 };
+
+const router = useRouter();
+const onRowClick = (payload) => {
+    // Go to event detail when click a row in the table
+    const { _id: donorId } = payload.data;
+    router.push({ name: "Donor Detail", params: { _id: donorId } });
+};
+
 onBeforeMount(() => {
     initFilter();
 });
@@ -48,21 +57,32 @@ onBeforeMount(() => {
         <div class="col-12">
             <div class="card">
                 <!-- Page headers -->
-                <h2>Donors Management</h2>
+                <div
+                    class="flex justify-content-between align-content-center"
+                    style="width: 100%"
+                >
+                    <h2>Donors Management</h2>
+                    <p class="app-note">
+                        * Left click to any row to see more information about
+                        the donor *
+                    </p>
+                </div>
 
                 <!-- Donors table -->
                 <PrimeVueTable
                     :value="donors"
-                    :paginator="true"
-                    class="p-datatable-gridlines"
-                    :rows="5"
                     dataKey="id"
-                    :rowHover="true"
-                    removableSort
-                    filterDisplay="row"
-                    v-model:filters="filters"
-                    :filters="filters"
+                    class="p-datatable-gridlines"
                     responsiveLayout="scroll"
+                    :rows="5"
+                    rowStyle="cursor: pointer"
+                    @row-click="onRowClick"
+                    :rowHover="true"
+                    :paginator="true"
+                    removableSort
+                    v-model:filters="filters"
+                    filterDisplay="row"
+                    :filters="filters"
                     :globalFilterFields="[
                         'name',
                         'email',

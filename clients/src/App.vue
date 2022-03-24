@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
+import Toast from "primevue/toast";
+
 import AppNavbar from "./components/navbar/AppNavbar.vue";
 import AppSidebar from "./components/sidebar/AppSidebar.vue";
 import AppFooter from "./components/footer/AppFooter.vue";
@@ -27,7 +29,7 @@ onMounted(() => {
         <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
 
         <!-- Sidebar -->
-        <div class="layout-sidebar">
+        <div class="layout-sidebar scrollbar-style">
             <AppSidebar />
         </div>
 
@@ -39,6 +41,8 @@ onMounted(() => {
             <AppFooter v-once />
         </div>
     </main>
+
+    <Toast position="bottom-right" />
 </template>
 
 <style lang="scss"></style>

@@ -8,8 +8,8 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
-import { BLOOD_TYPES } from "../constants";
-import { formatDate } from "../utils";
+import { BLOOD_TYPES } from "../../constants";
+import { formatDate } from "../../utils";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -120,6 +120,7 @@ onBeforeMount(() => {
                         name="requestFiles"
                         choose-label="Upload Excel File"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        v-if="participants"
                     />
                 </div>
 
@@ -345,7 +346,7 @@ onBeforeMount(() => {
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/styles/badge.scss";
+@import "../../assets/styles/badge.scss";
 
 .approve-btn {
     border: none !important;

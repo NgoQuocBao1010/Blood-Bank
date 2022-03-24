@@ -6,6 +6,8 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.35",
+    "@vuelidate/validators": "^2.0.0-alpha.27",
     "axios": "^0.26.1",
     "chart.js": "^3.7.1",
     "dayjs": "^1.11.0",
