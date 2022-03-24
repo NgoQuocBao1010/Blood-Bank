@@ -78,6 +78,13 @@ const router = createRouter({
             component: () => import("./views/error/404Error.vue"),
         },
     ],
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } else {
+            return { top: 0, behavior: "smooth" };
+        }
+    },
 });
 
 /* Changing the name of tab */
