@@ -20,6 +20,16 @@
 
 ## Participants API
 
+1. POST import excel
+    ```
+    {
+        eventId,
+        participants: [{
+            ...
+        }, ]
+    }
+    ```
+
 1. GET paticipants waiting for approved
 
     ```
