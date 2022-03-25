@@ -85,6 +85,7 @@ namespace backend
                 .AllowAnyMethod()
             );
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
