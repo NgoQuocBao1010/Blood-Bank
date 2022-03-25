@@ -18,6 +18,7 @@ namespace backend.Repositories
         
         // Update
         Task<bool> Update(string _id, Blood blood);
+        Task<bool> UpdateQuantity(string _id, int amount);
         
         // Delete
         Task<bool> Delete(string _id);

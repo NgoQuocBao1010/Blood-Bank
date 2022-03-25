@@ -11,6 +11,7 @@ namespace backend.Repositories
         private readonly IMongoCollection<DonorTransaction> _donorTransaction;
         private readonly IMongoCollection<Donor> _donor;
         private readonly IMongoCollection<Blood> _blood;
+
         public DonorTransactionRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
@@ -37,10 +38,19 @@ namespace backend.Repositories
 
             return donorTransaction;
         }
-        
-        public async Task<IEnumerable<DonorTransaction>> GetByDonor(string donorId)
+
+        public async Task<IEnumerable<DonorTransaction>> GetTransactionByDonor(string donorId)
         {
-            var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donor_id, donorId);
+            var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donorId, donorId);
+            var donorTransaction = await _donorTransaction.Find(filter).ToListAsync();
+
+            return donorTransaction;
+        }
+
+        public async Task<IEnumerable<DonorTransaction>> GetPendingTransaction(string donorId)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donorId, donorId)
+                         & Builders<DonorTransaction>.Filter.Eq(dt => dt.status, 0);
             var transactions = await _donorTransaction.Find(filter).ToListAsync();
 
             return transactions;
@@ -53,15 +63,12 @@ namespace backend.Repositories
             return donorTransaction;
         }
 
-        public async Task<bool> Update(string _id, DonorTransaction donorTransaction)
+        public async Task<bool> ApproveParticipants(string _id, string eventId)
         {
-            var filter = Builders<DonorTransaction>.Filter.Eq(d => d._id, _id);
-            var update = Builders<DonorTransaction>.Update
-                .Set(d => d.donate_date, donorTransaction.donate_date)
-                .Set(d => d.volume, donorTransaction.volume)
-                .Set(d => d.donor_id, donorTransaction.donor_id);
-
-
+            var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
+                & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+            
+            var update = Builders<DonorTransaction>.Update.Set(d => d.status, 1);
             var result = await _donorTransaction.UpdateOneAsync(filter, update);
 
             return result.ModifiedCount == 1;
