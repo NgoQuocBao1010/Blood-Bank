@@ -24,7 +24,7 @@ namespace backend.Controllers
         {
             var exist = await _bloodRepository.GetByName(blood.name);
             var id = "";
-            if (exist != null && exist.type.Equals(blood.type))
+            if (exist != null && exist.name.Equals(blood.name) && exist.type.Equals(blood.type))
             {
                 id = "Blood Type Exists!";
             }

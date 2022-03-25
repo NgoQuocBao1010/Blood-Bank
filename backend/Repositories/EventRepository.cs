@@ -39,11 +39,14 @@ namespace backend.Repositories
 
         public async Task<bool> Update(string _id, Event e)
         {
-            var filter = Builders<Event>.Filter.Eq(e => e._id, _id);
+            var filter = Builders<Event>.Filter.Eq(events => events._id, _id);
             var update = Builders<Event>.Update
-                .Set(e => e.name, e.name)
-                .Set(e => e.location, e.location)
-                .Set(e => e.date, e.date);
+                .Set(events => events.name, e.name)
+                .Set(events => events.location.city, e.location.city)
+                .Set(events => events.location.address, e.location.address)
+                .Set(events => events.startDate, e.startDate)
+                .Set(events => events.duration, e.duration)
+                .Set(events => events.detail, e.detail);
 
             var result = await _event.UpdateOneAsync(filter, update);
 
