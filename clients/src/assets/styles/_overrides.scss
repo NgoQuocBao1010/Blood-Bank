@@ -49,6 +49,14 @@
     }
 }
 
+.p-multiselect-panel .p-multiselect-header .p-multiselect-close:focus {
+    box-shadow: inset 0 0 0 0.15rem var(--primary-color) !important;
+}
+
+.p-toast .p-toast-message .p-toast-icon-close:focus {
+    box-shadow: none;
+}
+
 // Ripple in button ?
 // .p-ink-active {
 //     background-color: rgba(var(--primary-color-rbg), 0.4) !important;
@@ -128,6 +136,12 @@
     }
 }
 
+.p-inputnumber {
+    .p-inputtext:enabled:focus {
+        box-shadow: none !important;
+    }
+}
+
 // Multiselect
 .p-multiselect:not(.p-disabled):hover {
     border-color: var(--primary-color);
@@ -152,6 +166,10 @@
     background: var(--primary-color) !important;
 }
 
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    border-color: var(--primary-color) !important;
+}
+
 // Calendar
 .p-datepicker .p-datepicker-header .p-datepicker-prev:focus,
 .p-datepicker .p-datepicker-header .p-datepicker-next:focus {
@@ -172,15 +190,80 @@
     content: none !important;
 }
 
+// Dialog
+.p-dialog .p-dialog-header .p-dialog-header-icon:focus {
+    box-shadow: 0 0 0 0.2rem var(--primary-color) !important;
+}
+
 // Focus state of element
 .p-focus {
     border-color: var(--primary-color) !important;
     box-shadow: 0 0 0 0.1rem var(--primary-color) !important;
 }
 
+// File upload
+.p-fileupload-choose:not(.p-disabled):hover {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+// Breadcumb
+
+.p-breadcrumb ul li .p-menuitem-link:focus {
+    box-shadow: none !important;
+}
+
 // Layout Override
 .layout-sidebar {
     width: 250px;
+}
+
+// ** My custom css
+.app-highlight {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.app-note {
+    font-size: 0.875rem;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--primary-color);
+}
+
+.app-form-error {
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--primary-color);
+}
+
+.app-router-link-icon {
+    i {
+        margin-right: 0.5rem;
+    }
+}
+
+body::-webkit-scrollbar,
+.scrollbar-style::-webkit-scrollbar {
+    width: 0.6em;
+
+    &-track {
+        background: transparent;
+        border-radius: 1000px;
+        margin-block: 10px;
+    }
+
+    &-thumb {
+        background: var(--primary-color);
+        border-radius: 1000px;
+    }
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (min-width: 992px) {

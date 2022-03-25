@@ -36,3 +36,15 @@ app.component("PrimeVueColumn", Column);
 app.component("PrimeVueButton", Button);
 
 app.mount("#app");
+
+// ** Error handler
+app.config.errorHandler = (err, instance, info) => {
+    console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
+    console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
+    console.log("🚀 ~ file: main.js ~ line 41 ~ instance", instance);
+
+    if (!err.response && err.message === "Network Error") {
+        // Handle server cannot reach error (Ex: forget to start the server)
+        router.push({ name: "Server Error" });
+    }
+};

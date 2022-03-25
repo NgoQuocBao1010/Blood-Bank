@@ -1,3 +1,4 @@
+.event-badge,
 .stock-badge,
 .blood-badge {
     border-radius: var(--border-radius);
@@ -53,5 +54,21 @@
 
     &.status-out {
         background: lightgray;
+    }
+}
+
+.event-badge {
+    &.event-passed {
+        background: lightgray;
+    }
+
+    &.event-ongoing {
+        background: #c8e6c9;
+        color: #256029;
+    }
+
+    &.event-upcoming {
+        background: #feedaf;
+        color: #8a5340;
     }
 }

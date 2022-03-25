@@ -59,5 +59,10 @@ namespace backend.Repositories
 
             return result.DeletedCount == 1;
         }
+
+        public void AddDefaultData(List<Hospital> listHospital)
+        {
+            _hospital.InsertMany(listHospital);
+        }
     }
 }
