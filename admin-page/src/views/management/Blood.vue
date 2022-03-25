@@ -1,8 +1,8 @@
 <script setup>
 import { onBeforeMount } from "vue";
-import axios from "axios";
 import OverlayPanel from "primevue/overlaypanel";
 
+import BloodRepo from "../../api/BloodRepo";
 import { BLOOD_TYPES } from "../../constants";
 import { determineStockStatus, JSONtoExcel } from "../../utils";
 
@@ -22,9 +22,9 @@ const toggleStockInfo = (event) => {
 };
 
 onBeforeMount(async () => {
-    const response = await axios.get("http://localhost:5000/api/Blood");
+    const { data } = await BloodRepo.getAll();
     fetchingData = false;
-    bloodData = response.data;
+    bloodData = data;
 
     BLOOD_TYPES.forEach((name) => {
         const data = bloodData.filter((el) => el.name === name);
@@ -72,6 +72,9 @@ onBeforeMount(async () => {
 
 const downloadExcelFile = () => {
     const excelData = bloodData.map((el) => {
+        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
+        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
+        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
         const row = { ...el };
 
         row["Blood Group"] = row["name"];
