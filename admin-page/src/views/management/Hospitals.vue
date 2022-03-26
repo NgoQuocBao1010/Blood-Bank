@@ -33,9 +33,9 @@ onBeforeMount(async () => {
   fetchingData = false;
   hospitals = data.data;
 
-  //   console.log("hospital data: ", hospitals);
+  // console.log("hospital data: ", hospitals);
 
-  initFilters();
+  hospitals && hospitals.length !== 0 && initFilters();
 });
 
 const onRowClick = (payload) => {
@@ -106,6 +106,7 @@ const onRowClick = (payload) => {
                 <InputText
                   placeholder="Keyword Search"
                   style="width: 100%"
+                  v-if="!fetchingData"
                   v-model="filters['global'].value"
                 />
               </span>
@@ -123,11 +124,12 @@ const onRowClick = (payload) => {
             style="min-width: 20rem"
           >
             <template #body="{ data }">
-              {{ data.hospital_name }}
+              {{ data && data.hospital_name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
                 type="text"
+                v-if="!fetchingData"
                 v-model="filterModel.value"
                 @keydown.enter="filterCallback()"
                 class="p-column-filter"
@@ -144,11 +146,12 @@ const onRowClick = (payload) => {
             style="max-width: 18rem"
           >
             <template #body="{ data }">
-              {{ data.address }}
+              {{ data && data.address }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
                 type="text"
+                v-if="!fetchingData"
                 v-model="filterModel.value"
                 @keydown.enter="filterCallback()"
                 class="p-column-filter"
@@ -165,11 +168,12 @@ const onRowClick = (payload) => {
             style="max-width: 6rem"
           >
             <template #body="{ data }">
-              {{ data.phone }}
+              {{ data && data.phone }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
                 type="text"
+                v-if="!fetchingData"
                 v-model="filterModel.value"
                 @keydown.enter="filterCallback()"
                 class="p-column-filter"

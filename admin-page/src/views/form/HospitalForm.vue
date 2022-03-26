@@ -34,10 +34,9 @@ const { name } = router.currentRoute.value;
 onBeforeMount(async () => {
   // Check if this is a Event Edit page
   // Fetch data if there is no passed props
-  const { data } = await HospitalRepo.get(_id);
-  hospitalFetchData = data;
-
   if (name === "Hospital Edit" && _id) {
+    const { data } = await HospitalRepo.get(_id);
+    hospitalFetchData = data;
     if (hospitalData) {
       fixingVuevalidateBugs(JSON.parse(hospitalData));
     } else {

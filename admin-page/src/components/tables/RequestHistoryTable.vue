@@ -4,6 +4,8 @@ import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
+import MultiSelect from "primevue/multiselect";
+import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
 import { BLOOD_TYPES } from "../../constants";
