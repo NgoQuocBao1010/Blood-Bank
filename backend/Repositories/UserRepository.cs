@@ -31,6 +31,13 @@ namespace backend.Repositories
             return user;
         }
 
+        public Task<User> GetByEmail(string email)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.email, email);
+            var user = _user.Find(filter).FirstOrDefaultAsync();
+            return user;
+        }
+
         public async Task<bool> CheckUserEmail(string email)
         {
             var filter = Builders<User>.Filter.Eq(u => u.email, email);
@@ -66,6 +73,11 @@ namespace backend.Repositories
         public void AddDefaultData(IEnumerable<User> listUser)
         {
             _user.InsertMany(listUser);
+        }
+
+        public bool CheckUserPassword(User user, string password)
+        {
+            return user.password.Equals(password);
         }
     }
 }
