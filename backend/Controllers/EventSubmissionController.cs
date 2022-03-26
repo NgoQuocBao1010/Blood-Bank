@@ -20,7 +20,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(EventSubmission eventSubmission)
         {
             var result = await _eventSubmissionRepository.Create(eventSubmission);
-            return new JsonResult(result);
+            return Ok(new {id = result});
         }
 
         [HttpGet("{id}")]
