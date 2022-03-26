@@ -106,6 +106,12 @@ const router = createRouter({
       name: "404 Not found",
       component: () => import("./views/error/404Error.vue"),
     },
+    // Login Page
+    {
+      path: "/login",
+      name: "Login",
+      component: () => import("./views/Login.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
