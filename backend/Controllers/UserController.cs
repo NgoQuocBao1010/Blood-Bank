@@ -60,7 +60,7 @@ namespace backend.Controllers
                 {
                     new("UserID", existedUser._id)
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials =
                     new SigningCredentials(
                         new SymmetricSecurityKey(
