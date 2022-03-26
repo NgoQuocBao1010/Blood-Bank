@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Driver;
@@ -41,9 +40,12 @@ namespace backend.Repositories
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, _id);
             var update = Builders<Request>.Update
-                .Set(r => r.blood_id, request.blood_id)
-                .Set(r => r.volume, request.volume)
-                .Set(r => r.hospital_id, request.hospital_id);
+                .Set(r => r.Date, request.Date)
+                .Set(r => r.RequestQuantity, request.RequestQuantity)
+                .Set(r => r.RequestBlood.Name, request.RequestBlood.Name)
+                .Set(r => r.RequestBlood.Type, request.RequestBlood.Type)
+                .Set(r => r.RequestHospital._id, request.RequestHospital._id)
+                .Set(r => r.RequestHospital.Name, request.RequestHospital.Name);
             
             var result = await _request.UpdateOneAsync(filter, update);
             
