@@ -12,6 +12,11 @@ const router = createRouter({
         },
         // Management
         {
+            path: "/users-management",
+            name: "Users Management",
+            component: () => import("./views/management/Users.vue"),
+        },
+        {
             path: "/donors-management",
             name: "Donors Management",
             component: () => import("./views/management/Donors.vue"),
