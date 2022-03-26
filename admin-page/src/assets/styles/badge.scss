@@ -1,3 +1,4 @@
+.account-badge,
 .event-badge,
 .stock-badge,
 .blood-badge {
@@ -70,5 +71,17 @@
     &.event-upcoming {
         background: #feedaf;
         color: #8a5340;
+    }
+}
+
+.account-badge {
+    &.admin {
+        background: #c8e6c9;
+        color: #256029;
+    }
+
+    &.hospital {
+        background: #ffcdd2;
+        color: #c63737;
     }
 }
