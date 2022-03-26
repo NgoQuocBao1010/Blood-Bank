@@ -5,6 +5,7 @@ import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
 import UserRepo from "../../api/UserRepo";
+import UserCreation from "../../components/form/UserCreation.vue";
 
 let users = $ref(null);
 let fetchingData = $ref(true);
@@ -155,6 +156,9 @@ onBeforeMount(async () => {
                     </PrimeVueColumn>
                 </PrimeVueTable>
             </div>
+
+            <!-- User creation Form -->
+            <UserCreation />
         </div>
     </div>
 </template>
