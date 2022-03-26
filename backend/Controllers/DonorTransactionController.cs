@@ -27,14 +27,6 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(DonorTransaction donorTransaction)
         {
             var id = await _donorTransactionRepository.Create(donorTransaction);
-
-            var donor = await _donorRepository.Get(donorTransaction.donor_id);
-            donor.listTransaction.Add(donorTransaction);
-            await _donorRepository.Update(donorTransaction.donor_id, donor);
-            
-            var blood = await _bloodRepository.GetByName(donor.blood_type);
-            blood.quantity += donorTransaction.volume;
-            await _bloodRepository.Update(blood._id, blood);
             return new JsonResult(id);
         }
 
@@ -61,31 +53,15 @@ namespace backend.Controllers
             return new JsonResult(donorTransaction);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, DonorTransaction donorTransaction)
+        [HttpPut("approve")]
+        public async Task<IActionResult> Update(List<Participant> listParticipants)
         {
-            bool result;
-            var transaction = await _donorTransactionRepository.Get(id);
-            if (transaction == null)
+            var result = false;
+            foreach (var participant in listParticipants)
             {
-                result = false;
+                result = await _donorTransactionRepository.ApproveParticipants(participant._id, participant.eventId);
             }
-            else
-            {
-                var currentVolume = transaction.volume;
-
-                result = await _donorTransactionRepository.Update(id, donorTransaction);
             
-                var donor = await _donorRepository.Get(donorTransaction.donor_id);
-                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor.idNumber);
-
-                await _donorRepository.Update(donorTransaction.donor_id, donor);
-            
-                var blood = await _bloodRepository.GetByName(donor.blood_type);
-                blood.quantity += (donorTransaction.volume - currentVolume);
-                await _bloodRepository.Update(blood._id, blood);
-            }
-           
             return new JsonResult(result);
         }
 
@@ -100,15 +76,7 @@ namespace backend.Controllers
             }
             else
             {
-                var currentVolume = donorTransaction.volume;
                 result = await _donorTransactionRepository.Delete(id);
-                var donor = await _donorRepository.Get(donorTransaction.donor_id);
-                donor.listTransaction = (List<DonorTransaction>) await _donorTransactionRepository.GetByDonor(donor.idNumber);
-                await _donorRepository.Update(donorTransaction.donor_id, donor);
-                
-                var blood = await _bloodRepository.GetByName(donor.blood_type);
-                blood.quantity -= currentVolume;
-                await _bloodRepository.Update(blood._id, blood);
             }
 
             return new JsonResult(result);
