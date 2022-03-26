@@ -48,8 +48,10 @@ namespace backend.Controllers
             var existedUser = await _userRepository.GetByEmail(user.email);
 
             // Wrong email or password.
-            if (existedUser == null || !_userRepository.CheckUserPassword(existedUser, user.password))
-                return BadRequest("Wrong username or password!");
+            if (existedUser == null)
+                return BadRequest("Wrong email!");
+            if (!_userRepository.CheckUserPassword(existedUser, user.password))
+                return BadRequest("Wrong password!");
 
             // Execute login.
             var tokenDescriptor = new SecurityTokenDescriptor
