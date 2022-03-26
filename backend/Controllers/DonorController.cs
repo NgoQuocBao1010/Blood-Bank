@@ -84,6 +84,13 @@ namespace backend.Controllers
         }
 
         [HttpGet("{id}")]
+        public async Task<IActionResult> GetInfo(string id)
+        {
+            var donor = await _donorRepository.Get(id);
+            return new JsonResult(donor);
+        }
+        
+        
         public async Task<IActionResult> Get(string id)
         {
             var result = new List<Donor>();
