@@ -22,9 +22,9 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Blood blood)
         {
-            var exist = await _bloodRepository.GetByName(blood.name);
+            var exist = await _bloodRepository.GetByNameAndType(blood.name, blood.type);
             var id = "";
-            if (exist != null && exist.name.Equals(blood.name) && exist.type.Equals(blood.type))
+            if (exist != null)
             {
                 id = "Blood Type Exists!";
             }
@@ -46,16 +46,6 @@ namespace backend.Controllers
             return new JsonResult(blood);
         }
         
-        [HttpGet("type/{blood_type}")]
-        public async Task<IActionResult> GetByType(string blood_type)
-        {
-            var blood = await _bloodRepository.GetByName(blood_type);
-            if (blood == null)
-            {
-                return NotFound();
-            }
-            return new JsonResult(blood);
-        }
 
         public void AddDefaultData()
         {

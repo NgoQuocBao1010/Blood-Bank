@@ -52,6 +52,16 @@ namespace backend.Repositories
 
             return result.ModifiedCount == 1;
         }
+        
+        public async Task<bool> UpdateParticipant(string _id, int numOfParticipants)
+        {
+            var filter = Builders<Event>.Filter.Eq(events => events._id, _id);
+            var update = Builders<Event>.Update
+                .Set(events => events.participants, numOfParticipants);
+            var result = await _event.UpdateOneAsync(filter, update);
+
+            return result.ModifiedCount == 1;
+        }
 
         public async Task<bool> Delete(string _id)
         {

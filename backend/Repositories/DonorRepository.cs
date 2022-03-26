@@ -24,7 +24,7 @@ namespace backend.Repositories
         public async Task<string> Create(Donor donor)
         {
             await _donor.InsertOneAsync(donor);
-            return "Create Participants Successfully";
+            return "Create Successfully";
         }
 
         public Task<Donor> Get(string idNumber)

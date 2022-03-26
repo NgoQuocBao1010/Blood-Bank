@@ -13,12 +13,12 @@ namespace backend.Repositories
         
         // Read
         Task<Blood> Get(string _id);
-        Task<Blood> GetByName(string name);
+        Task<Blood> GetByNameAndType(string name, string type);
         Task<IEnumerable<Blood>> Get();
         
         // Update
         Task<bool> Update(string _id, Blood blood);
-        Task<bool> UpdateQuantity(string _id, int amount);
+        Task<bool> UpdateQuantity(string name, string type, int amount);
         
         // Delete
         Task<bool> Delete(string _id);
