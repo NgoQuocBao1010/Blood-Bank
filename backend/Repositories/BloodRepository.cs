@@ -65,6 +65,18 @@ namespace backend.Repositories
             
             return result.ModifiedCount == 1;
         }
+        
+        public async Task<bool> UpdateQuantity(string _id, int amount)
+        {
+            var blood = await Get(_id);
+            var quantity = blood.quantity;
+            var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
+            var update = Builders<Blood>.Update
+                .Set(b => b.quantity, quantity + amount);
+            var result = await _blood.UpdateOneAsync(filter, update);
+            
+            return result.ModifiedCount == 1;
+        }
 
         public async Task<bool> Delete(string _id)
         {
