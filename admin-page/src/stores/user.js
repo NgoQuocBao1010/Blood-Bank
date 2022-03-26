@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import router from "../router";
 
 import UserRepo from "../api/UserRepo";
 
@@ -19,8 +20,6 @@ export const useUserStore = defineStore("user", {
             localStorage.setItem("userToken", this.token);
         },
         verifyToken() {
-            console.log("Make API call to verify token");
-
             if (this.token) {
                 this.email = "admin@gmail.com";
                 this.isLoggedIn = true;
@@ -39,6 +38,8 @@ export const useUserStore = defineStore("user", {
         logout() {
             localStorage.removeItem("userToken");
             this.$reset();
+
+            router.push({ name: "About" });
         },
     },
 });
