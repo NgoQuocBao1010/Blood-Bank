@@ -4,8 +4,6 @@ import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
-import MultiSelect from "primevue/multiselect";
-import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
 import { BLOOD_TYPES } from "../../constants";
@@ -158,23 +156,6 @@ onBeforeMount(() => {
       v-if="isAcitivy"
     ></PrimeVueColumn>
 
-    <!-- Request's ID -->
-    <PrimeVueColumn field="_id" header="Request ID" style="min-width: 12rem">
-      <template #body="{ data }">
-        {{ data._id }}
-      </template>
-      <template #filter="{ filterModel, filterCallback }">
-        <InputText
-          type="text"
-          v-model="filterModel.value"
-          @keydown.enter="filterCallback()"
-          class="p-column-filter"
-          :placeholder="`Search by request ID`"
-          v-tooltip.top.focus="'Press enter key to filter'"
-        />
-      </template>
-    </PrimeVueColumn>
-
     <!-- Hospital name -->
     <PrimeVueColumn
       field="hospital_name"
@@ -192,28 +173,6 @@ onBeforeMount(() => {
           @keydown.enter="filterCallback()"
           class="p-column-filter"
           :placeholder="`Search by hospital's name`"
-          v-tooltip.top.focus="'Press enter key to filter'"
-        />
-      </template>
-    </PrimeVueColumn>
-
-    <!-- Hospital's ID -->
-    <PrimeVueColumn
-      field="hospital_id"
-      header="Hospital ID"
-      style="min-width: 12rem"
-      v-if="isAcitivy"
-    >
-      <template #body="{ data }">
-        {{ data.hospital_id }}
-      </template>
-      <template #filter="{ filterModel, filterCallback }">
-        <InputText
-          type="text"
-          v-model="filterModel.value"
-          @keydown.enter="filterCallback()"
-          class="p-column-filter"
-          :placeholder="`Search by hospital ID`"
           v-tooltip.top.focus="'Press enter key to filter'"
         />
       </template>

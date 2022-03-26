@@ -1,9 +1,7 @@
 <script setup>
-import { onBeforeMount, reactive } from "vue";
+import { onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import InputText from "primevue/inputtext";
-import InputNumber from "primevue/inputnumber";
-import Textarea from "primevue/textarea";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";

@@ -49,7 +49,7 @@ const requestHistory = [
   },
 ];
 // *** END of mock data **
-const props = defineProps({
+const { _id } = defineProps({
   _id: String,
 });
 
@@ -64,7 +64,7 @@ const home = $ref({
 let items = $ref(null);
 
 onBeforeMount(async () => {
-  const { data } = await HospitalRepo.get(props._id);
+  const { data } = await HospitalRepo.get(_id);
   hospital = data;
   items = [
     {
@@ -88,7 +88,7 @@ onBeforeMount(async () => {
       <div class="card">
         <div class="card__content">
           <div class="card__header">
-            <h2 class="card-title">{{ hospital.hospital_name }}</h2>
+            <h2 class="card-title">{{ hospital && hospital.hospital_name }}</h2>
             <!-- Edit Button -->
             <RouterLink
               :to="{
@@ -111,15 +111,15 @@ onBeforeMount(async () => {
             <div class="section">
               <p>
                 <i class="fa-solid fa-passport"></i>
-                {{ hospital._id }}
+                {{ hospital && hospital._id }}
               </p>
               <p>
                 <i class="fa-solid fa-location-pin"></i>
-                {{ hospital.address }}
+                {{ hospital && hospital.address }}
               </p>
               <p>
                 <i class="fa-solid fa-phone"></i>
-                {{ hospital.phone }}
+                {{ hospital && hospital.phone }}
               </p>
             </div>
           </div>

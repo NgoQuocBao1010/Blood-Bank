@@ -3,8 +3,6 @@ import { onBeforeMount, onMounted } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import dayjs from "dayjs";
 import InputText from "primevue/inputtext";
-import MultiSelect from "primevue/multiselect";
-import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
 import { formatDate } from "../../utils";
@@ -106,7 +104,7 @@ const onRowClick = (payload) => {
               <span class="p-input-icon-left mb-2">
                 <i class="pi pi-search" />
                 <InputText
-                  placeholder="Search by any infor"
+                  placeholder="Keyword Search"
                   style="width: 100%"
                   v-model="filters['global'].value"
                 />
