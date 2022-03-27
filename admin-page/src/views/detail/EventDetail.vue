@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
 
+import EventRepo from "../../api/EventRepo";
 import { formatDate } from "../../utils";
 
 const AsyncDonorTable = defineAsyncComponent({
@@ -12,17 +13,6 @@ const AsyncDonorTable = defineAsyncComponent({
 });
 
 // *** Mock data ***
-const data = {
-    _id: "f822bdb0-6b7e-4681-8c62-93520c3accfc",
-    name: "Health and Wellbeing at work",
-    location: {
-        city: "Cần Thơ",
-        address: "Can Tho University",
-    },
-    startDate: new Date("02/11/2022").getTime().toString(),
-    duration: 300,
-    detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-};
 const donorsData = [
     {
         _id: "800000100001",
@@ -166,7 +156,8 @@ const props = defineProps({
     _id: String,
 });
 
-let event = $ref(null);
+let event = $ref();
+let catchedData = $ref({});
 let showDonorTable = $ref(false);
 
 // Naviagtion settings
@@ -176,7 +167,10 @@ const home = $ref({
 });
 let items = $ref(null);
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+    const { data } = await EventRepo.getById(props._id);
+
+    catchedData = JSON.stringify(data);
     event = { ...data };
     event["startDate"] = new Date(parseInt(event["startDate"]));
 
@@ -215,7 +209,7 @@ onBeforeMount(() => {
 
                 <!-- Right content -->
                 <div class="card__content">
-                    <h2 class="event-title">{{ event.name }}</h2>
+                    <h2 class="event-title">{{ event?.name }}</h2>
 
                     <!-- Overview information -->
                     <Divider>
@@ -228,29 +222,29 @@ onBeforeMount(() => {
                         <li>
                             <b>Start Date: </b>
                             <span class="info">
-                                {{ formatDate(event.startDate) }}
+                                {{ formatDate(event?.startDate) }}
                             </span>
                         </li>
                         <!-- Duration -->
                         <li>
                             <b>Duration: </b>
-                            <span class="info">{{ event.duration }} days</span>
+                            <span class="info">{{ event?.duration }} days</span>
                         </li>
                         <!-- Status -->
                         <li>
                             <b>Status: </b>
                             <span
-                                :class="`info event-badge event-${event.status}`"
+                                :class="`info event-badge event-${event?.status}`"
                             >
-                                {{ event.status }}
+                                {{ event?.status }}
                             </span>
                         </li>
                         <!-- Address -->
                         <li>
                             <b>Address: </b>
                             <span class="info">
-                                {{ event.location.address }},
-                                {{ event.location.city }}
+                                {{ event?.location.address }},
+                                {{ event?.location.city }}
                             </span>
                         </li>
                     </ul>
@@ -261,7 +255,7 @@ onBeforeMount(() => {
                             Event Description
                         </b>
                     </Divider>
-                    <p>{{ event.detail }}</p>
+                    <p>{{ event?.detail }}</p>
 
                     <!-- Edit Button -->
                     <RouterLink
@@ -269,12 +263,12 @@ onBeforeMount(() => {
                             name: 'Event Edit',
                             params: {
                                 _id,
-                                eventData: JSON.stringify(data),
+                                eventData: catchedData,
                             },
                         }"
                         v-ripple
                         class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon edit-btn"
-                        v-if="event['status'] !== 'passed'"
+                        v-if="event?.status !== 'passed'"
                     >
                         <i class="fa-solid fa-pen-to-square"></i>
                         Edit
