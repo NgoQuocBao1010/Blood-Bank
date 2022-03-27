@@ -19,6 +19,6 @@ namespace backend.Repositories
         // Delete
         Task<bool> Delete(string _id);
 
-        void AddDefaultData(List<Hospital> listHospital);
+        void AddDefaultData(IEnumerable<Hospital> listHospital);
     }
 }

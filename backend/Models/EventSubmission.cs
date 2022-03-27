@@ -11,6 +11,7 @@ namespace backend.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string EventId { get; set; }
 
+        public string IdCardNumber { get; set; }
         public string FullName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }

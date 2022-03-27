@@ -13,8 +13,12 @@ namespace backend.Repositories
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Event>(nameof(Event));
-
             _event = collection;
+        }
+        
+        public void AddDefaultData(IEnumerable<Event> listEvent)
+        {
+            _event.InsertMany(listEvent);
         }
 
         public async Task<string> Create(Event e)
