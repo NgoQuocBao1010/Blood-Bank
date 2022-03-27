@@ -2,6 +2,10 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
+const getKeyByValue = (object, value) => {
+    return Object.keys(object).find((key) => object[key] === value);
+};
+
 const determineStockStatus = (value) => {
     if (value === 0) return { status: "out", displayStatus: "out of stock" };
 
@@ -19,4 +23,8 @@ const formatDate = (date) => {
     return day.format("DD/MM/YYYY");
 };
 
-export { determineStockStatus, formatDate };
+const converToDate = (stringDate) => {
+    return dayjs(stringDate, "DD/MM/YYYY", true).toDate();
+};
+
+export { determineStockStatus, formatDate, getKeyByValue, converToDate };

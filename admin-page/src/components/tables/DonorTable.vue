@@ -6,12 +6,14 @@ import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
+import Dialog from "primevue/dialog";
 import { FilterMatchMode } from "primevue/api";
 
+import { useEventStore } from "../../stores/event";
 import DonorsHelpers from "../../utils/helpers/Donors";
 import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
-import { JSONtoExcel } from "../../utils/excel";
+import { JSONtoExcel, excelToJson } from "../../utils/excel";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -25,11 +27,8 @@ const { donorsData, participants } = defineProps({
 });
 
 let donors = $ref(null);
-const events = participants
-    ? [...new Set(donorsData.map((don) => don.transaction.eventDonated.name))]
-    : null;
-
 let selectedDonors = $ref([]);
+const eventStore = useEventStore();
 
 // Filter configurations
 let filters = $ref(null);
@@ -64,7 +63,7 @@ const clearFilter = () => {
     initFilter();
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
     initFilter();
 
     donors = JSON.parse(JSON.stringify(donorsData));
@@ -76,11 +75,31 @@ onBeforeMount(() => {
         );
         return donor;
     });
+
+    if (!eventStore.events) await eventStore.setEvents();
 });
 
 const downloadExcel = () => {
-    const excelData = DonorsHelpers.transformRows(donorsData);
+    const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
     JSONtoExcel(excelData, "Pending_Donors");
+};
+
+let newParticipants = $ref({
+    eventID: null,
+    listParticipants: null,
+    files: null,
+});
+const selectEventsDialog = $ref(false);
+const onSelectExcel = (event) => {
+    newParticipants.files = event.files[0];
+    selectEventsDialog = true;
+};
+const importExcel = async () => {
+    const data = await excelToJson(newParticipants.files);
+    newParticipants.listParticipants = DonorsHelpers.reformAfterExcel(data);
+    selectEventsDialog = false;
+
+    console.log(newParticipants);
 };
 </script>
 
@@ -130,6 +149,7 @@ const downloadExcel = () => {
 
                     <FileUpload
                         mode="basic"
+                        @select="onSelectExcel($event)"
                         name="requestFiles"
                         choose-label="Upload Excel File"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
@@ -235,7 +255,7 @@ const downloadExcel = () => {
                 <DropDown
                     v-model="filterModel.value"
                     @change="filterCallback"
-                    :options="events"
+                    :options="eventStore.names"
                     class="p-column-filter"
                     style="height: 2.2rem"
                     :showClear="true"
@@ -356,6 +376,51 @@ const downloadExcel = () => {
             />
         </template>
     </PrimeVueTable>
+
+    {{ newParticipants.eventID }}
+
+    <!-- Event choosing dialog -->
+    <Dialog
+        header="Which event that these participants from?"
+        v-model:visible="selectEventsDialog"
+        :style="{ width: '50vw' }"
+        :modal="true"
+    >
+        <DropDown
+            v-model="newParticipants.eventID"
+            :options="eventStore.activeEvents"
+            optionValue="_id"
+            class="p-column-filter"
+            placeholder="Choose event"
+            style="width: 100%"
+            :showClear="true"
+        >
+            <template #value="slotProps">
+                <span v-if="slotProps.value">
+                    {{ eventStore.getEventById(slotProps.value)?.name }}
+                </span>
+                <span v-else>
+                    {{ slotProps.placeholder }}
+                </span>
+            </template>
+            <template #option="slotProps">
+                <span>{{ slotProps.option.name }}</span>
+            </template>
+        </DropDown>
+
+        <template #footer>
+            <PrimeVueButton
+                label="Import"
+                icon="pi pi-plus-circle"
+                @click="importExcel"
+            />
+            <PrimeVueButton
+                label="Close"
+                icon="pi pi-times"
+                @click="selectEventsDialog = false"
+            />
+        </template>
+    </Dialog>
 </template>
 
 <style lang="scss" scoped>

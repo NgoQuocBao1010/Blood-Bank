@@ -16,32 +16,33 @@ const JSONtoExcel = (jsonData, name = "unknown") => {
 
 /* convert excel file to javascript object */
 const excelToJson = (exelFile) => {
-    const reader = new FileReader();
-    let result = {};
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        let result = {};
 
-    reader.onload = (e) => {
-        let data = e.target.result;
-        data = new Uint8Array(data);
-        let array = new Array();
+        reader.onload = (e) => {
+            let data = e.target.result;
+            data = new Uint8Array(data);
+            let array = new Array();
 
-        for (let i = 0; i != data.length; ++i)
-            array[i] = String.fromCharCode(data[i]);
+            for (let i = 0; i != data.length; ++i)
+                array[i] = String.fromCharCode(data[i]);
 
-        const bstr = array.join("");
-        const workbook = readExcel(bstr, {
-            type: "binary",
-        });
-        const first_sheet_name = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[first_sheet_name];
+            const bstr = array.join("");
+            const workbook = readExcel(bstr, {
+                type: "binary",
+            });
+            const first_sheet_name = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[first_sheet_name];
 
-        result = utils.sheet_to_json(worksheet, {
-            raw: true,
-        });
+            result = utils.sheet_to_json(worksheet, {
+                raw: true,
+            });
+            resolve(result);
+        };
 
-        console.log(result);
-    };
-
-    reader.readAsArrayBuffer(exelFile);
+        reader.readAsArrayBuffer(exelFile);
+    });
 };
 
 export { excelToJson, JSONtoExcel };
