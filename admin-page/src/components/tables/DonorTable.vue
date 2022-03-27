@@ -8,8 +8,10 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
+import DonorsHelpers from "../../utils/helpers/Donors";
 import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
+import { JSONtoExcel } from "../../utils/excel";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -24,7 +26,7 @@ const { donorsData, participants } = defineProps({
 
 let donors = $ref(null);
 const events = participants
-    ? [...new Set(donorsData.map((don) => don.transaction._event.name))]
+    ? [...new Set(donorsData.map((don) => don.transaction.eventDonated.name))]
     : null;
 
 let selectedDonors = $ref([]);
@@ -40,7 +42,7 @@ const initFilter = () => {
             value: null,
             matchMode: FilterMatchMode.DATE_IS,
         },
-        "transaction._event.name": {
+        "transaction.eventDonated.name": {
             value: null,
             matchMode: FilterMatchMode.EQUALS,
         },
@@ -63,13 +65,23 @@ const clearFilter = () => {
 };
 
 onBeforeMount(() => {
-    donors = donorsData.map((row) => {
+    initFilter();
+
+    donors = JSON.parse(JSON.stringify(donorsData));
+    donors = donors.map((row) => {
         let donor = { ...row };
-        donor.transaction.dateDonated = new Date(donor.transaction.dateDonated);
+
+        donor.transaction.dateDonated = new Date(
+            parseInt(donor.transaction.dateDonated)
+        );
         return donor;
     });
-    initFilter();
 });
+
+const downloadExcel = () => {
+    const excelData = DonorsHelpers.transformRows(donorsData);
+    JSONtoExcel(excelData, "Pending_Donors");
+};
 </script>
 
 <template>
@@ -90,7 +102,7 @@ onBeforeMount(() => {
             'name',
             '_id',
             'transaction.dateDonated',
-            'transaction._event.name',
+            'transaction.eventDonated.name',
             'transaction.blood.name',
             'transaction.blood.type',
             'transaction.amount',
@@ -112,6 +124,7 @@ onBeforeMount(() => {
                         type="button"
                         icon="pi pi-file-excel"
                         label="Export to Excel"
+                        @click="downloadExcel"
                         class="p-button-outlined mb-2 mr-2"
                     />
 
@@ -210,13 +223,13 @@ onBeforeMount(() => {
 
         <!-- Event name -->
         <PrimeVueColumn
-            field="transaction._event.name"
+            field="transaction.eventDonated.name"
             header="Event"
             style="min-width: 250px; max-width: 12rem"
             v-if="participants"
         >
             <template #body="{ data }">
-                {{ data.transaction._event.name }}
+                {{ data.transaction.eventDonated.name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
                 <DropDown
