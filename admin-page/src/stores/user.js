@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import router from "../router";
+
+import UserRepo from "../api/UserRepo";
 
 export const useUserStore = defineStore("user", {
     state: () => {
@@ -17,8 +20,6 @@ export const useUserStore = defineStore("user", {
             localStorage.setItem("userToken", this.token);
         },
         verifyToken() {
-            console.log("Make API call to verify token");
-
             if (this.token) {
                 this.email = "admin@gmail.com";
                 this.isLoggedIn = true;
@@ -26,8 +27,10 @@ export const useUserStore = defineStore("user", {
 
             return this.token ? false : true;
         },
-        login(email, password) {
-            const authToken = "45808de6-ce77-436e-b698-c64d8f3148ae";
+        async login(email, password) {
+            const { data } = await UserRepo.getToken(email, password);
+
+            const authToken = data.token;
             this.setToken(authToken);
             this.email = email;
             this.isLoggedIn = true;
@@ -35,6 +38,8 @@ export const useUserStore = defineStore("user", {
         logout() {
             localStorage.removeItem("userToken");
             this.$reset();
+
+            router.push({ name: "About" });
         },
     },
 });

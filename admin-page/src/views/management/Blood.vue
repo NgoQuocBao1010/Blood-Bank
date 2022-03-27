@@ -15,7 +15,7 @@ const expandAllRows = () => {
     expandedRows = bloods.filter((el) => el._id);
 };
 
-const stockInfo = $ref(null);
+let stockInfo = $ref(null);
 const toggleStockInfo = (event) => {
     // Toggle info button about stock status
     stockInfo.toggle(event);

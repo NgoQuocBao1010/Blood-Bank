@@ -12,11 +12,12 @@ namespace backend.Repositories
         
         // Read
         Task<DonorTransaction> Get(string _id);
-        Task<IEnumerable<DonorTransaction>> GetByDonor(string donorId);
+        Task<IEnumerable<DonorTransaction>> GetPendingTransaction(string donorId);
         Task<IEnumerable<DonorTransaction>> Get();
-        
+
+        Task<IEnumerable<DonorTransaction>> GetTransactionByDonor(string donorId);
         // Update
-        Task<bool> Update(string _id, DonorTransaction donorTransaction);
+        Task<bool> ApproveParticipants(string _id, string eventId);
         
         // Delete
         Task<bool> Delete(string _id);

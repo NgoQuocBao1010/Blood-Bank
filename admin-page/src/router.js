@@ -12,6 +12,11 @@ const router = createRouter({
     },
     // Management
     {
+      path: "/users-management",
+      name: "Users Management",
+      component: () => import("./views/management/Users.vue"),
+    },
+    {
       path: "/donors-management",
       name: "Donors Management",
       component: () => import("./views/management/Donors.vue"),
@@ -26,6 +31,7 @@ const router = createRouter({
       name: "Events Management",
       component: () => import("./views/management/Events.vue"),
     },
+
     {
       path: "/hospitals-management",
       name: "Hospitals Management",
@@ -42,6 +48,7 @@ const router = createRouter({
       name: "Blood Requests",
       component: () => import("./views/activity/BloodRequests.vue"),
     },
+
     // Detail
     {
       path: "/events/detail/:_id",
@@ -55,6 +62,7 @@ const router = createRouter({
       component: () => import("./views/detail/DonorDetail.vue"),
       props: true,
     },
+
     {
       path: "/hospitals/detail/:_id",
       name: "Hospital Detail",

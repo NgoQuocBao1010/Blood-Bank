@@ -16,6 +16,11 @@ const menu = [
     label: "Management",
     items: [
       {
+        label: "Users",
+        icon: "fa-solid fa-user pi-fw",
+        to: { name: "Users Management" },
+      },
+      {
         label: "Blood",
         icon: "fa-solid fa-droplet pi-fw",
         to: { name: "Blood Management" },
