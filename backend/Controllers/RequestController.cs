@@ -12,15 +12,19 @@ namespace backend.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestRepository _requestRepository;
+        private readonly IHospitalRepository _hospitalRepository;
 
-        public RequestController(IRequestRepository requestRepository)
+        public RequestController(IRequestRepository requestRepository, IHospitalRepository hospitalRepository)
         {
             _requestRepository = requestRepository;
+            _hospitalRepository = hospitalRepository;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Request request)
         {
+            var hospital = _hospitalRepository.Get(request.Hospital._id);
+            request.Hospital.Name = hospital.Result.hospital_name;
             var result = await _requestRepository.Create(request);
             return Ok(new {id = result});
         }
