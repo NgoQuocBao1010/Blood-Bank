@@ -1,20 +1,21 @@
 <script setup>
 import { onBeforeMount, onMounted } from "vue";
 import { useRouter, RouterLink } from "vue-router";
-import dayjs from "dayjs";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
 import EventRepo from "../../api/EventRepo";
+import EventHelper from "../../utils/helpers/Event";
+import { useEventStore } from "../../stores/event";
 import { formatDate } from "../../utils";
+import { PRIMARY_CITIES } from "../../constants";
 
 const router = useRouter();
-let events = $ref();
+const eventStore = useEventStore();
 let fetchingEvent = $ref(true);
 const EVENT_STATUS = ["passed", "ongoing", "upcoming"];
-let cities = $ref([]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -34,26 +35,9 @@ const clearFilter = () => {
 onBeforeMount(async () => {
     initFilters();
 
-    const { data } = await EventRepo.getAll();
-    events = data.map((row) => {
-        const event = { ...row };
-
-        event["startDate"] = new Date(parseInt(event["startDate"]));
-
-        // Check status of the event
-        const endDate = dayjs(event.startDate).add(event.duration, "day");
-        if (dayjs().isAfter(endDate, "day")) {
-            event["status"] = "passed";
-        } else if (dayjs().isBefore(event.startDate, "day")) {
-            event["status"] = "upcoming";
-        } else {
-            event["status"] = "ongoing";
-        }
-
-        cities.push(event.location.city);
-        return event;
-    });
-    cities = [...new Set(cities)];
+    if (!eventStore.events) {
+        await eventStore.setEvents();
+    }
     fetchingEvent = false;
 });
 
@@ -82,7 +66,7 @@ const onRowClick = (payload) => {
 
                 <!-- Events table -->
                 <PrimeVueTable
-                    :value="events"
+                    :value="eventStore.events"
                     :loading="fetchingEvent"
                     data-key="_id"
                     class="p-datatable-gridlines"
@@ -220,7 +204,7 @@ const onRowClick = (payload) => {
                             <MultiSelect
                                 v-model="filterModel.value"
                                 @change="filterCallback()"
-                                :options="cities"
+                                :options="PRIMARY_CITIES"
                                 optionLabel=""
                                 placeholder="Select location"
                                 class="p-column-filter"
