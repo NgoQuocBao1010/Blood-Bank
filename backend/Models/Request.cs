@@ -3,13 +3,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace backend.Models
 {
-    public abstract class RequestBlood
+    public class RequestBlood
     {
         public string Name { get; set; }
         public string Type { get; set; }
     }
 
-    public abstract class RequestHospital
+    public class RequestHospital
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
@@ -23,8 +23,8 @@ namespace backend.Models
         public string _id { get; set; }
         
         public string Date { get; set; }
-        public string RequestQuantity { get; set; }
-        public RequestBlood RequestBlood { get; set; }
-        public RequestHospital RequestHospital { get; set; }
+        public int Quantity { get; set; }
+        public RequestBlood Blood { get; set; }
+        public RequestHospital Hospital { get; set; }
     }
 }

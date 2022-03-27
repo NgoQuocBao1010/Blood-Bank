@@ -41,11 +41,11 @@ namespace backend.Repositories
             var filter = Builders<Request>.Filter.Eq(r => r._id, _id);
             var update = Builders<Request>.Update
                 .Set(r => r.Date, request.Date)
-                .Set(r => r.RequestQuantity, request.RequestQuantity)
-                .Set(r => r.RequestBlood.Name, request.RequestBlood.Name)
-                .Set(r => r.RequestBlood.Type, request.RequestBlood.Type)
-                .Set(r => r.RequestHospital._id, request.RequestHospital._id)
-                .Set(r => r.RequestHospital.Name, request.RequestHospital.Name);
+                .Set(r => r.Quantity, request.Quantity)
+                .Set(r => r.Blood.Name, request.Blood.Name)
+                .Set(r => r.Blood.Type, request.Blood.Type)
+                .Set(r => r.Hospital._id, request.Hospital._id)
+                .Set(r => r.Hospital.Name, request.Hospital.Name);
             
             var result = await _request.UpdateOneAsync(filter, update);
             

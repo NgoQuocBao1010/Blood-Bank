@@ -22,7 +22,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(Request request)
         {
             var result = await _requestRepository.Create(request);
-            return Ok(new {result});
+            return Ok(new {id = result});
         }
 
         [HttpGet("{id}")]
