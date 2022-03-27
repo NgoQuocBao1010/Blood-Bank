@@ -186,3 +186,96 @@
     }
     ```
     
+## User
+
+1. GET all user -> Endpoint: api/user
+    ```
+    [
+        {
+            "_id": "string",
+            "email": "string",
+            "password": "string",
+            "isAdmin": boolean,
+            "hospital_id": "string"
+        }
+    ]
+    ```
+
+2. GET user by id -> Endpoint: api/user/{id}
+    ```
+    {
+        "_id": "string",
+        "email": "string",
+        "password": "string",
+        "isAdmin": boolean,
+        "hospital_id": "string"
+    }
+    ```
+
+3. POST create user -> Endpoint: api/user
+    ```
+    {
+        "email": "string",
+        "password": "string",
+        "isAdmin": boolean,
+        "hospital_id": "string"
+    }
+    ```
+4. POST user login -> Endpoint: api/user/login
+    ```
+    {
+        "email": "string",
+        "password": "string"
+    }
+    ```
+
+## Event Submission
+
+1. GET all event submission -> Endpoint: api/eventSubmission
+    ```
+    [
+        {
+            "_id": "string",
+            "eventId": "string",
+            "idCardNumber": "string",
+            "fullName": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "gender": "string",
+            "dob": "string",
+            "latestDonationDate": "string"
+        }
+    ]
+    ```
+
+2. GET event submission by id -> Endpoint: api/eventSubmission/{id}
+    ```
+    {
+        "_id": "string",
+        "eventId": "string",
+        "idCardNumber": "string",
+        "fullName": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "gender": "string",
+        "dob": "string",
+        "latestDonationDate": "string"
+    }
+    ```
+
+3. POST create event submission -> Endpoint: api/eventSubmission
+    ```
+    {
+        "eventId": "string",
+        "idCardNumber": "string",
+        "fullName": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "gender": "string",
+        "dob": "string",
+        "latestDonationDate": "string"
+    }
+    ```
