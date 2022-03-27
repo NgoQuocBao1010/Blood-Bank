@@ -22,7 +22,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(EventSubmission eventSubmission)
         {
             var result = await _eventSubmissionRepository.Create(eventSubmission);
-            return new JsonResult(result);
+            return Ok(new {id = result});
         }
 
         [HttpGet("{id}")]
@@ -52,6 +52,12 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, EventSubmission eventSubmission)
         {
+            var exist = await _eventSubmissionRepository.Get(id);
+            if (exist == null)
+            {
+                return NotFound();
+            }
+            
             var result = await _eventSubmissionRepository.Update(id, eventSubmission);
             return new JsonResult(result);
         }
@@ -59,6 +65,12 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            var exist = await _eventSubmissionRepository.Get(id);
+            if (exist == null)
+            {
+                return NotFound();
+            }
+            
             var result = await _eventSubmissionRepository.Delete(id);
             return new JsonResult(result);
         }

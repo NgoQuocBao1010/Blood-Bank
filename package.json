@@ -4,8 +4,8 @@
     "description": "<br/>",
     "main": "index.js",
     "scripts": {
-        "install-admin": "cd clients && npm i",
-        "start-admin": "cd clients && npm run dev",
+        "install-admin": "cd admin-page && npm i",
+        "start-admin": "cd admin-page && npm run dev",
         "install-lp": "cd landing-page && npm i",
         "start-lp": "cd landing-page && npm run dev",
         "start-sv": "cd backend && dotnet run",
