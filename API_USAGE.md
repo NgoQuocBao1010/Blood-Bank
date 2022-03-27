@@ -173,6 +173,10 @@
     }
     ```
     
+3. DELETE events data -> Endpoint: api/Event/{_id}
+
+
+    
 ## Blood
 
 1. GET blood data -> Endpoint: api/Blood
