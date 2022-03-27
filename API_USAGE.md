@@ -96,29 +96,28 @@
 
 2. POST (import from excel) -> Endpoint: api/Donor
     ```
-    [
-        {
-            _id: string (CMND),
-            name,
-            dob: string,
-            gender,
-            address,
-            phone: string,
-            email,
-            transaction: {
-                blood: {
-                    name,
-                    type
-                },
-                eventDonated: {
-                    _id: string,
-                    name
-                },
-                dateDonated: string,
-                amount: int
-            }
-        },
-    ]
+    {
+        eventId: string,
+        listParticipants: [
+            {
+                _id: string (CMND),
+                name,
+                dob: string,
+                gender,
+                address,
+                phone: string,
+                email,
+                transaction: {
+                    blood: {
+                        name,
+                        type
+                    },
+                    dateDonated: string,
+                    amount: int
+                }
+            },
+        ]
+    }
     ```
     
 3. PUT participants waiting for approved -> Endpoint: api/DonorTransaction/approve
@@ -173,6 +172,10 @@
         detail
     }
     ```
+    
+3. DELETE events data -> Endpoint: api/Event/{_id}
+
+
     
 ## Blood
 
