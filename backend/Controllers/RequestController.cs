@@ -24,7 +24,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(Request request)
         {
             var hospital = _hospitalRepository.Get(request.Hospital._id);
-            request.Hospital.Name = hospital.Result.hospital_name;
+            request.Hospital.Name = hospital.Result.Name;
             var result = await _requestRepository.Create(request);
             return Ok(new {id = result});
         }
