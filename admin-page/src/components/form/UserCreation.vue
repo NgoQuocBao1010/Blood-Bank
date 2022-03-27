@@ -2,7 +2,6 @@
 import InputText from "primevue/inputtext";
 import Divider from "primevue/divider";
 import Dialog from "primevue/dialog";
-import InlineMessage from "primevue/inlinemessage";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
@@ -123,6 +122,7 @@ const copy = (value) => {
             </div>
         </div>
 
+        <!-- Pop up dialog to reveal information -->
         <Dialog
             header="New Account Has Been Created"
             v-model:visible="resultData.show"
