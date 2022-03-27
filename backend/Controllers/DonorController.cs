@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -35,10 +37,10 @@ namespace backend.Controllers
             {
                 // check this participant exists or not
                 var exist = await _donorRepository.Get(donor._id);
+                donor.blood = donor.transaction.blood;
                 // if this participant does not exist
                 if (exist == null)
                 {
-                    donor.blood = donor.transaction.blood;
                     result = await _donorRepository.Create(donor);
                     if (result == null)
                     {
@@ -56,6 +58,10 @@ namespace backend.Controllers
                                  " event already!";
                         return new JsonResult(result);
                     }
+                    else
+                    {
+                        await Update(exist._id, donor);
+                    }
                 }
 
                 // set event, rejectReason, donorId property in transaction
@@ -66,12 +72,12 @@ namespace backend.Controllers
                 };
                 donor.transaction.rejectReason = "";
                 donor.transaction.donorId = donor._id;
-                
+
                 // Create a transaction of a participant
                 var transaction = await _donorTransactionRepository.Create(donor.transaction);
-                
+
                 if (transaction == null) continue;
-                
+
                 // add participants to number of participants in Event
                 var currentEvent = await _eventRepository.Get(data.eventId);
                 var sum = currentEvent.participants + 1;
@@ -89,8 +95,8 @@ namespace backend.Controllers
             var donor = await _donorRepository.Get(id);
             return new JsonResult(donor);
         }
-        
-        
+
+
         public async Task<IActionResult> Get(string id)
         {
             var result = new List<Donor>();
@@ -133,6 +139,7 @@ namespace backend.Controllers
                 }
             }
 
+            result.Sort((x, y) => long.Parse(y.transaction.dateDonated).CompareTo(long.Parse(x.transaction.dateDonated)));
 
             return new JsonResult(result);
         }

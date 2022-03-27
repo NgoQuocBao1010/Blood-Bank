@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EventSubmissionController : ControllerBase
     {
         private readonly IEventSubmissionRepository _eventSubmissionRepository;

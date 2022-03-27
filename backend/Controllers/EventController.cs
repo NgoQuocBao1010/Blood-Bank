@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -8,13 +9,18 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
+        private readonly IDonorTransactionRepository _donorTransactionRepository;
+        private readonly IDonorRepository _donorRepository;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(IEventRepository eventRepository, IDonorTransactionRepository donorTransactionRepository, IDonorRepository donorRepository)
         {
             _eventRepository = eventRepository;
+            _donorRepository = donorRepository;
+            _donorTransactionRepository = donorTransactionRepository;
         }
 
         [HttpPost]
@@ -26,6 +32,14 @@ namespace backend.Controllers
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
+        {
+            var e = await _eventRepository.Get(id);
+
+            return new JsonResult(e);
+        }
+        
+        [HttpGet("listParticipants/{id}")]
+        public async Task<IActionResult> GetListParticipants(string id)
         {
             var e = await _eventRepository.Get(id);
 
