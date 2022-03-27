@@ -1,12 +1,16 @@
 import Repository from "./Repository";
 
+import { useLocalToken } from "./helpers";
+
 const resource = "/Hospital";
 
 export default {
-  getAll() {
-    return Repository.get(`${resource}`);
-  },
-  get(id) {
-    return Repository.get(`${resource}/${id}`);
-  },
+    getAll() {
+        useLocalToken();
+        return Repository.get(`${resource}`);
+    },
+    get(id) {
+        useLocalToken();
+        return Repository.get(`${resource}/${id}`);
+    },
 };
