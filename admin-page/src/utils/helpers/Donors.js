@@ -20,11 +20,13 @@ export default {
                     key !== "dob" ? data[key] : formatDate(parseInt(data[key]));
         }
 
-        transformData["Event"] = data.transaction.eventDonated.name;
-        console.log(data.transaction.dateDonated);
+        if (data.transaction.eventDonated)
+            transformData["Event"] = data.transaction.eventDonated.name;
+
         transformData["Date Donated"] = formatDate(
             parseInt(data.transaction.dateDonated)
         );
+
         transformData["Blood Type"] = `${data.blood.name} ${data.blood.type}`;
         transformData["Donation Amount (ml)"] = data.transaction.amount;
 

@@ -4,7 +4,7 @@ import OverlayPanel from "primevue/overlaypanel";
 
 import BloodRepo from "../../api/BloodRepo";
 import { BLOOD_TYPES } from "../../constants";
-import { determineStockStatus, JSONtoExcel } from "../../utils";
+import { determineStockStatus } from "../../utils";
 
 let bloodData = null;
 let bloods = $ref([]);
@@ -89,7 +89,7 @@ const downloadExcelFile = () => {
         return row;
     });
 
-    JSONtoExcel(excelData, "blood_data");
+    // JSONtoExcel(excelData, "blood_data");
 };
 </script>
 
