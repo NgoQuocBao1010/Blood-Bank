@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -9,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
@@ -27,6 +29,10 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(Event e)
         {
             var id = await _eventRepository.Create(e);
+            if (id == null)
+            {
+                return NotFound();
+            }
             return new JsonResult(id);
         }
 
@@ -41,9 +47,22 @@ namespace backend.Controllers
         [HttpGet("listParticipants/{id}")]
         public async Task<IActionResult> GetListParticipants(string id)
         {
-            var e = await _eventRepository.Get(id);
+            var result = new List<Donor>();
+            var listDonor = await _donorRepository.Get();
+            foreach (var donor in listDonor)
+            {
+                var transaction = await _donorTransactionRepository.GetByEventAndDonor(donor._id, id);
+                
+                if (transaction == null) continue;
+                
+                var tempDonor = await _donorRepository.Get(donor._id);
+                tempDonor.transaction = transaction;
+                result.Add(tempDonor);
+            }
 
-            return new JsonResult(e);
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+
+            return new JsonResult(sortResult);
         }
 
         [HttpGet]

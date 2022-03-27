@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class DonorTransactionController : ControllerBase
     {
         private readonly IDonorTransactionRepository _donorTransactionRepository;
@@ -57,7 +57,7 @@ namespace backend.Controllers
 
             return new JsonResult(donorTransaction);
         }
-        
+
         [HttpGet("listDonation/{donorId}")]
         public async Task<IActionResult> GetListTransaction(string donorId)
         {
@@ -85,6 +85,7 @@ namespace backend.Controllers
                 // if approving successfully, add amount of blood in this transaction to quantity in Blood model
                 var transaction =
                     await _donorTransactionRepository.GetByEventAndDonor(participant._id, participant.eventId);
+                
                 await _bloodRepository.UpdateQuantity(transaction.blood.name, transaction.blood.type,
                     transaction.amount);
             }
@@ -101,7 +102,7 @@ namespace backend.Controllers
                 // reject transaction
                 result = await _donorTransactionRepository.RejectParticipants(participant._id, participant.eventId,
                     participant.rejectReason);
-                
+
                 if (result) continue;
                 // check if update status of transaction failed
                 var error = "Cannot reject transaction of participant having _id" + participant._id;

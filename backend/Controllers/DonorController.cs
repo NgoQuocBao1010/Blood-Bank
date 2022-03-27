@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize]
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -139,9 +139,8 @@ namespace backend.Controllers
                 }
             }
 
-            result.Sort((x, y) => long.Parse(y.transaction.dateDonated).CompareTo(long.Parse(x.transaction.dateDonated)));
-
-            return new JsonResult(result);
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+            return new JsonResult(sortResult);
         }
 
         [HttpGet("success")]
