@@ -91,6 +91,15 @@ const toggleAccountPanel = (event) => {
                     @click="userStore.logout()"
                 />
             </p>
+            <p v-else>
+                <router-link
+                    :to="{ name: 'Login' }"
+                    class="p-button p-button-sm app-router-link-icon"
+                >
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Login
+                </router-link>
+            </p>
         </OverlayPanel>
     </div>
 </template>
