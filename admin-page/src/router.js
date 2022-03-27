@@ -111,7 +111,7 @@ const router = createRouter({
         },
         {
             path: "/:pathMatch(.*)*",
-            name: "404 Not found",
+            name: "404 Error",
             component: () => import("./views/error/404Error.vue"),
         },
         // Login Page

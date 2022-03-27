@@ -47,9 +47,18 @@ app.config.errorHandler = (err, instance, info) => {
     if (!err.response && err.message === "Network Error") {
         // Handle server cannot reach error (Ex: forget to start the server)
         router.push({ name: "Server Error" });
-    } else {
-        throw err;
+        return;
     }
+
+    if (err.response) {
+        if (err.response.status === 500) router.push({ name: "Server Error" });
+        else if (err.response.status === 405)
+            router.push({ name: "Server Error" });
+        else if (err.response.status === 404)
+            router.push({ name: "404 Error" });
+        return;
+    }
+    throw err;
 
     // console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
     // console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
