@@ -120,7 +120,7 @@ const downloadExcelFile = () => {
                                     label="Expand All"
                                     class="mr-2 mb-2"
                                     @click="expandAllRows()"
-                                    :disabled="expandedRows.length > 0"
+                                    :disabled="expandedRows.length === 5"
                                 />
                                 <PrimeVueButton
                                     icon="pi pi-minus"
