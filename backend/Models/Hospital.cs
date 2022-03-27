@@ -8,15 +8,15 @@ namespace backend.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
         
-        public string hospital_name { get; set; }
-        public string address { get; set; }
-        public string phone { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Phone { get; set; }
 
-        public Hospital(string hospitalName, string address, string phone)
+        public Hospital(string name, string address, string phone)
         {
-            hospital_name = hospitalName;
-            this.address = address;
-            this.phone = phone;
+            Name = name;
+            Address = address;
+            Phone = phone;
         }
     }
 }

@@ -6,11 +6,10 @@ const resource = "/Hospital";
 export default {
   getAll() {
     useLocalToken();
-    return Repository.get(`${resource}/`);
+    return Repository.get(`${resource}`);
   },
-
-  getById(id) {
+  get(id) {
     useLocalToken();
-    return Repository.get(`${resource}/${id}/`);
+    return Repository.get(`${resource}/${id}`);
   },
 };
