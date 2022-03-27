@@ -31,6 +31,12 @@ const router = createRouter({
             name: "Events Management",
             component: () => import("./views/management/Events.vue"),
         },
+
+        {
+            path: "/hospitals-management",
+            name: "Hospitals Management",
+            component: () => import("./views/management/Hospitals.vue"),
+        },
         // Activity
         {
             path: "/donation-requests",
@@ -42,6 +48,7 @@ const router = createRouter({
             name: "Blood Requests",
             component: () => import("./views/activity/BloodRequests.vue"),
         },
+
         // Detail
         {
             path: "/events/detail/:_id",
@@ -55,6 +62,13 @@ const router = createRouter({
             component: () => import("./views/detail/DonorDetail.vue"),
             props: true,
         },
+
+        {
+            path: "/hospitals/detail/:_id",
+            name: "Hospital Detail",
+            component: () => import("./views/detail/HospitalDetail.vue"),
+            props: true,
+        },
         // Form
         {
             path: "/event/new/",
@@ -65,6 +79,17 @@ const router = createRouter({
             path: "/event/edit/:_id",
             name: "Event Edit",
             component: () => import("./views/form/EventForm.vue"),
+            props: true,
+        },
+        {
+            path: "/hospital/new/",
+            name: "Hospital Create",
+            component: () => import("./views/form/HospitalForm.vue"),
+        },
+        {
+            path: "/hospital/edit/:_id",
+            name: "Hospital Edit",
+            component: () => import("./views/form/HospitalForm.vue"),
             props: true,
         },
         // Information
@@ -89,6 +114,12 @@ const router = createRouter({
             name: "404 Not found",
             component: () => import("./views/error/404Error.vue"),
         },
+        // Login Page
+        {
+            path: "/login",
+            name: "Login",
+            component: () => import("./views/Login.vue"),
+        },
     ],
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
@@ -103,11 +134,12 @@ router.beforeEach((to, from, next) => {
     const user = useUserStore();
     if (!user.isLoggedIn) user.verifyToken();
 
-    if (
-        !["About", "Authentication Error"].includes(to.name) &&
-        !user.isLoggedIn
-    )
-        return next({ name: "Authentication Error" });
+    if (!["About", "Login"].includes(to.name) && !user.isLoggedIn)
+        return next({ name: "Login" });
+
+    if (to.name === "Login" && user.isLoggedIn) {
+        return next({ name: "Dashboard" });
+    }
 
     next();
 });

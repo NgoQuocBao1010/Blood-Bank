@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", {
             localStorage.removeItem("userToken");
             this.$reset();
 
-            router.push({ name: "About" });
+            router.push({ name: "Login" });
         },
     },
 });
