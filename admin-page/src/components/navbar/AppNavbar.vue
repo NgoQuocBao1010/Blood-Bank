@@ -1,9 +1,19 @@
 <script setup>
 import InputText from "primevue/inputtext";
+import OverlayPanel from "primevue/overlaypanel";
 
+import { useUserStore } from "../../stores/user";
+
+const userStore = useUserStore();
 const emit = defineEmits(["toggleSidebar"]);
 
 const keywordSearch = $ref("");
+
+let accountBtn = $ref(null);
+const toggleAccountPanel = (event) => {
+    // Toggle info button about stock status
+    accountBtn.toggle(event);
+};
 </script>
 
 <template>
@@ -34,6 +44,7 @@ const keywordSearch = $ref("");
             class="layout-topbar-menu hidden lg:flex origin-top"
             style="align-items: center"
         >
+            <!-- Serach bar -->
             <li>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search" />
@@ -45,6 +56,8 @@ const keywordSearch = $ref("");
                     />
                 </span>
             </li>
+
+            <!-- Sidebar toggle -->
             <li>
                 <button
                     class="p-link layout-topbar-button"
@@ -54,13 +67,31 @@ const keywordSearch = $ref("");
                     <span>Menu</span>
                 </button>
             </li>
+
+            <!-- Account toggle -->
             <li>
-                <button class="p-link layout-topbar-button">
+                <button
+                    class="p-link layout-topbar-button"
+                    ref="accountBtn"
+                    @click="toggleAccountPanel"
+                >
                     <i class="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
             </li>
         </ul>
+
+        <OverlayPanel ref="accountBtn" id="account_panel">
+            <p class="app-highlight">{{ userStore.email || "Guest" }}</p>
+            <p v-if="userStore.isLoggedIn">
+                <PrimeVueButton
+                    icon="fa-solid fa-arrow-right-from-bracket"
+                    class="p-button-sm"
+                    label="logout"
+                    @click="userStore.logout()"
+                />
+            </p>
+        </OverlayPanel>
     </div>
 </template>
 
@@ -68,6 +99,14 @@ const keywordSearch = $ref("");
 .layout-topbar-logo {
     img {
         height: 5rem;
+    }
+}
+
+#account_panel {
+    p {
+        font-size: 1rem;
+        text-align: center;
+        width: 20em !important;
     }
 }
 </style>

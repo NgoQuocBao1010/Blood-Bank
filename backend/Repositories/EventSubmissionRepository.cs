@@ -42,6 +42,7 @@ namespace backend.Repositories
             var update = Builders<EventSubmission>.Update
                 .Set(es => es._id, eventSubmission._id)
                 .Set(es => es.EventId, eventSubmission.EventId)
+                .Set(es => es.IdCardNumber, eventSubmission.IdCardNumber)
                 .Set(es => es.FullName, eventSubmission.FullName)
                 .Set(es => es.Phone, eventSubmission.Phone)
                 .Set(es => es.Address, eventSubmission.Address)
