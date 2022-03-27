@@ -9,12 +9,13 @@ export default {
     return Repository.get(`${resource}/`);
   },
 
-  getById(id) {
+  get(id) {
     useLocalToken();
     return Repository.get(`${resource}/${id}/`);
   },
 
   post(params) {
+    useLocalToken();
     return Repository.post(`${resource}/`, {
       quantity: params.quantity,
       blood: {

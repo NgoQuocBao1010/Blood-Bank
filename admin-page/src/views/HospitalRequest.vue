@@ -40,7 +40,7 @@ const formRules = $computed(() => {
 let hospital_name = $ref("");
 
 onBeforeMount(async () => {
-  const data = await HospitalRepo.getById(hospital_id);
+  const data = await HospitalRepo.get(hospital_id);
   hospital_name = data.data.hospital_name;
 });
 
