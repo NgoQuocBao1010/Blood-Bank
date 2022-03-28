@@ -27,17 +27,17 @@ namespace backend.Controllers
 
             var listEvent = new List<Event>
             {
-                new("Event 01", new Location("Cần Thơ", "F+"), "1648252800",
+                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1612976400000",
                     2, "This is a blood donation event at F+", 10),
-                new("Event 02", new Location("Hậu Giang", "Nga 6"), "1648252800",
+                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1639069200000",
                     2, "This is a blood donation event at Nga 6", 10),
-                new("Event 03", new Location("Hồ Chí Minh", "Cho Ray"), "1648252800",
+                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1646067600000",
                     2, "This is a blood donation event at Cho Ray", 10),
-                new("Event 04", new Location("An Giang", "Nha Cua May"), "1648252800",
+                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1644080400000",
                     2, "This is a blood donation event at Nha Cua May", 10),
-                new("Event 05", new Location("Đà Lạt", "Nomad Homestay"), "1648252800",
-                    2, "This is a blood donation event at Nomad", 10),
-                new("Event 06", new Location("Cần Thơ", "Cafe Station"), "1648252800",
+                new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
+                    100, "This is a blood donation event at Nomad", 10),
+                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"), "1671469200000",
                     2, "This is a blood donation event at Cafe Station", 10)
             };
 

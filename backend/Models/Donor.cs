@@ -10,6 +10,12 @@ namespace backend.Models
         public string name { get; set; }
         public string type { get; set; }
     }
+    
+    public class ListParticipants
+    {
+        public string eventId { get; set; }
+        public List<Donor> listParticipants { get; set; }
+    }
     public class Donor
     {
         public string _id { get; set; }
