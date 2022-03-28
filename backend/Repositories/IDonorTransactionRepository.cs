@@ -16,6 +16,9 @@ namespace backend.Repositories
         Task<IEnumerable<DonorTransaction>> Get();
         Task<DonorTransaction> GetByEventAndDonor(string _id, string eventId);
 
+        Task<IEnumerable<DonorTransaction>> GetByEvent(string eventId);
+
+
         Task<IEnumerable<DonorTransaction>> GetTransactionByDonor(string donorId);
         
         // Update

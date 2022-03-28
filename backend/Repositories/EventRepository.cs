@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Driver;
@@ -31,14 +32,14 @@ namespace backend.Repositories
         {
             var filter = Builders<Event>.Filter.Eq(e => e._id, _id);
             var e = _event.Find(filter).FirstOrDefaultAsync();
-
             return e;
         }
 
         public async Task<IEnumerable<Event>> Get()
         {
             var e = await _event.Find(_ => true).ToListAsync();
-            return e;
+            var sortEvent = e.OrderByDescending(x => long.Parse(x.startDate));
+            return sortEvent;
         }
 
         public async Task<bool> Update(string _id, Event e)

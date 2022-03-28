@@ -70,8 +70,7 @@ namespace backend.Repositories
                 .Set(d => d.address, donor.address)
                 .Set(d => d.phone, donor.phone)
                 .Set(d => d.email, donor.email)
-                .Set(d => d.blood.name, donor.blood.name)
-                .Set(d => d.blood.type, donor.blood.type);
+                .Set(d => d.blood, donor.blood);
             
             var result = await _donor.UpdateOneAsync(filter, update);
             

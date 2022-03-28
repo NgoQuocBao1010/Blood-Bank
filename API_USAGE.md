@@ -1,3 +1,11 @@
+## Search Keyword by _id
+1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{_id}
+    ```
+    return JSON
+    ```
+    if id is invalid, return 404 Not Found error
+
+
 ## Donors API
 
 1. GET list successful donors, expected JSON return:  -> Endpoint: api/Donor/success
@@ -173,6 +181,49 @@
     }
     ```
     
+3. DELETE events data -> Endpoint: api/Event/{_id}
+
+    ```
+    Return true if delete success
+    ```
+
+
+4. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
+    ```
+    [
+        {
+            _id (CMND),
+            name (donor name),
+            dob : int -> string,
+            gender,
+            address,
+            phone,
+            email,
+            blood: {
+                name,
+                type,
+            }
+            transaction: {
+                _id,
+                blood: {
+                    name,
+                    type
+                },
+                eventDonated: {
+                    _id,
+                    name
+                },
+                dateDonated: string,
+                amount: int,
+                status: int,
+                rejectReason,
+                donorId
+            }
+        },
+    ]
+    ```
+
+    
 ## Blood
 
 1. GET blood data -> Endpoint: api/Blood
@@ -185,3 +236,144 @@
     }
     ```
     
+## User
+
+1. POST user login -> Endpoint: api/user/login
+    ```
+    {
+        "email": "string",
+        "password": "string"
+    }
+    ```
+
+2. GET all user -> Endpoint: api/user
+    ```
+    [
+        {
+            "_id": "string",
+            "email": "string",
+            "password": "string",
+            "isAdmin": boolean,
+            "hospital_id": "string"
+        }
+    ]
+    ```
+
+3. GET user by id -> Endpoint: api/user/{id}
+    ```
+    {
+        "_id": "string",
+        "email": "string",
+        "password": "string",
+        "isAdmin": boolean,
+        "hospital_id": "string"
+    }
+    ```
+
+4. POST create user -> Endpoint: api/user
+    ```
+    {
+        "email": "string",
+        "password": "string",
+        "isAdmin": boolean,
+        "hospital_id": "string"
+    }
+    ```
+
+5. DELETE user by id -> Endpoint: api/user/{id}
+    ```
+    Return true if delete success
+   ```
+
+## Event Submission
+
+1. GET all event submission -> Endpoint: api/eventSubmission
+    ```
+    [
+        {
+            "_id": "string",
+            "eventId": "string",
+            "idCardNumber": "string",
+            "fullName": "string",
+            "phone": "string",
+            "email": "string",
+            "address": "string",
+            "gender": "string",
+            "dob": "string",
+            "latestDonationDate": "string"
+        }
+    ]
+    ```
+
+2. GET event submission by id -> Endpoint: api/eventSubmission/{id}
+    ```
+    {
+        "_id": "string",
+        "eventId": "string",
+        "idCardNumber": "string",
+        "fullName": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "gender": "string",
+        "dob": "string",
+        "latestDonationDate": "string"
+    }
+    ```
+
+3. POST create event submission -> Endpoint: api/eventSubmission
+    ```
+    {
+        "eventId": "string",
+        "idCardNumber": "string",
+        "fullName": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "gender": "string",
+        "dob": "string",
+        "latestDonationDate": "string"
+    }
+    ```
+4. DELETE event submission by id -> Endpoint: api/eventSubmission/{id}
+    ```
+    Return true if delete success
+    ```
+
+## Hospital
+
+1. GET all hospital -> Endpoint: api/hospital
+    ```
+    [
+        {
+            "_id": "string",
+            "name": "string",
+            "address": "string",
+            "phone": "string"
+        }
+    ]
+    ```
+
+2. GET hospital by id -> Endpoint: api/hospital/{id}
+    ```
+    {
+        "_id": "string",
+        "name": "string",
+        "address": "string",
+        "phone": "string"
+    }
+    ```
+
+3. POST create hospital -> Endpoint: api/hospital
+    ```
+    {
+        "name": "string",
+        "address": "string",
+        "phone": "string"
+    }
+    ```
+
+4. DELETE hospital by id -> Endpoint: api/hospital/{id}
+    ```
+    Return true if delete success
+    ```

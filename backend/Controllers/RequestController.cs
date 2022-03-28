@@ -12,17 +12,25 @@ namespace backend.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestRepository _requestRepository;
+        private readonly IHospitalRepository _hospitalRepository;
 
-        public RequestController(IRequestRepository requestRepository)
+        public RequestController(IRequestRepository requestRepository, IHospitalRepository hospitalRepository)
         {
             _requestRepository = requestRepository;
+            _hospitalRepository = hospitalRepository;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Request request)
         {
+            var hospital = _hospitalRepository.Get(request.Hospital._id);
+            if (hospital == null)
+            {
+                return BadRequest("Hospital empty");
+            }
+            request.Hospital.Name = hospital.Result.Name;
             var result = await _requestRepository.Create(request);
-            return new JsonResult(result);
+            return Ok(new {id = result});
         }
 
         [HttpGet("{id}")]
@@ -52,15 +60,27 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Request request)
         {
+            var exist = await _requestRepository.Get(id);
+            if (exist == null)
+            {
+                return NotFound();
+            }
+
             var result = await _requestRepository.Update(id, request);
-            return new JsonResult(result);
+            return Ok(new {result});
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            var exist = await _requestRepository.Get(id);
+            if (exist == null)
+            {
+                return NotFound();
+            }
+            
             var result = await _requestRepository.Delete(id);
-            return new JsonResult(result);
+            return Ok(new {result});
         }
     }
 }

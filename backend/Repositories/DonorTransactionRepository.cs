@@ -60,6 +60,15 @@ namespace backend.Repositories
             return donorTransaction;
         }
         
+
+        public async Task<IEnumerable<DonorTransaction>> GetByEvent(string eventId)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+            var transaction = await _donorTransaction.Find(filter).ToListAsync();
+            return transaction;
+        }
+        
+        
         public async Task<DonorTransaction> GetByEventAndDonor(string _id, string eventId)
         {
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
