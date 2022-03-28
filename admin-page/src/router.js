@@ -134,7 +134,10 @@ router.beforeEach((to, from, next) => {
     const user = useUserStore();
     if (!user.isLoggedIn) user.verifyToken();
 
-    if (!["About", "Login"].includes(to.name) && !user.isLoggedIn)
+    if (
+        !["About", "Login", "Server Error"].includes(to.name) &&
+        !user.isLoggedIn
+    )
         return next({ name: "Login" });
 
     if (to.name === "Login" && user.isLoggedIn) {
