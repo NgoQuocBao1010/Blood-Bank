@@ -37,6 +37,7 @@ namespace backend.Controllers
             {
                 // check this participant exists or not
                 var exist = await _donorRepository.Get(donor._id);
+
                 donor.blood = donor.transaction.blood;
                 // if this participant does not exist
                 if (exist == null)

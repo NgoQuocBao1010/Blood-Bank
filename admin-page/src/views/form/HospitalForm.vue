@@ -13,7 +13,7 @@ const { _id, hospitalData } = defineProps({
   hospitalData: String,
 });
 
-const hospitalFetchData = $ref();
+let hospitalFetchData = $ref();
 
 let formData = $ref({
   name: "",
