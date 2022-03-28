@@ -1,3 +1,11 @@
+## Search Keyword by _id
+1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{_id}
+    ```
+    return JSON
+    ```
+    if id is invalid, return 404 Not Found error
+
+
 ## Donors API
 
 1. GET list successful donors, expected JSON return:  -> Endpoint: api/Donor/success
@@ -175,6 +183,45 @@
     
 3. DELETE events data -> Endpoint: api/Event/{_id}
 
+    ```
+    Return true if delete success
+    ```
+
+
+4. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
+    ```
+    [
+        {
+            _id (CMND),
+            name (donor name),
+            dob : int -> string,
+            gender,
+            address,
+            phone,
+            email,
+            blood: {
+                name,
+                type,
+            }
+            transaction: {
+                _id,
+                blood: {
+                    name,
+                    type
+                },
+                eventDonated: {
+                    _id,
+                    name
+                },
+                dateDonated: string,
+                amount: int,
+                status: int,
+                rejectReason,
+                donorId
+            }
+        },
+    ]
+    ```
 
     
 ## Blood
