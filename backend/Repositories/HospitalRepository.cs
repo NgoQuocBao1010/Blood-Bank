@@ -43,9 +43,9 @@ namespace backend.Repositories
         {
             var filter = Builders<Hospital>.Filter.Eq(b => b._id, _id);
             var update = Builders<Hospital>.Update
-                .Set(h => h.hospital_name, hospital.hospital_name)
-                .Set(h => h.address, hospital.address)
-                .Set(h => h.phone, hospital.phone);
+                .Set(h => h.Name, hospital.Name)
+                .Set(h => h.Address, hospital.Address)
+                .Set(h => h.Phone, hospital.Phone);
 
             var result = await _hospital.UpdateOneAsync(filter, update);
             
