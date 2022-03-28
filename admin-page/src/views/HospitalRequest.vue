@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, defineAsyncComponent } from "vue";
 import { useRoute } from "vue-router";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
@@ -10,6 +10,10 @@ import { BLOOD_TYPES } from "../constants";
 
 import HospitalRepo from "../api/HospitalRepo";
 import RequestRepo from "../api/RequestRepo";
+
+const AsyncRequestHistory = defineAsyncComponent({
+  loader: () => import("../components/tables/RequestHistoryTable.vue"),
+});
 
 const route = useRoute();
 const hospital_id = route.params._id;
@@ -49,6 +53,8 @@ const toast = useToast();
 
 let errorMessage = $ref(null);
 let submitting = $ref(false);
+let requestHistory = $ref(null);
+let showRequestHistory = $ref(false);
 
 const resetForm = () => {
   (formData.quantity = null),
@@ -61,6 +67,15 @@ const resetForm = () => {
     }),
     (formData.date = Math.floor(new Date(today).getTime() / 1000));
 };
+
+onBeforeMount(async () => {
+  const requestData = await RequestRepo.getAll();
+
+  if (requestData.data && requestData.data.length !== 0) {
+    requestHistory = requestData.data;
+    console.log(requestHistory);
+  }
+});
 
 const submitData = async () => {
   // Form validation
@@ -78,23 +93,6 @@ const submitData = async () => {
 
   // Make API call to server
   submitting = true;
-  //   console.log("formData", {
-  //     quantity: formData.quantity,
-  //     blood: {
-  //       name: formData.blood.name,
-  //       type: formData.blood.type,
-  //     },
-  //     hospital: {
-  //       _id: formData.hospital._id,
-  //     },
-  //     date: formData.date.toString(),
-  //   });
-
-  //   setTimeout(() => {
-  //     submitting = false;
-  //     resetForm();
-  //   }, 2000);
-
   try {
     await RequestRepo.post({
       quantity: formData.quantity,
@@ -217,6 +215,20 @@ const submitData = async () => {
             />
           </div>
         </div>
+      </div>
+      <!-- Request History -->
+      <div class="card">
+        <div class="flex-center" style="width: 100%" v-if="!showRequestHistory">
+          <PrimeVueButton
+            label="Show Request History"
+            @click="showRequestHistory = !showRequestHistory"
+          />
+        </div>
+
+        <template v-else>
+          <h2>Request History</h2>
+          <AsyncRequestHistory :requestHistory="requestHistory" />
+        </template>
       </div>
     </div>
   </div>
