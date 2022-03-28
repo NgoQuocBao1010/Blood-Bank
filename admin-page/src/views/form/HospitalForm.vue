@@ -16,14 +16,14 @@ const { _id, hospitalData } = defineProps({
 const hospitalFetchData = $ref();
 
 let formData = $ref({
-  hospital_name: "",
+  name: "",
   address: "",
   phone: "",
 });
 
 const formRules = $computed(() => {
   return {
-    hospital_name: { required },
+    name: { required },
     address: { required },
     phone: { required },
   };
@@ -81,7 +81,7 @@ const submitData = async () => {
 
 // Helpers
 const fixingVuevalidateBugs = (data) => {
-  formData.hospital_name = data.hospital_name;
+  formData.name = data.name;
   formData.address = data.address;
   formData.phone = data.phone;
 };
@@ -103,12 +103,12 @@ const fixingVuevalidateBugs = (data) => {
           <div class="field col-12">
             <label for="hospital-name">Hospital Name</label>
             <InputText
-              v-model="formData.hospital_name"
+              v-model="formData.name"
               id="hospital-name"
               type="text"
-              :class="{ 'p-invalid': $v.hospital_name.$error }"
+              :class="{ 'p-invalid': $v.name.$error }"
             />
-            <span v-if="$v.hospital_name.$error" class="app-form-error">
+            <span v-if="$v.name.$error" class="app-form-error">
               This field is required
             </span>
           </div>
