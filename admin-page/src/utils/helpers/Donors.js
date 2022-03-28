@@ -51,7 +51,7 @@ export default {
                         : converToDate(data[key]).getTime().toString();
             } else {
                 if (key === "Blood Type") {
-                    const [name, type] = [...data[key]];
+                    const [name, type] = [...data[key].split(" ")];
                     reformData.transaction["blood"] = { name, type };
                 } else if (key === "Donation Amount (ml)") {
                     reformData.transaction["amount"] = data[key];

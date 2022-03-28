@@ -7,6 +7,7 @@ import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import Dialog from "primevue/dialog";
+import { useToast } from "primevue/usetoast";
 import { FilterMatchMode } from "primevue/api";
 
 import { useEventStore } from "../../stores/event";
@@ -14,6 +15,7 @@ import DonorsHelpers from "../../utils/helpers/Donors";
 import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
 import { JSONtoExcel, excelToJson } from "../../utils/excel";
+import DonorRepo from "../../api/DonorRepo";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -79,13 +81,24 @@ onBeforeMount(async () => {
     if (!eventStore.events) await eventStore.setEvents();
 });
 
+const toast = useToast();
 const downloadExcel = () => {
+    if (donorsData.length === 0) {
+        toast.add({
+            severity: "error",
+            summary: "No information",
+            detail: "There is no donors data found",
+            life: 3000,
+        });
+        return;
+    }
     const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
     JSONtoExcel(excelData, "Pending_Donors");
 };
 
+const emits = defineEmits(["updateParticipants"]);
 let newParticipants = $ref({
-    eventID: null,
+    eventId: null,
     listParticipants: null,
     files: null,
 });
@@ -95,11 +108,38 @@ const onSelectExcel = (event) => {
     selectEventsDialog = true;
 };
 const importExcel = async () => {
-    const data = await excelToJson(newParticipants.files);
-    newParticipants.listParticipants = DonorsHelpers.reformAfterExcel(data);
+    if (!newParticipants.eventId) {
+        toast.add({
+            severity: "error",
+            summary: "No Event Information",
+            detail: "Please pick the events for these donors",
+            life: 3000,
+        });
+
+        return;
+    }
+
+    const excelData = await excelToJson(newParticipants.files);
+    newParticipants.listParticipants =
+        DonorsHelpers.reformAfterExcel(excelData);
     selectEventsDialog = false;
 
-    console.log(newParticipants);
+    const { data, status } = await DonorRepo.importParticipants(
+        newParticipants
+    );
+
+    if (data && status === 200) {
+        toast.add({
+            severity: "success",
+            summary: "New Participants",
+            detail: `New Participants for ${
+                eventStore.getEventById(newParticipants.eventId)?.name
+            } has been added`,
+            life: 3000,
+        });
+
+        emits("updateParticipants");
+    }
 };
 </script>
 
@@ -170,7 +210,9 @@ const importExcel = async () => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty> No donors found. </template>
+        <template #empty>
+            <h4 style="text-align: center">No donor found.</h4>
+        </template>
 
         <!-- Columns -->
 
@@ -182,7 +224,7 @@ const importExcel = async () => {
         ></PrimeVueColumn>
 
         <!-- Donor's name -->
-        <PrimeVueColumn field="name" header="Name" style="min-width: 12rem">
+        <PrimeVueColumn field="name" header="Name" style="min-width: 300px">
             <template #body="{ data }">
                 {{ data.name }}
             </template>
@@ -225,7 +267,7 @@ const importExcel = async () => {
             field="transaction.dateDonated"
             dataType="date"
             :sortable="true"
-            style="min-width: 200px; width: 14rem !important"
+            style="min-width: 250px; width: 14rem !important"
             v-if="participants"
         >
             <template #body="{ data }">
@@ -377,8 +419,6 @@ const importExcel = async () => {
         </template>
     </PrimeVueTable>
 
-    {{ newParticipants.eventID }}
-
     <!-- Event choosing dialog -->
     <Dialog
         header="Which event that these participants from?"
@@ -387,13 +427,14 @@ const importExcel = async () => {
         :modal="true"
     >
         <DropDown
-            v-model="newParticipants.eventID"
+            v-model="newParticipants.eventId"
             :options="eventStore.activeEvents"
             optionValue="_id"
             class="p-column-filter"
             placeholder="Choose event"
             style="width: 100%"
             :showClear="true"
+            :showUploadButton="false"
         >
             <template #value="slotProps">
                 <span v-if="slotProps.value">

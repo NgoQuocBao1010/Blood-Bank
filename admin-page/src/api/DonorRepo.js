@@ -6,4 +6,7 @@ export default {
     getAll() {
         return Repository.get(`${resource}/`);
     },
+    importParticipants(data) {
+        return Repository.post(`${resource}/`, data);
+    },
 };

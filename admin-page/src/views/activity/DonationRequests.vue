@@ -6,9 +6,14 @@ import DonorTable from "../../components/tables/DonorTable.vue";
 
 let donorsData = $ref(null);
 
-onBeforeMount(async () => {
+const updateParticipants = async () => {
+    donorsData = null;
     const { data } = await DonorRepo.getAll();
     donorsData = data;
+};
+
+onBeforeMount(async () => {
+    await updateParticipants();
 });
 </script>
 
@@ -24,6 +29,7 @@ onBeforeMount(async () => {
                     v-if="donorsData"
                     :donorsData="donorsData"
                     :participants="true"
+                    @updateParticipants="updateParticipants"
                 />
             </div>
         </div>
