@@ -1,88 +1,21 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import { useRouter, RouterLink } from "vue-router";
-import dayjs from "dayjs";
 import InputText from "primevue/inputtext";
 import MultiSelect from "primevue/multiselect";
 import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
+import EventRepo from "../../api/EventRepo";
+import EventHelper from "../../utils/helpers/Event";
+import { useEventStore } from "../../stores/event";
 import { formatDate } from "../../utils";
+import { PRIMARY_CITIES } from "../../constants";
 
 const router = useRouter();
-
-const eventsData = [
-    {
-        _id: "f822bdb0-6b7e-4681-8c62-93520c3accfc",
-        name: "Health and Wellbeing at work",
-        location: {
-            city: "Can Tho",
-            address: "Can Tho University",
-        },
-        startDate: new Date("02/11/2021").getTime().toString(),
-        duration: 3,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-    {
-        _id: "c75f46e3-8726-4a39-bbea-1d11d411ce72",
-        name: "Tell me, do you bleed?",
-        location: {
-            city: "Ho Chi Minh",
-            address: "Somewhere",
-        },
-        startDate: new Date("12/10/2021").getTime().toString(),
-        duration: 4,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-    {
-        _id: "54a60992-ec21-42c0-807d-7ad4e5b698d5",
-        name: "We are donors",
-        location: {
-            city: "Ho Chi Minh",
-            address: "Somewhere",
-        },
-        startDate: new Date("04/07/2021").getTime().toString(),
-        duration: 4,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-    {
-        _id: "b641b947-9846-46b3-a3a1-fef365d93bf6",
-        name: "Judoh Blood Donations",
-        location: {
-            city: "Ho Chi Minh",
-            address: "Somewhere",
-        },
-        startDate: new Date("03/01/2022").getTime().toString(),
-        duration: 50,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-    {
-        _id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf065",
-        name: "Judoh Blood Donations - Summer Edition",
-        location: {
-            city: "Da Nang",
-            address: "Somewhere",
-        },
-        startDate: new Date("02/06/2022").getTime().toString(),
-        duration: 3,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-    {
-        _id: "b2c13297-ce8e-4fa2-8a0c-cc7e761cf066",
-        name: "Judoh Blood Donations - Chrismas Edition",
-        location: {
-            city: "Da Nang",
-            address: "Somewhere",
-        },
-        startDate: new Date("12/20/2022").getTime().toString(),
-        duration: 3,
-        detail: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi esse porro odio ea doloribus quaerat iste quae reprehenderit asperiores animi.",
-    },
-];
-
-let events = $ref(null);
+const eventStore = useEventStore();
+let fetchingEvent = $ref(true);
 const EVENT_STATUS = ["passed", "ongoing", "upcoming"];
-let cities = $ref([]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -99,30 +32,13 @@ const clearFilter = () => {
     initFilters();
 };
 
-onBeforeMount(() => {
-    events = eventsData.map((row) => {
-        const event = { ...row };
-
-        event["startDate"] = new Date(parseInt(event["startDate"]));
-
-        // Check status of the event
-        const endDate = dayjs(event.startDate).add(event.duration, "day");
-        if (dayjs().isAfter(endDate, "day")) {
-            event["status"] = "passed";
-        } else if (dayjs().isBefore(event.startDate, "day")) {
-            event["status"] = "upcoming";
-        } else {
-            event["status"] = "ongoing";
-        }
-
-        cities.push(event.location.city);
-
-        return event;
-    });
-
-    cities = [...new Set(cities)];
-
+onBeforeMount(async () => {
     initFilters();
+
+    if (!eventStore.events) {
+        await eventStore.setEvents();
+    }
+    fetchingEvent = false;
 });
 
 const onRowClick = (payload) => {
@@ -150,7 +66,8 @@ const onRowClick = (payload) => {
 
                 <!-- Events table -->
                 <PrimeVueTable
-                    :value="events"
+                    :value="eventStore.events"
+                    :loading="fetchingEvent"
                     data-key="_id"
                     class="p-datatable-gridlines"
                     :rows="5"
@@ -207,7 +124,14 @@ const onRowClick = (payload) => {
                     </template>
 
                     <!-- Empty data fallback -->
-                    <template #empty> No events found. </template>
+                    <template #empty>
+                        <h4 style="text-align: center">No data found.</h4>
+                    </template>
+
+                    <!-- Loading fallback -->
+                    <template #loading>
+                        <h4 style="text-align: center">Fetching data ...</h4>
+                    </template>
 
                     <!-- Columns -->
                     <!-- Events's name -->
@@ -280,7 +204,7 @@ const onRowClick = (payload) => {
                             <MultiSelect
                                 v-model="filterModel.value"
                                 @change="filterCallback()"
-                                :options="cities"
+                                :options="PRIMARY_CITIES"
                                 optionLabel=""
                                 placeholder="Select location"
                                 class="p-column-filter"

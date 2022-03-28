@@ -6,6 +6,14 @@ const THEMES = {
 
 const BLOOD_TYPES = ["A", "B", "AB", "O", "Rh"];
 
-const PRIMARY_CITIES = ["Cần Thơ", "TP. Hồ Chí Minh", "Đà Nẵng", "Hà Nội"];
+const PRIMARY_CITIES = [
+    "Cần Thơ",
+    "Hồ Chí Minh",
+    "Đà Nẵng",
+    "Hà Nội",
+    "Hậu Giang",
+    "An Giang",
+    "Đà Lạt",
+];
 
 export { THEMES, BLOOD_TYPES, PRIMARY_CITIES };

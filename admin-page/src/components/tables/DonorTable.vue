@@ -1,15 +1,22 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, nextTick, transformVNodeArgs } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
+import Dialog from "primevue/dialog";
+import { useToast } from "primevue/usetoast";
 import { FilterMatchMode } from "primevue/api";
 
+import { useEventStore } from "../../stores/event";
+import DonorsHelpers from "../../utils/helpers/Donors";
 import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
+import { JSONtoExcel, excelToJson } from "../../utils/excel";
+import DonorRepo from "../../api/DonorRepo";
+import DonorTransactionRepo from "../../api/DonorTransaction";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -23,11 +30,9 @@ const { donorsData, participants } = defineProps({
 });
 
 let donors = $ref(null);
-const events = participants
-    ? [...new Set(donorsData.map((don) => don.transaction._event.name))]
-    : null;
-
-let selectedDonors = $ref([]);
+let selectedParticipants = $ref([]);
+const eventStore = useEventStore();
+const emits = defineEmits(["updateParticipants"]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -40,7 +45,7 @@ const initFilter = () => {
             value: null,
             matchMode: FilterMatchMode.DATE_IS,
         },
-        "transaction._event.name": {
+        "transaction.eventDonated.name": {
             value: null,
             matchMode: FilterMatchMode.EQUALS,
         },
@@ -62,14 +67,135 @@ const clearFilter = () => {
     initFilter();
 };
 
-onBeforeMount(() => {
-    donors = donorsData.map((row) => {
+onBeforeMount(async () => {
+    initFilter();
+
+    donors = JSON.parse(JSON.stringify(donorsData));
+    donors = donors.map((row) => {
         let donor = { ...row };
-        donor.transaction.dateDonated = new Date(donor.transaction.dateDonated);
+
+        donor["dataKey"] = donor._id + donor.transaction.eventDonated._id;
+        donor.transaction.dateDonated = new Date(
+            parseInt(donor.transaction.dateDonated)
+        );
         return donor;
     });
-    initFilter();
+
+    if (!eventStore.events) await eventStore.setEvents();
 });
+
+// Excel import and export
+const toast = useToast();
+const downloadExcel = () => {
+    if (donorsData.length === 0) {
+        toast.add({
+            severity: "error",
+            summary: "No information",
+            detail: "There is no donors data found",
+            life: 3000,
+        });
+        return;
+    }
+    const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
+    JSONtoExcel(excelData, "Pending_Donors");
+};
+
+let newParticipants = $ref({
+    eventId: null,
+    listParticipants: null,
+    files: null,
+});
+let isRerender = $ref(false);
+let selectEventsDialog = $ref(false);
+const onSelectExcel = async (event) => {
+    newParticipants.files = event.files[0];
+    selectEventsDialog = true;
+
+    isRerender = true;
+    await nextTick();
+    isRerender = false;
+};
+const importExcel = async () => {
+    if (!newParticipants.eventId) {
+        toast.add({
+            severity: "error",
+            summary: "No Event Information",
+            detail: "Please pick the events for these donors",
+            life: 3000,
+        });
+
+        return;
+    }
+
+    const excelData = await excelToJson(newParticipants.files);
+    newParticipants.listParticipants =
+        DonorsHelpers.reformAfterExcel(excelData);
+    selectEventsDialog = false;
+
+    const { data, status } = await DonorRepo.importParticipants(
+        newParticipants
+    );
+
+    if (data && status === 200) {
+        toast.add({
+            severity: "success",
+            summary: "New Participants",
+            detail: `New Participants for ${
+                eventStore.getEventById(newParticipants.eventId)?.name
+            } has been added`,
+            life: 3000,
+        });
+
+        emits("updateParticipants");
+    }
+};
+
+// Approve reject
+let isApprove = $ref(null);
+let rejectReason = $ref("");
+let showConfirmDialog = $ref(false);
+const openConfirmDialog = (approve = true) => {
+    isApprove = approve;
+    showConfirmDialog = true;
+};
+const handleParticipants = async () => {
+    if (!isApprove && !rejectReason) {
+        toast.add({
+            severity: "error",
+            summary: "Invalid Reject Reason",
+            detail: "Please provide a reason for rejecting these participants",
+            life: 4000,
+        });
+
+        return;
+    }
+
+    const participants = JSON.parse(JSON.stringify(selectedParticipants)).map(
+        (row) => {
+            let transformData = {};
+
+            transformData["_id"] = row._id;
+            transformData["eventId"] = row.transaction.eventDonated._id;
+            transformData["rejectReason"] = rejectReason;
+            return transformData;
+        }
+    );
+
+    const { data, status } = isApprove
+        ? await DonorTransactionRepo.approveParticipants(participants)
+        : await DonorTransactionRepo.rejectParticipants(participants);
+
+    if (data && status === 200) {
+        toast.add({
+            severity: "success",
+            summary: isApprove
+                ? "Participants Approved"
+                : "Participants Rejected",
+            life: 2000,
+        });
+        emits("updateParticipants");
+    }
+};
 </script>
 
 <template>
@@ -78,11 +204,11 @@ onBeforeMount(() => {
         :paginator="true"
         class="p-datatable-gridlines"
         :rows="5"
-        dataKey="_id"
+        dataKey="dataKey"
         :rowHover="true"
         removableSort
         filterDisplay="row"
-        v-model:selection="selectedDonors"
+        v-model:selection="selectedParticipants"
         v-model:filters="filters"
         :filters="filters"
         responsiveLayout="scroll"
@@ -90,7 +216,7 @@ onBeforeMount(() => {
             'name',
             '_id',
             'transaction.dateDonated',
-            'transaction._event.name',
+            'transaction.eventDonated.name',
             'transaction.blood.name',
             'transaction.blood.type',
             'transaction.amount',
@@ -112,15 +238,18 @@ onBeforeMount(() => {
                         type="button"
                         icon="pi pi-file-excel"
                         label="Export to Excel"
+                        @click="downloadExcel"
                         class="p-button-outlined mb-2 mr-2"
                     />
 
                     <FileUpload
                         mode="basic"
+                        @select="onSelectExcel($event)"
                         name="requestFiles"
                         choose-label="Upload Excel File"
+                        :showUploadButton="false"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        v-if="participants"
+                        v-if="participants && !isRerender"
                     />
                 </div>
 
@@ -137,7 +266,9 @@ onBeforeMount(() => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty> No donors found. </template>
+        <template #empty>
+            <h4 style="text-align: center">No donor found.</h4>
+        </template>
 
         <!-- Columns -->
 
@@ -149,7 +280,7 @@ onBeforeMount(() => {
         ></PrimeVueColumn>
 
         <!-- Donor's name -->
-        <PrimeVueColumn field="name" header="Name" style="min-width: 12rem">
+        <PrimeVueColumn field="name" header="Name" style="min-width: 300px">
             <template #body="{ data }">
                 {{ data.name }}
             </template>
@@ -192,7 +323,7 @@ onBeforeMount(() => {
             field="transaction.dateDonated"
             dataType="date"
             :sortable="true"
-            style="min-width: 200px; width: 14rem !important"
+            style="min-width: 250px; width: 14rem !important"
             v-if="participants"
         >
             <template #body="{ data }">
@@ -210,19 +341,19 @@ onBeforeMount(() => {
 
         <!-- Event name -->
         <PrimeVueColumn
-            field="transaction._event.name"
+            field="transaction.eventDonated.name"
             header="Event"
             style="min-width: 250px; max-width: 12rem"
             v-if="participants"
         >
             <template #body="{ data }">
-                {{ data.transaction._event.name }}
+                {{ data.transaction.eventDonated.name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
                 <DropDown
                     v-model="filterModel.value"
                     @change="filterCallback"
-                    :options="events"
+                    :options="eventStore.names"
                     class="p-column-filter"
                     style="height: 2.2rem"
                     :showClear="true"
@@ -327,12 +458,13 @@ onBeforeMount(() => {
         </PrimeVueColumn>
 
         <!-- Table's footer -->
-        <template #footer v-if="selectedDonors.length > 0">
+        <template #footer v-if="selectedParticipants.length > 0">
             <PrimeVueButton
                 type="button"
                 icon="pi pi-check-circle"
                 label="Approve"
                 class="p-button p-button-sm mr-2 approve-btn"
+                @click="openConfirmDialog"
             />
 
             <PrimeVueButton
@@ -340,9 +472,98 @@ onBeforeMount(() => {
                 icon="pi pi-times-circle"
                 label="Reject"
                 class="p-button p-button-sm reject-btn"
+                @click="openConfirmDialog(false)"
             />
         </template>
     </PrimeVueTable>
+
+    <!-- Event for import excel dialog -->
+    <Dialog
+        header="Which event that these participants from?"
+        v-model:visible="selectEventsDialog"
+        :style="{ width: '50vw' }"
+        :modal="true"
+    >
+        <DropDown
+            v-model="newParticipants.eventId"
+            :options="eventStore.activeEvents"
+            optionValue="_id"
+            class="p-column-filter"
+            placeholder="Choose event"
+            style="width: 100%"
+            :showClear="true"
+        >
+            <template #value="slotProps">
+                <span v-if="slotProps.value">
+                    {{ eventStore.getEventById(slotProps.value)?.name }}
+                </span>
+                <span v-else>
+                    {{ slotProps.placeholder }}
+                </span>
+            </template>
+            <template #option="slotProps">
+                <span>{{ slotProps.option.name }}</span>
+            </template>
+        </DropDown>
+
+        <template #footer>
+            <PrimeVueButton
+                label="Import"
+                icon="pi pi-plus-circle"
+                @click="importExcel"
+            />
+            <PrimeVueButton
+                label="Close"
+                icon="pi pi-times"
+                @click="selectEventsDialog = false"
+            />
+        </template>
+    </Dialog>
+
+    <!-- Approve Reject dialog -->
+    <Dialog
+        :header="isApprove ? 'Approving participants' : 'Reject participants'"
+        v-model:visible="showConfirmDialog"
+        :style="{ width: '50vw' }"
+        position="bottom"
+        :modal="true"
+    >
+        <p class="m-0" v-if="isApprove">
+            You are approving
+            <span class="app-highlight">
+                {{ selectedParticipants.length }} participants
+            </span>
+            . Are you sure to proceed?
+        </p>
+        <template v-else>
+            <p class="m-0">
+                You are rejecting
+                <span class="app-highlight">
+                    {{ selectedParticipants.length }} participants
+                </span>
+                . Please provide a reason below.
+            </p>
+            <InputText
+                class="reject-input"
+                placeholder="Type in the reject reason"
+                v-model="rejectReason"
+            />
+        </template>
+
+        <template #footer>
+            <PrimeVueButton
+                label="Cancel"
+                icon="pi pi-times"
+                @click="showConfirmDialog = false"
+                class="p-button-text"
+            />
+            <PrimeVueButton
+                label="Proceed"
+                icon="pi pi-check"
+                @click="handleParticipants"
+            />
+        </template>
+    </Dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -356,5 +577,10 @@ onBeforeMount(() => {
 .reject-btn {
     border: none !important;
     background: #ff6363 !important;
+}
+
+.reject-input {
+    margin-top: 1rem;
+    width: 80%;
 }
 </style>
