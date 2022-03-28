@@ -32,7 +32,8 @@ onBeforeMount(async () => {
 
   // console.log("hospital data: ", hospitals);
 
-  hospitals && hospitals.length !== 0 && initFilters();
+  // hospitals && hospitals.length !== 0 && initFilters();
+  initFilters();
 });
 
 const onRowClick = (payload) => {
@@ -71,7 +72,7 @@ const onRowClick = (payload) => {
           :paginator="true"
           removable-sort
           filterDisplay="row"
-          v-model="filters"
+          v-model:filters="filters"
           :filters="filters"
           :globalFilterFields="['name', 'address', 'phone']"
         >
@@ -117,7 +118,7 @@ const onRowClick = (payload) => {
           <!-- Hospital's name -->
           <PrimeVueColumn field="name" header="Name" style="min-width: 20rem">
             <template #body="{ data }">
-              {{ data && data.name }}
+              {{ data.name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
@@ -139,7 +140,7 @@ const onRowClick = (payload) => {
             style="max-width: 18rem"
           >
             <template #body="{ data }">
-              {{ data && data.address }}
+              {{ data.address }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
@@ -161,7 +162,7 @@ const onRowClick = (payload) => {
             style="max-width: 6rem"
           >
             <template #body="{ data }">
-              {{ data && data.phone }}
+              {{ data.phone }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
