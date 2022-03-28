@@ -16,7 +16,7 @@ let filters = $ref(null);
 const initFilters = () => {
     filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        hospital_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: { value: null, matchMode: FilterMatchMode.CONTAINS },
         address: { value: null, matchMode: FilterMatchMode.CONTAINS },
         phone: { value: null, matchMode: FilterMatchMode.CONTAINS },
     };
@@ -74,7 +74,7 @@ const onRowClick = (payload) => {
                     filterDisplay="row"
                     v-model:filters="filters"
                     :filters="filters"
-                    :globalFilterFields="['hospital_name', 'address', 'phone']"
+                    :globalFilterFields="['name', 'address', 'phone']"
                 >
                     <!-- Header of the table -->
                     <template #header>
@@ -119,12 +119,12 @@ const onRowClick = (payload) => {
                     <!-- Columns -->
                     <!-- Hospital's name -->
                     <PrimeVueColumn
-                        field="hospital_name"
+                        field="name"
                         header="Name"
                         style="min-width: 20rem"
                     >
                         <template #body="{ data }">
-                            {{ data && data.hospital_name }}
+                            {{ data && data.name }}
                         </template>
                         <template #filter="{ filterModel, filterCallback }">
                             <InputText
