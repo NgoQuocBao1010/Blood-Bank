@@ -391,7 +391,7 @@
 
 ## Hospital Request
 
-1. GET all hospital -> Endpoint: api/request
+1. GET all hospital request -> Endpoint: api/request
     ```
     [
         {
@@ -402,10 +402,8 @@
                 "name": "string",
                 "type": "string"
             },
-            "hospital": {
-                "_id": "string",
-                "name": "string"
-            }
+            "hospitalId": "string",
+            "hospitalName": "string"
         }
     ]
     ```
@@ -420,10 +418,8 @@
             "name": "string",
             "type": "string"
         },
-        "hospital": {
-            "_id": "string",
-            "name": "string"
-        }
+        "hospitalId": "string",
+        "hospitalName": "string"
     }
     ```
 
@@ -437,9 +433,7 @@
             "name": "string",
             "type": "string"
         },
-        "hospital": {
-            "_id": "string"
-        }
+        "hospitalId": "string"
     }
     ```
 
