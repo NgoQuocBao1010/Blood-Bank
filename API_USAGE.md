@@ -384,7 +384,17 @@
     }
     ```
 
-4. DELETE hospital by id -> Endpoint: api/hospital/{id}
+4. PUT edit hospital -> Endpoint: api/hospital/{id}
+    ```
+    {
+        "name": "string",
+        "address": "string",
+        "phone": "string"
+    }
+    ```
+    Return **true** if update success.
+
+5. DELETE hospital by id -> Endpoint: api/hospital/{id}
     ```
     Return true if delete success
     ```
