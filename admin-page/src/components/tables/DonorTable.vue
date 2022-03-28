@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, nextTick } from "vue";
+import { onBeforeMount, nextTick, transformVNodeArgs } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
@@ -16,6 +16,7 @@ import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
 import { JSONtoExcel, excelToJson } from "../../utils/excel";
 import DonorRepo from "../../api/DonorRepo";
+import DonorTransactionRepo from "../../api/DonorTransaction";
 
 const { donorsData, participants } = defineProps({
     donorsData: {
@@ -29,8 +30,9 @@ const { donorsData, participants } = defineProps({
 });
 
 let donors = $ref(null);
-let selectedDonors = $ref([]);
+let selectedParticipants = $ref([]);
 const eventStore = useEventStore();
+const emits = defineEmits(["updateParticipants"]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -72,6 +74,7 @@ onBeforeMount(async () => {
     donors = donors.map((row) => {
         let donor = { ...row };
 
+        donor["dataKey"] = donor._id + donor.transaction.eventDonated._id;
         donor.transaction.dateDonated = new Date(
             parseInt(donor.transaction.dateDonated)
         );
@@ -81,6 +84,7 @@ onBeforeMount(async () => {
     if (!eventStore.events) await eventStore.setEvents();
 });
 
+// Excel import and export
 const toast = useToast();
 const downloadExcel = () => {
     if (donorsData.length === 0) {
@@ -96,7 +100,6 @@ const downloadExcel = () => {
     JSONtoExcel(excelData, "Pending_Donors");
 };
 
-const emits = defineEmits(["updateParticipants"]);
 let newParticipants = $ref({
     eventId: null,
     listParticipants: null,
@@ -146,6 +149,53 @@ const importExcel = async () => {
         emits("updateParticipants");
     }
 };
+
+// Approve reject
+let isApprove = $ref(null);
+let rejectReason = $ref("");
+let showConfirmDialog = $ref(false);
+const openConfirmDialog = (approve = true) => {
+    isApprove = approve;
+    showConfirmDialog = true;
+};
+const handleParticipants = async () => {
+    if (!isApprove && !rejectReason) {
+        toast.add({
+            severity: "error",
+            summary: "Invalid Reject Reason",
+            detail: "Please provide a reason for rejecting these participants",
+            life: 4000,
+        });
+
+        return;
+    }
+
+    const participants = JSON.parse(JSON.stringify(selectedParticipants)).map(
+        (row) => {
+            let transformData = {};
+
+            transformData["_id"] = row._id;
+            transformData["eventId"] = row.transaction.eventDonated._id;
+            transformData["rejectReason"] = rejectReason;
+            return transformData;
+        }
+    );
+
+    const { data, status } = isApprove
+        ? await DonorTransactionRepo.approveParticipants(participants)
+        : await DonorTransactionRepo.rejectParticipants(participants);
+
+    if (data && status === 200) {
+        toast.add({
+            severity: "success",
+            summary: isApprove
+                ? "Participants Approved"
+                : "Participants Rejected",
+            life: 2000,
+        });
+        emits("updateParticipants");
+    }
+};
 </script>
 
 <template>
@@ -154,11 +204,11 @@ const importExcel = async () => {
         :paginator="true"
         class="p-datatable-gridlines"
         :rows="5"
-        dataKey="_id"
+        dataKey="dataKey"
         :rowHover="true"
         removableSort
         filterDisplay="row"
-        v-model:selection="selectedDonors"
+        v-model:selection="selectedParticipants"
         v-model:filters="filters"
         :filters="filters"
         responsiveLayout="scroll"
@@ -408,12 +458,13 @@ const importExcel = async () => {
         </PrimeVueColumn>
 
         <!-- Table's footer -->
-        <template #footer v-if="selectedDonors.length > 0">
+        <template #footer v-if="selectedParticipants.length > 0">
             <PrimeVueButton
                 type="button"
                 icon="pi pi-check-circle"
                 label="Approve"
                 class="p-button p-button-sm mr-2 approve-btn"
+                @click="openConfirmDialog"
             />
 
             <PrimeVueButton
@@ -421,11 +472,12 @@ const importExcel = async () => {
                 icon="pi pi-times-circle"
                 label="Reject"
                 class="p-button p-button-sm reject-btn"
+                @click="openConfirmDialog(false)"
             />
         </template>
     </PrimeVueTable>
 
-    <!-- Event choosing dialog -->
+    <!-- Event for import excel dialog -->
     <Dialog
         header="Which event that these participants from?"
         v-model:visible="selectEventsDialog"
@@ -467,6 +519,51 @@ const importExcel = async () => {
             />
         </template>
     </Dialog>
+
+    <!-- Approve Reject dialog -->
+    <Dialog
+        :header="isApprove ? 'Approving participants' : 'Reject participants'"
+        v-model:visible="showConfirmDialog"
+        :style="{ width: '50vw' }"
+        position="bottom"
+        :modal="true"
+    >
+        <p class="m-0" v-if="isApprove">
+            You are approving
+            <span class="app-highlight">
+                {{ selectedParticipants.length }} participants
+            </span>
+            . Are you sure to proceed?
+        </p>
+        <template v-else>
+            <p class="m-0">
+                You are rejecting
+                <span class="app-highlight">
+                    {{ selectedParticipants.length }} participants
+                </span>
+                . Please provide a reason below.
+            </p>
+            <InputText
+                class="reject-input"
+                placeholder="Type in the reject reason"
+                v-model="rejectReason"
+            />
+        </template>
+
+        <template #footer>
+            <PrimeVueButton
+                label="Cancel"
+                icon="pi pi-times"
+                @click="showConfirmDialog = false"
+                class="p-button-text"
+            />
+            <PrimeVueButton
+                label="Proceed"
+                icon="pi pi-check"
+                @click="handleParticipants"
+            />
+        </template>
+    </Dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -480,5 +577,10 @@ const importExcel = async () => {
 .reject-btn {
     border: none !important;
     background: #ff6363 !important;
+}
+
+.reject-input {
+    margin-top: 1rem;
+    width: 80%;
 }
 </style>
