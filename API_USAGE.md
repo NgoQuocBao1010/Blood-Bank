@@ -1,3 +1,14 @@
+- [Search Keyword by _id](#search-keyword-by-_id)
+- [Donors API](#donors-api)
+- [DonorTransaction API](#donortransaction-api)
+- [Participants API](#participants-api)
+- [Events](#events)
+- [Blood](#blood)
+- [User](#user)
+- [Event Submission](#event-submission)
+- [Hospital](#hospital)
+- [Hospital Request](#hospital-request)
+
 ## Search Keyword by _id
 1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{_id}
     ```
@@ -374,6 +385,59 @@
     ```
 
 4. DELETE hospital by id -> Endpoint: api/hospital/{id}
+    ```
+    Return true if delete success
+    ```
+
+## Hospital Request
+
+1. GET all hospital request -> Endpoint: api/request
+    ```
+    [
+        {
+            "_id": "string",
+            "date": "string",
+            "quantity": int,
+            "blood": {
+                "name": "string",
+                "type": "string"
+            },
+            "hospitalId": "string",
+            "hospitalName": "string"
+        }
+    ]
+    ```
+
+2. GET hospital by id -> Endpoint: api/request/{id}
+    ```
+    {
+        "_id": "string",
+        "date": "string",
+        "quantity": int,
+        "blood": {
+            "name": "string",
+            "type": "string"
+        },
+        "hospitalId": "string",
+        "hospitalName": "string"
+    }
+    ```
+
+3. POST create request -> Endpoint: api/request
+    ```
+    {
+        "_id": "string",
+        "date": "string",
+        "quantity": int,
+        "blood": {
+            "name": "string",
+            "type": "string"
+        },
+        "hospitalId": "string"
+    }
+    ```
+
+4. DELETE request by id -> Endpoint: api/request/{id}
     ```
     Return true if delete success
     ```
