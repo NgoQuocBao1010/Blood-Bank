@@ -13,10 +13,14 @@ namespace backend.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
+        private readonly IDonorTransactionRepository _donorTransactionRepository;
+        private readonly IDonorRepository _donorRepository;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(IEventRepository eventRepository, IDonorTransactionRepository donorTransactionRepository, IDonorRepository donorRepository)
         {
             _eventRepository = eventRepository;
+            _donorRepository = donorRepository;
+            _donorTransactionRepository = donorTransactionRepository;
             AddDefaultData();
         }
 
@@ -64,6 +68,27 @@ namespace backend.Controllers
         {
             var e = await _eventRepository.Get();
             return new JsonResult(e);
+        }
+        
+        [HttpGet("listParticipants/{id}")]
+        public async Task<IActionResult> GetListParticipants(string id)
+        {
+            var result = new List<Donor>();
+            var listDonor = await _donorRepository.Get();
+            foreach (var donor in listDonor)
+            {
+                var transaction = await _donorTransactionRepository.GetByEventAndDonor(donor._id, id);
+                
+                if (transaction == null) continue;
+                
+                var tempDonor = await _donorRepository.Get(donor._id);
+                tempDonor.transaction = transaction;
+                result.Add(tempDonor);
+            }
+
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+
+            return new JsonResult(sortResult);
         }
 
         [HttpPut("{id}")]
