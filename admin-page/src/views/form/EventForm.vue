@@ -10,6 +10,7 @@ import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 
+import { useEventStore } from "../../stores/event";
 import EventRepo from "../../api/EventRepo";
 import { PRIMARY_CITIES } from "../../constants";
 
@@ -77,6 +78,7 @@ const submitData = async () => {
     }
     // Make API call to server
     submitting = true;
+    formData.startDate = formData.startDate.getTime().toString();
 
     if (isEditPage) {
         setTimeout(() => {
@@ -95,6 +97,7 @@ const submitData = async () => {
         const { data, status } = await EventRepo.createNewEvent(formData);
 
         if (data && status === 200) {
+            await useEventStore().setEvents();
             toast.add({
                 severity: "success",
                 summary: "Successful",
