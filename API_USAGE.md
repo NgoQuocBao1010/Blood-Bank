@@ -256,6 +256,7 @@
         "password": "string"
     }
     ```
+    Return token when login success.
 
 2. GET all user -> Endpoint: api/user
     ```
