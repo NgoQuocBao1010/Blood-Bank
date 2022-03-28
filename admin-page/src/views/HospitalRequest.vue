@@ -37,11 +37,11 @@ const formRules = $computed(() => {
   };
 });
 
-let hospital_name = $ref("");
+let name = $ref("");
 
 onBeforeMount(async () => {
   const data = await HospitalRepo.get(hospital_id);
-  hospital_name = data.data.hospital_name;
+  name = data.data.name;
 });
 
 const $v = $(useVuelidate(formRules, formData));
@@ -141,9 +141,9 @@ const submitData = async () => {
   <div class="grid">
     <div class="col-12">
       <div class="card">
-        <h4 class="hospital-name" :v-model="hospital_name">
+        <h4 class="hospital-name" :v-model="name">
           <i class="fa fa-hospital"></i>
-          {{ hospital_name }}
+          {{ name }}
         </h4>
         <h3 class="title">Hospital Blood Request Form</h3>
 
