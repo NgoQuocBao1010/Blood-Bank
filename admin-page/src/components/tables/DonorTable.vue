@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, nextTick } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
@@ -102,10 +102,15 @@ let newParticipants = $ref({
     listParticipants: null,
     files: null,
 });
+let isRerender = $ref(false);
 let selectEventsDialog = $ref(false);
-const onSelectExcel = (event) => {
+const onSelectExcel = async (event) => {
     newParticipants.files = event.files[0];
     selectEventsDialog = true;
+
+    isRerender = true;
+    await nextTick();
+    isRerender = false;
 };
 const importExcel = async () => {
     if (!newParticipants.eventId) {
@@ -192,8 +197,9 @@ const importExcel = async () => {
                         @select="onSelectExcel($event)"
                         name="requestFiles"
                         choose-label="Upload Excel File"
+                        :showUploadButton="false"
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        v-if="participants"
+                        v-if="participants && !isRerender"
                     />
                 </div>
 
@@ -434,7 +440,6 @@ const importExcel = async () => {
             placeholder="Choose event"
             style="width: 100%"
             :showClear="true"
-            :showUploadButton="false"
         >
             <template #value="slotProps">
                 <span v-if="slotProps.value">
