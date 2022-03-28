@@ -21,6 +21,41 @@ namespace backend.Controllers
             _hospitalRepository = hospitalRepository;
         }
 
+        [HttpPut("approve/{id}")]
+        public async Task<IActionResult> ApproveRequest(string id)
+        {
+            try
+            {
+                var result = await _requestRepository.Get(id);
+                result.ApproveStatus = 1;
+                await _requestRepository.Update(id, result);
+                return Ok("Approve request successfully!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Request ID error!");
+            }
+        }
+
+        [HttpPut("reject/{id}")]
+        public async Task<IActionResult> RejectRequest(string id, Request request)
+        {
+            try
+            {
+                var result = await _requestRepository.Get(id);
+                result.ApproveStatus = -1;
+                result.RejectReason = request.RejectReason;
+                await _requestRepository.Update(result._id, result);
+                return Ok("Reject request successfully!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Request ID error!");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(Request request)
         {

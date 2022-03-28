@@ -45,7 +45,9 @@ namespace backend.Repositories
                 .Set(r => r.Blood.Name, request.Blood.Name)
                 .Set(r => r.Blood.Type, request.Blood.Type)
                 .Set(r => r.HospitalId, request.HospitalId)
-                .Set(r => r.HospitalName, request.HospitalName);
+                .Set(r => r.HospitalName, request.HospitalName)
+                .Set(r => r.ApproveStatus, request.ApproveStatus)
+                .Set(r => r.RejectReason, request.RejectReason);
             
             var result = await _request.UpdateOneAsync(filter, update);
             

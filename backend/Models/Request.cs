@@ -13,11 +13,13 @@ namespace backend.Models
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
-        
+
         public string Date { get; set; }
         public int Quantity { get; set; }
         public RequestBlood Blood { get; set; }
         public string HospitalId { get; set; }
         public string HospitalName { get; set; }
+        public int ApproveStatus { get; set; }
+        public string RejectReason { get; set; }
     }
 }
