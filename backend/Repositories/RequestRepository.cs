@@ -48,9 +48,9 @@ namespace backend.Repositories
                 .Set(r => r.HospitalName, request.HospitalName)
                 .Set(r => r.ApproveStatus, request.ApproveStatus)
                 .Set(r => r.RejectReason, request.RejectReason);
-            
+
             var result = await _request.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount == 1;
         }
 

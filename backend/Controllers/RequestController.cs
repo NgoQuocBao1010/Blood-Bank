@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -21,14 +22,17 @@ namespace backend.Controllers
             _hospitalRepository = hospitalRepository;
         }
 
-        [HttpPut("approve/{id}")]
-        public async Task<IActionResult> ApproveRequest(string id)
+        [HttpPut("approve")]
+        public async Task<IActionResult> ApproveRequest(IEnumerable<Request> listRequest)
         {
             try
             {
-                var result = await _requestRepository.Get(id);
-                result.ApproveStatus = 1;
-                await _requestRepository.Update(id, result);
+                foreach (var request in listRequest)
+                {
+                    var result = await _requestRepository.Get(request._id);
+                    result.ApproveStatus = 1;
+                    await _requestRepository.Update(request._id, result);
+                }
                 return Ok("Approve request successfully!");
             }
             catch (Exception e)
@@ -38,15 +42,18 @@ namespace backend.Controllers
             }
         }
 
-        [HttpPut("reject/{id}")]
-        public async Task<IActionResult> RejectRequest(string id, Request request)
+        [HttpPut("reject")]
+        public async Task<IActionResult> RejectRequest(IEnumerable<Request> listRequest)
         {
             try
             {
-                var result = await _requestRepository.Get(id);
-                result.ApproveStatus = -1;
-                result.RejectReason = request.RejectReason;
-                await _requestRepository.Update(result._id, result);
+                foreach (var request in listRequest)
+                {
+                    var result = await _requestRepository.Get(request._id);
+                    result.ApproveStatus = -1;
+                    result.RejectReason = request.RejectReason;
+                    await _requestRepository.Update(result._id, result);
+                }
                 return Ok("Reject request successfully!");
             }
             catch (Exception e)
