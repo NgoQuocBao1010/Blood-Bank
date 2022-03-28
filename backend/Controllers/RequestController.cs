@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -23,64 +24,78 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Request request)
         {
-            var hospital = _hospitalRepository.Get(request.Hospital._id);
-            if (hospital == null)
+            try
             {
-                return BadRequest("Hospital empty");
+                var hospital = _hospitalRepository.Get(request.Hospital._id);
+                request.Hospital.Name = hospital.Result.Name;
+                var result = await _requestRepository.Create(request);
+                return Ok(new {id = result});
             }
-            request.Hospital.Name = hospital.Result.Name;
-            var result = await _requestRepository.Create(request);
-            return Ok(new {id = result});
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Hospital ID error!");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _requestRepository.Get(id);
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = await _requestRepository.Get(id);
+                return Ok(new {id = result});
             }
-
-            return new JsonResult(result);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Hospital ID error!");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _requestRepository.Get();
-            if (result == null)
+            try
             {
-                return NotFound();
+                var result = await _requestRepository.Get();
+                return Ok(new {id = result});
             }
-
-            return new JsonResult(result);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Hospital ID error!");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Request request)
         {
-            var exist = await _requestRepository.Get(id);
-            if (exist == null)
+            try
             {
-                return NotFound();
+                var result = await _requestRepository.Update(id, request);
+                return Ok(new {result});
             }
-
-            var result = await _requestRepository.Update(id, request);
-            return Ok(new {result});
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Hospital ID error!");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var exist = await _requestRepository.Get(id);
-            if (exist == null)
+            try
             {
-                return NotFound();
+                var result = await _requestRepository.Delete(id);
+                return Ok(new {result});
             }
-            
-            var result = await _requestRepository.Delete(id);
-            return Ok(new {result});
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Hospital ID error!");
+            }
         }
     }
 }
