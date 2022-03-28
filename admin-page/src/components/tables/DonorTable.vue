@@ -102,7 +102,7 @@ let newParticipants = $ref({
     listParticipants: null,
     files: null,
 });
-const selectEventsDialog = $ref(false);
+let selectEventsDialog = $ref(false);
 const onSelectExcel = (event) => {
     newParticipants.files = event.files[0];
     selectEventsDialog = true;
