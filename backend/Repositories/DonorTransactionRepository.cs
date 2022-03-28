@@ -10,25 +10,22 @@ namespace backend.Repositories
     {
         private readonly IMongoCollection<DonorTransaction> _donorTransaction;
         private readonly IMongoCollection<Donor> _donor;
-        private readonly IMongoCollection<Blood> _blood;
 
         public DonorTransactionRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<DonorTransaction>(nameof(DonorTransaction));
             var collection1 = database.GetCollection<Donor>(nameof(Donor));
-            var collection2 = database.GetCollection<Blood>(nameof(Blood));
 
             _donorTransaction = collection;
             _donor = collection1;
-            _blood = collection2;
         }
 
 
         public async Task<string> Create(DonorTransaction donorTransaction)
         {
             await _donorTransaction.InsertOneAsync(donorTransaction);
-            return donorTransaction._id;
+            return "Create Successfully";
         }
 
         public Task<DonorTransaction> Get(string _id)
@@ -62,14 +59,49 @@ namespace backend.Repositories
 
             return donorTransaction;
         }
+        
+        public async Task<IEnumerable<DonorTransaction>> GetByEvent(string eventId)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+            var transaction = await _donorTransaction.Find(filter).ToListAsync();
+            return transaction;
+        }
+        
+        public async Task<DonorTransaction> GetByEventAndDonor(string _id, string eventId)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
+                         & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+            var transaction = await _donorTransaction.Find(filter).FirstOrDefaultAsync();
+            return transaction;
+        }
+
 
         public async Task<bool> ApproveParticipants(string _id, string eventId)
         {
+            // filter transaction
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
                 & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
             
+            // update status to 1 -> Approve to be a donor
             var update = Builders<DonorTransaction>.Update.Set(d => d.status, 1);
             var result = await _donorTransaction.UpdateOneAsync(filter, update);
+
+
+            return result.ModifiedCount == 1;
+        }
+        
+        public async Task<bool> RejectParticipants(string _id, string eventId, string rejectReason)
+        {
+            // filter transaction
+            var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
+                         & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+            
+            // update status to 1 -> Approve to be a donor
+            var update = Builders<DonorTransaction>.Update
+                .Set(d => d.status, -1)
+                .Set(d => d.rejectReason, rejectReason);
+            var result = await _donorTransaction.UpdateOneAsync(filter, update);
+
 
             return result.ModifiedCount == 1;
         }

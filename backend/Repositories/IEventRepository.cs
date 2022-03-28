@@ -17,6 +17,9 @@ namespace backend.Repositories
         // Update
         Task<bool> Update(string _id, Event e);
         
+        // Update Number of Participants
+        Task<bool> UpdateParticipant(string _id, int numOfParticipants);
+        
         // Delete
         Task<bool> Delete(string _id);
         

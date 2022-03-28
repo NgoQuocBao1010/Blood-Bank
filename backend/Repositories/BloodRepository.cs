@@ -14,7 +14,7 @@ namespace backend.Repositories
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Blood>(nameof(Blood));
-            
+
             _blood = collection;
         }
 
@@ -37,15 +37,16 @@ namespace backend.Repositories
 
             return blood;
         }
-        
-        public async Task<Blood> GetByName(string name)
+
+        public async Task<Blood> GetByNameAndType(string name, string type)
         {
-            var filter = Builders<Blood>.Filter.Eq(b => b.name, name);
+            var filter = Builders<Blood>.Filter.Eq(b => b.name, name)
+                         & Builders<Blood>.Filter.Eq(b => b.type, type);
             var blood = await _blood.Find(filter).FirstOrDefaultAsync();
 
             return blood;
         }
-        
+
 
         public async Task<IEnumerable<Blood>> Get()
         {
@@ -57,24 +58,29 @@ namespace backend.Repositories
         public async Task<bool> Update(string _id, Blood blood)
         {
             var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
+
             var update = Builders<Blood>.Update
                 .Set(b => b.name, blood.name)
                 .Set(b => b.type, blood.type)
                 .Set(b => b.quantity, blood.quantity);
             var result = await _blood.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount == 1;
         }
-        
-        public async Task<bool> UpdateQuantity(string _id, int amount)
+
+        public async Task<bool> UpdateQuantity(string name, string type, int amount)
         {
-            var blood = await Get(_id);
+            var blood = await GetByNameAndType(name, type);
+            // get current quantity of Blood
             var quantity = blood.quantity;
-            var filter = Builders<Blood>.Filter.Eq(b => b._id, _id);
+            
+            // filter to update a quantity property
+            var filter = Builders<Blood>.Filter.Eq(b => b.name, name)
+                         & Builders<Blood>.Filter.Eq(b => b.type, type);
             var update = Builders<Blood>.Update
                 .Set(b => b.quantity, quantity + amount);
             var result = await _blood.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount == 1;
         }
 
