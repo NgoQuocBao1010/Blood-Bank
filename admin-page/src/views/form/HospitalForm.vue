@@ -75,6 +75,7 @@ const submitData = async () => {
   try {
     if (name === "Hospital Edit" && _id) {
       await HospitalRepo.put({
+        _id: _id,
         name: formData.name,
         address: formData.address,
         phone: formData.phone,
