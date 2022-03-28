@@ -26,8 +26,8 @@ namespace backend.Controllers
         {
             try
             {
-                var hospital = _hospitalRepository.Get(request.Hospital._id);
-                request.Hospital.Name = hospital.Result.Name;
+                var hospital = _hospitalRepository.Get(request.HospitalId);
+                request.HospitalName = hospital.Result.Name;
                 var result = await _requestRepository.Create(request);
                 return Ok(new {id = result});
             }
@@ -44,7 +44,7 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Get(id);
-                return Ok(new {id = result});
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Get();
-                return Ok(new {id = result});
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Update(id, request);
-                return Ok(new {result});
+                return Ok(result);
             }
             catch (Exception e)
             {
@@ -89,7 +89,7 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Delete(id);
-                return Ok(new {result});
+                return Ok(result);
             }
             catch (Exception e)
             {

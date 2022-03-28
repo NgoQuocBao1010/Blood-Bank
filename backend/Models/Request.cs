@@ -9,14 +9,6 @@ namespace backend.Models
         public string Type { get; set; }
     }
 
-    public class RequestHospital
-    {
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string _id { get; set; }
-
-        public string Name { get; set; }
-    }
-
     public class Request
     {
         [BsonRepresentation(BsonType.ObjectId)]
@@ -25,6 +17,7 @@ namespace backend.Models
         public string Date { get; set; }
         public int Quantity { get; set; }
         public RequestBlood Blood { get; set; }
-        public RequestHospital Hospital { get; set; }
+        public string HospitalId { get; set; }
+        public string HospitalName { get; set; }
     }
 }
