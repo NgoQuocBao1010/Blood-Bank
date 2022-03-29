@@ -121,7 +121,10 @@ const clearFilter = () => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty> No transaction found. </template>
+
+        <template #empty>
+            <h4 style="text-align: center">No transaction found.</h4>
+        </template>
 
         <!-- Columns -->
         <!-- Event name -->

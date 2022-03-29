@@ -138,7 +138,9 @@ onBeforeMount(() => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty> No requests found. </template>
+        <template #empty>
+            <h4 style="text-align: center">No requests found.</h4>
+        </template>
 
         <!-- Columns -->
 
