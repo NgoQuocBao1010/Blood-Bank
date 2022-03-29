@@ -10,39 +10,39 @@ import AppFooter from "./components/footer/AppFooter.vue";
 let sidebarHide = $ref(null);
 
 const winWidth =
-  window.innerWidth ||
-  document.documentElement.clientWidth ||
-  document.body.clientWidth;
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
 
 onMounted(() => {
-  // Hide sidebar if window's width is lower than 1280
-  sidebarHide = winWidth <= 1280 ? true : false;
+    // Hide sidebar if window's width is lower than 1280
+    sidebarHide = winWidth <= 1280 ? true : false;
 });
 </script>
 
 <template>
-  <main
-    class="layout-wrapper layout-static"
-    :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
-  >
-    <!-- Navbar -->
-    <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
+    <main
+        class="layout-wrapper layout-static"
+        :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
+    >
+        <!-- Navbar -->
+        <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
 
-    <!-- Sidebar -->
-    <div class="layout-sidebar scrollbar-style">
-      <AppSidebar />
-    </div>
+        <!-- Sidebar -->
+        <div class="layout-sidebar scrollbar-style">
+            <AppSidebar />
+        </div>
 
-    <!-- Main -->
-    <div class="layout-main-container">
-      <div class="layout-main">
-        <router-view />
-      </div>
-      <AppFooter v-once />
-    </div>
-  </main>
+        <!-- Main -->
+        <div class="layout-main-container">
+            <div class="layout-main">
+                <router-view :key="$route.fullPath" />
+            </div>
+            <AppFooter v-once />
+        </div>
+    </main>
 
-  <Toast position="bottom-right" />
+    <Toast position="bottom-right" />
 </template>
 
 <style lang="scss"></style>

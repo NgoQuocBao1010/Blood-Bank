@@ -1,13 +1,57 @@
 <script setup>
 import InputText from "primevue/inputtext";
 import OverlayPanel from "primevue/overlaypanel";
+import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
 import { useUserStore } from "../../stores/user";
+import AppRepo from "../../api/AppRepo";
+import router from "../../router";
 
 const userStore = useUserStore();
 const emit = defineEmits(["toggleSidebar"]);
+const toast = useToast();
 
-const keywordSearch = $ref("");
+let keywordSearch = $ref("");
+const searchID = async () => {
+    try {
+        const { data, status } = await AppRepo.searchByObjectById(
+            keywordSearch
+        );
+
+        if (data && status === 200) {
+            if ("Donor" in data) {
+                return router.push({
+                    name: "Donor Detail",
+                    params: { _id: keywordSearch },
+                });
+            }
+
+            if ("Event" in data) {
+                return router.push({
+                    name: "Event Detail",
+                    params: { _id: keywordSearch },
+                });
+            }
+        }
+    } catch (e) {
+        if (e.response) {
+            const { status } = e.response;
+            if (status === 404) {
+                toast.add({
+                    severity: "error",
+                    summary: "ID not matching",
+                    detail: "No object from Database is matched with your given ID",
+                    life: 3000,
+                });
+            } else {
+                throw e;
+            }
+        } else {
+            throw e;
+        }
+    }
+};
 
 let accountBtn = $ref(null);
 const toggleAccountPanel = (event) => {
@@ -52,7 +96,9 @@ const toggleAccountPanel = (event) => {
                         type="text"
                         style="width: 20rem"
                         v-model="keywordSearch"
-                        placeholder="Keyword search"
+                        placeholder="Enter personal ID"
+                        @keydown.enter="searchID"
+                        v-tooltip.top.focus="'Press enter key to search'"
                     />
                 </span>
             </li>
