@@ -143,7 +143,6 @@ let items = [{ label: "Donor Detail" }];
                 </div>
 
                 <template v-else>
-                    <h3>Donations Table</h3>
                     <AsyncTransactionTable :transactionData="listDonation" />
                 </template>
             </div>

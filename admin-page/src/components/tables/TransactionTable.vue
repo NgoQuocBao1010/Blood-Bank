@@ -64,6 +64,12 @@ const clearFilter = () => {
 </script>
 
 <template>
+    <div class="flex justify-content-between align-content-center">
+        <h3>Donations Table</h3>
+        <p class="app-note">
+            ** Hover on the FAILED badge to view the failed reason **
+        </p>
+    </div>
     <PrimeVueTable
         :value="transactions"
         :paginator="true"
@@ -194,7 +200,18 @@ const clearFilter = () => {
             style="max-width: 14rem !important"
         >
             <template #body="{ data }">
-                <span :class="'transaction-badge status-' + data.status">
+                <span
+                    :class="'transaction-badge status-' + data.status"
+                    style="cursor: pointer"
+                    v-tooltip.bottom="{
+                        value: `Failed Reason: ${data.rejectReason}`,
+                        class: 'reason-tooltip',
+                    }"
+                    v-if="data.status === 'failed'"
+                >
+                    {{ data.status }}
+                </span>
+                <span :class="'transaction-badge status-' + data.status" v-else>
                     {{ data.status }}
                 </span>
             </template>
@@ -219,7 +236,6 @@ const clearFilter = () => {
         </PrimeVueColumn>
     </PrimeVueTable>
 </template>
-
 <style lang="scss" scoped>
 @import "../../assets/styles/badge.scss";
 </style>
