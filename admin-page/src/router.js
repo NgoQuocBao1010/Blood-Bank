@@ -181,6 +181,12 @@ const router = createRouter({
                 unguard: true,
             },
         },
+        // Hospital request page
+        {
+            path: "/hospital-request/:_id",
+            name: "Hospital Page",
+            component: () => import("./views/HospitalRequest.vue"),
+        },
     ],
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {

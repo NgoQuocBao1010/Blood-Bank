@@ -27,18 +27,16 @@ const { requestHistory, isAcitivy } = defineProps({
 });
 
 let requests = $ref(null);
-
 let selectedRequests = $ref([]);
+// let fetchingData = $ref(true);
 
 // Filter configurations
 let filters = $ref(null);
 const initFilter = () => {
     filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        hospital_id: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        hospital_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        _id: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        dateRequested: {
+        hospitalName: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        date: {
             value: null,
             matchMode: FilterMatchMode.DATE_IS,
         },
@@ -50,7 +48,7 @@ const initFilter = () => {
             value: null,
             matchMode: FilterMatchMode.EQUALS,
         },
-        amount: {
+        quantity: {
             value: null,
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
         },
@@ -63,20 +61,22 @@ const clearFilter = () => {
 onBeforeMount(() => {
     let requestData;
 
-    // Check if not in activity, show only request hitory belong to  hospital
+    //   Check if not in activity, show only request hitory belong to  hospital
     if (isAcitivy === false) {
         requestData = requestHistory.filter(
-            (request) => request.hospital_id === hospital_id
+            (request) => request.hospitalId === hospital_id
         );
     } else {
         requestData = requestHistory;
     }
 
-    requests = requestData.map((row) => {
-        let request = { ...row };
-        request.dateRequested = new Date(request.dateRequested);
-        return request;
-    });
+    if (requestData) {
+        requests = requestData.map((row) => {
+            let request = { ...row };
+            request.date = new Date(request.date * 1000);
+            return request;
+        });
+    }
     initFilter();
 });
 </script>
@@ -96,13 +96,11 @@ onBeforeMount(() => {
         :filters="filters"
         responsiveLayout="scroll"
         :globalFilterFields="[
-            '_id',
-            'hospital_id',
-            'hospital_name',
-            'dateRequested',
+            'hospitalName',
+            'date',
             'blood.name',
             'blood.type',
-            'amount',
+            'quantity',
         ]"
     >
         <!-- Header of the table -->
@@ -138,9 +136,7 @@ onBeforeMount(() => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty>
-            <h4 style="text-align: center">No requests found.</h4>
-        </template>
+        <template #empty> No requests found. </template>
 
         <!-- Columns -->
 
@@ -153,13 +149,13 @@ onBeforeMount(() => {
 
         <!-- Hospital name -->
         <PrimeVueColumn
-            field="hospital_name"
+            field="hospitalName"
             header="Hospital Name"
             style="min-width: 250px; max-width: 12rem"
             v-if="isAcitivy"
         >
             <template #body="{ data }">
-                {{ data.hospital_name }}
+                {{ data.hospitalName }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
                 <InputText
@@ -176,13 +172,13 @@ onBeforeMount(() => {
         <!-- Date requested -->
         <PrimeVueColumn
             header="Date Requested"
-            field="dateRequested"
+            field="date"
             dataType="date"
             :sortable="true"
             style="min-width: 200px; width: 14rem !important"
         >
             <template #body="{ data }">
-                {{ formatDate(data.dateRequested) }}
+                {{ formatDate(data.date) }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
                 <Calendar
@@ -254,16 +250,16 @@ onBeforeMount(() => {
             </template>
         </PrimeVueColumn>
 
-        <!-- Amount -->
+        <!-- quantity -->
         <PrimeVueColumn
-            field="amount"
-            header="Amount (ml)"
+            field="quantity"
+            header="quantity (ml)"
             dataType="numeric"
             :sortable="true"
             :showFilterMatchModes="false"
             style="min-width: 180px; max-width: 10rem"
         >
-            <template #body="{ data }"> {{ data.amount }} ml </template>
+            <template #body="{ data }"> {{ data.quantity }} ml </template>
             <template #filter="{ filterModel, filterCallback }">
                 <InputNumber
                     v-model="filterModel.value"
