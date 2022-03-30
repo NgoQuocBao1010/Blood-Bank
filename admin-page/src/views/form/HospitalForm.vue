@@ -80,16 +80,21 @@ const submitData = async () => {
         address: formData.address,
         phone: formData.phone,
       });
+      router.push({ name: "Hospital Detail", params: { _id } });
     } else {
-      await HospitalRepo.post({
+      const response = await HospitalRepo.post({
         name: formData.name,
         address: formData.address,
         phone: formData.phone,
       });
+      const hospitalId = response.data.id;
+      router.push({
+        name: "Hospital Detail",
+        params: { _id: hospitalId },
+      });
     }
     errorMessage = null;
     submitting = false;
-    router.push({ name: "Hospitals Management" });
 
     toast.add({
       severity: "success",
@@ -107,7 +112,7 @@ const submitData = async () => {
         errorMessage = "You have an error";
         toast.add({
           severity: "error",
-          summary: "Form Error",
+          summary: "Check your information",
           detail: errorMessage,
           life: 3000,
         });
