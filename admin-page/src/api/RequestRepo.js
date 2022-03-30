@@ -23,9 +23,7 @@ export default {
         type: params.blood.type,
       },
       date: params.date,
-      hospital: {
-        _id: params.hospital._id,
-      },
+      hospitalId: params.hospitalId,
     });
   },
 };
