@@ -46,7 +46,7 @@ namespace backend.Controllers
                 var transaction = await _donorTransactionRepository.Get(_id);
                 if (transaction != null)
                 {
-                    result.type = "Transaction";
+                    result.type = "DonorTransaction";
                 }
             }
             else
