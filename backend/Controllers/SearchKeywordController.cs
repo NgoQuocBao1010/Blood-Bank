@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/search")]
-    // [Authorize]
+    [Authorize]
     public class SearchKeywordController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -30,7 +30,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string _id)
         {
             dynamic result = new ExpandoObject();
-            IDictionary<string, object> dict = result;
+            result.type = null;
 
             // validate _id
             if (ObjectId.TryParse(_id, out _))
@@ -39,14 +39,14 @@ namespace backend.Controllers
                 var e = await _eventRepository.Get(_id);
                 if (e != null)
                 {
-                    dict["Event"] = e;
+                    result.type = "Event";
                 }
             
                 // Check _id  in DonorTransaction model
                 var transaction = await _donorTransactionRepository.Get(_id);
                 if (transaction != null)
                 {
-                    dict["DonorTransaction"] = transaction;
+                    result.type = "Transaction";
                 }
             }
             else
@@ -55,11 +55,12 @@ namespace backend.Controllers
                 var donor = await _donorRepository.Get(_id);
                 if (donor != null)
                 {
-                    dict["Donor"] = donor;
+                    result.type = "Donor";
                 }
             }
+            
 
-            return dict.Count == 0 ? NotFound("Cannot find any object from this _id") : new JsonResult(result);
+            return result.type == null ? NotFound("Cannot find any object from this _id") : new JsonResult(result);
         }
     }
 }

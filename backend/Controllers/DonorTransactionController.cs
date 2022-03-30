@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize]
+    [Authorize]
     public class DonorTransactionController : ControllerBase
     {
         private readonly IDonorTransactionRepository _donorTransactionRepository;
@@ -80,7 +80,10 @@ namespace backend.Controllers
                 result = await _donorTransactionRepository.ApproveParticipants(participant._id, participant.eventId);
 
                 // check to approve successfully
-                if (!result) continue;
+                if (!result)
+                {
+                    return BadRequest();
+                }
 
                 // if approving successfully, add amount of blood in this transaction to quantity in Blood model
                 var transaction =
@@ -103,10 +106,10 @@ namespace backend.Controllers
                 result = await _donorTransactionRepository.RejectParticipants(participant._id, participant.eventId,
                     participant.rejectReason);
 
-                if (result) continue;
-                // check if update status of transaction failed
-                var error = "Cannot reject transaction of participant having _id" + participant._id;
-                return new JsonResult(error);
+                if (!result)
+                {
+                    return BadRequest();
+                }
             }
 
             return new JsonResult(result);
@@ -115,16 +118,12 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            bool result;
             var donorTransaction = await _donorTransactionRepository.Get(id);
             if (donorTransaction == null)
             {
-                result = false;
+                return NotFound("Cannot find any transaction with this _id");
             }
-            else
-            {
-                result = await _donorTransactionRepository.Delete(id);
-            }
+            var result = await _donorTransactionRepository.Delete(id);
 
             return new JsonResult(result);
         }

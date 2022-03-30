@@ -35,6 +35,13 @@ namespace backend.Repositories
             var request = await _eventSubmission.Find(_ => true).ToListAsync();
             return request;
         }
+        
+        public async Task<IEnumerable<EventSubmission>> GetByEvent(string eventId)
+        {
+            var filter = Builders<EventSubmission>.Filter.Eq(es => es.EventId, eventId);
+            var request = await _eventSubmission.Find(filter).ToListAsync();
+            return request;
+        }
 
         public async Task<bool> Update(string _id, EventSubmission eventSubmission)
         {
