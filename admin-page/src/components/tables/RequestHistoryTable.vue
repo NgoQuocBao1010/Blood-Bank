@@ -35,7 +35,7 @@ let filters = $ref(null);
 const initFilter = () => {
   filters = {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    "hospital.name": { value: null, matchMode: FilterMatchMode.CONTAINS },
+    hospitalName: { value: null, matchMode: FilterMatchMode.CONTAINS },
     date: {
       value: null,
       matchMode: FilterMatchMode.DATE_IS,
@@ -64,7 +64,7 @@ onBeforeMount(() => {
   //   Check if not in activity, show only request hitory belong to  hospital
   if (isAcitivy === false) {
     requestData = requestHistory.filter(
-      (request) => request.hospital._id === hospital_id
+      (request) => request.hospitalId === hospital_id
     );
   } else {
     requestData = requestHistory;
@@ -96,7 +96,7 @@ onBeforeMount(() => {
     :filters="filters"
     responsiveLayout="scroll"
     :globalFilterFields="[
-      'hospital.name',
+      'hospitalName',
       'date',
       'blood.name',
       'blood.type',
@@ -149,13 +149,13 @@ onBeforeMount(() => {
 
     <!-- Hospital name -->
     <PrimeVueColumn
-      field="hospital.name"
+      field="hospitalName"
       header="Hospital Name"
       style="min-width: 250px; max-width: 12rem"
       v-if="isAcitivy"
     >
       <template #body="{ data }">
-        {{ data.hospital.name }}
+        {{ data.hospitalName }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <InputText

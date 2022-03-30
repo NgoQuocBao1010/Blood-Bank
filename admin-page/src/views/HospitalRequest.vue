@@ -17,6 +17,7 @@ const AsyncRequestHistory = defineAsyncComponent({
 
 const route = useRoute();
 const hospital_id = route.params._id;
+
 const today = new Date();
 
 let formData = $ref({
@@ -25,9 +26,7 @@ let formData = $ref({
     name: "",
     type: "",
   },
-  hospital: {
-    _id: hospital_id,
-  },
+  hospitalId: hospital_id,
   date: Math.floor(new Date(today).getTime() / 1000),
 });
 
@@ -41,34 +40,29 @@ const formRules = $computed(() => {
   };
 });
 
-let name = $ref("");
-
-onBeforeMount(async () => {
-  const data = await HospitalRepo.get(hospital_id);
-  name = data.data.name;
-});
-
 const $v = $(useVuelidate(formRules, formData));
 const toast = useToast();
 
+let hospitalName = $ref("");
 let errorMessage = $ref(null);
 let submitting = $ref(false);
 let requestHistory = $ref(null);
 let showRequestHistory = $ref(false);
 
+// Reset form after submit
 const resetForm = () => {
   (formData.quantity = null),
     (formData.blood = {
       name: "",
       type: "",
     }),
-    (formData.hospital = {
-      _id: hospital_id,
-    }),
+    (formData.hospitalId = hospital_id),
     (formData.date = Math.floor(new Date(today).getTime() / 1000));
 };
 
 onBeforeMount(async () => {
+  const data = await HospitalRepo.get(hospital_id);
+  hospitalName = data.data.name;
   const requestData = await RequestRepo.getAll();
 
   if (requestData.data && requestData.data.length !== 0) {
@@ -100,9 +94,7 @@ const submitData = async () => {
         name: formData.blood.name,
         type: formData.blood.type,
       },
-      hospital: {
-        _id: formData.hospital._id,
-      },
+      hospitalId: hospital_id,
       date: formData.date.toString(),
     });
 
@@ -139,9 +131,9 @@ const submitData = async () => {
   <div class="grid">
     <div class="col-12">
       <div class="card">
-        <h4 class="hospital-name" :v-model="name">
+        <h4 class="hospital-name" :v-model="hospitalName">
           <i class="fa fa-hospital"></i>
-          {{ name }}
+          {{ hospitalName }}
         </h4>
         <h3 class="title">Hospital Blood Request Form</h3>
 
