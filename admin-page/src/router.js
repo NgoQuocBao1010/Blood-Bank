@@ -186,6 +186,9 @@ const router = createRouter({
             path: "/hospital-request/:_id",
             name: "Hospital Page",
             component: () => import("./views/HospitalRequest.vue"),
+            meta: {
+                layoutName: "LayoutDefault",
+            },
         },
     ],
     scrollBehavior(to, from, savedPosition) {
