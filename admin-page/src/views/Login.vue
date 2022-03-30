@@ -1,18 +1,19 @@
 <script setup>
+import { useRouter } from "vue-router";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Password from "primevue/password";
-import Checkbox from "primevue/checkbox";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 
+import { useUserStore } from "../stores/user";
+
+// Form data and validation rules
 const formData = $ref({
     email: "",
     password: "",
-    checked: false,
 });
-
 const formRules = $computed(() => {
     return {
         email: {
@@ -35,8 +36,11 @@ const formRules = $computed(() => {
     };
 });
 
+const router = useRouter();
+const userStore = useUserStore();
 const $v = $(useVuelidate(formRules, formData));
 const toast = useToast();
+let errorMessage = $ref(null);
 let submitting = $ref(false);
 
 const submitData = async () => {
@@ -54,17 +58,36 @@ const submitData = async () => {
     }
     // Make API call to server
     submitting = true;
-
-    setTimeout(() => {
-        submitting = false;
+    try {
+        await userStore.login(formData.email, formData.password);
+        errorMessage = null;
 
         toast.add({
             severity: "success",
-            summary: "Successful",
-            detail: "Login successful",
+            summary: "Login Success",
+            detail: `Welcom, ${userStore.email} 👋`,
             life: 3000,
         });
-    }, 2000);
+
+        router.push({ name: "Dashboard" });
+    } catch (e) {
+        if (e.response) {
+            const { status } = e.response;
+            if (status === 400) {
+                errorMessage = "Email Or Password is invalid";
+                toast.add({
+                    severity: "error",
+                    summary: "Login Failed",
+                    detail: "Please ensure your email and password are correct",
+                    life: 3000,
+                });
+            } else throw e;
+        } else {
+            throw e;
+        }
+    } finally {
+        submitting = false;
+    }
 };
 </script>
 
@@ -77,6 +100,7 @@ const submitData = async () => {
         >
             <div class="col-12 xl:col-6 form_wrapper">
                 <div class="h-full w-full m-0 py-7 px-4 form_content">
+                    <!-- Header -->
                     <div class="text-center mb-5">
                         <div class="text-900 text-3xl font-medium mb-3">
                             You are reaching Judoh Admin Page
@@ -90,41 +114,55 @@ const submitData = async () => {
                     </div>
 
                     <!-- Form -->
-                    <!-- <div class="p-fluid formgrid grid"> -->
                     <div class="w-full md:w-10 mx-auto">
+                        <!-- Email -->
                         <div class="field col-12">
                             <label
                                 for="email"
                                 class="block text-900 text-xl font-medium mb-2"
-                                >Email</label
                             >
+                                Email
+                            </label>
                             <InputText
                                 id="email"
                                 v-model="formData.email"
+                                @keydown.enter="submitData"
                                 type="text"
                                 class="w-full mb-3"
-                                :class="{ 'p-invalid': $v.email.$error }"
+                                :class="{
+                                    'p-invalid':
+                                        $v.email.$error || errorMessage,
+                                }"
                                 placeholder="Email"
                                 style="padding: 1rem"
                             />
                             <span v-if="$v.email.$error" class="app-form-error">
                                 {{ $v.email.$errors[0].$message }}
                             </span>
+                            <span v-if="errorMessage" class="app-form-error">
+                                {{ errorMessage }}
+                            </span>
                         </div>
 
+                        <!-- Password -->
                         <div class="field col-12">
                             <label
                                 for="password"
                                 class="block text-900 font-medium text-xl mb-2"
-                                >Password</label
                             >
+                                Password
+                            </label>
                             <Password
                                 id="password"
                                 v-model="formData.password"
+                                @keydown.enter="submitData"
                                 placeholder="Password"
                                 :toggleMask="true"
                                 class="w-full mb-3"
-                                :class="{ 'p-invalid': $v.password.$error }"
+                                :class="{
+                                    'p-invalid':
+                                        $v.password.$error || errorMessage,
+                                }"
                                 inputClass="w-full"
                                 inputStyle="padding:1rem"
                             ></Password>
@@ -134,24 +172,16 @@ const submitData = async () => {
                             >
                                 {{ $v.password.$errors[0].$message }}
                             </span>
+                            <span v-if="errorMessage" class="app-form-error">
+                                {{ errorMessage }}
+                            </span>
                         </div>
 
-                        <div
-                            class="flex align-items-center justify-content-between mb-5"
-                        >
-                            <div class="flex align-items-center">
-                                <Checkbox
-                                    id="rememberme1"
-                                    v-model="formData.checked"
-                                    :binary="true"
-                                    class="mr-2"
-                                ></Checkbox>
-                                <label for="rememberme1">Remember me</label>
-                            </div>
-                        </div>
+                        <!-- Submit Button -->
                         <Button
                             label="Sign In"
-                            class="w-full p-3 text-xl"
+                            class="w-full mt-3 p-3 text-xl"
+                            :loading="submitting"
                             @click="submitData"
                         ></Button>
                     </div>
