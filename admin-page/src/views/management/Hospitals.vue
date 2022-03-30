@@ -71,7 +71,7 @@ const onRowClick = (payload) => {
           :paginator="true"
           removable-sort
           filterDisplay="row"
-          v-model="filters"
+          v-model:filters="filters"
           :filters="filters"
           :globalFilterFields="['name', 'address', 'phone']"
         >

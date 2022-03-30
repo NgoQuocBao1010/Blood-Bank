@@ -111,7 +111,7 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)*",
-      name: "404 Not found",
+      name: "404 Error",
       component: () => import("./views/error/404Error.vue"),
     },
     // Login Page
@@ -119,12 +119,6 @@ const router = createRouter({
       path: "/login",
       name: "Login",
       component: () => import("./views/Login.vue"),
-    },
-    // Hospital page
-    {
-      path: "/hospital-request/:_id",
-      name: "Hospital Request",
-      component: () => import("./views/HospitalRequest.vue"),
     },
   ],
   scrollBehavior(to, from, savedPosition) {
@@ -140,7 +134,7 @@ router.beforeEach((to, from, next) => {
   const user = useUserStore();
   if (!user.isLoggedIn) user.verifyToken();
 
-  if (!["About", "Login"].includes(to.name) && !user.isLoggedIn)
+  if (!["About", "Login", "Server Error"].includes(to.name) && !user.isLoggedIn)
     return next({ name: "Login" });
 
   if (to.name === "Login" && user.isLoggedIn) {
