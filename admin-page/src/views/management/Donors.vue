@@ -6,24 +6,27 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
+import DonorRepos from "../../api/DonorRepo";
 import { BLOOD_TYPES } from "../../constants";
 
-const donors = [
-    {
-        _id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
-        name: "Quoc Bao 1",
-        phone: "0945127866",
-        address: "1st street, Can Tho city, VietNam",
-        gender: "male",
-        email: "baobao@gmail.com",
-        dob: new Date("05/11/2000").getTime().toString(),
-        blood: {
-            name: "A",
-            type: "Negative",
-        },
-    },
-];
+// const donors = [
+//     {
+//         _id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
+//         name: "Quoc Bao 1",
+//         phone: "0945127866",
+//         address: "1st street, Can Tho city, VietNam",
+//         gender: "male",
+//         email: "baobao@gmail.com",
+//         dob: new Date("05/11/2000").getTime().toString(),
+//         blood: {
+//             name: "A",
+//             type: "Negative",
+//         },
+//     },
+// ];
 
+let donors = $ref(null);
+let fetchingDonors = $ref(true);
 // Filter configuration
 let filters = $ref(null);
 const initFilter = () => {
@@ -47,8 +50,12 @@ const onRowClick = (payload) => {
     router.push({ name: "Donor Detail", params: { _id: donorId } });
 };
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
     initFilter();
+
+    const { data } = await DonorRepos.getSuccess();
+    donors = data;
+    fetchingDonors = false;
 });
 </script>
 
@@ -71,6 +78,7 @@ onBeforeMount(() => {
                 <!-- Donors table -->
                 <PrimeVueTable
                     :value="donors"
+                    :loading="fetchingDonors"
                     dataKey="id"
                     class="p-datatable-gridlines"
                     responsiveLayout="scroll"
@@ -124,154 +132,165 @@ onBeforeMount(() => {
                         </div>
                     </template>
 
+                    <!-- Loading data fallback -->
+                    <template #loading>
+                        <h4 style="text-align: center">Loading data ...</h4>
+                    </template>
+
                     <!-- Empty data fallback -->
-                    <template #empty> No donors found. </template>
+                    <template #empty>
+                        <h4 style="text-align: center">No donors found.</h4>
+                    </template>
 
                     <!-- Columns -->
-                    <!-- Donor's name -->
-                    <PrimeVueColumn
-                        field="name"
-                        header="Name"
-                        style="min-width: 12rem"
-                    >
-                        <template #body="{ data }">
-                            {{ data.name }}
-                        </template>
-                        <template #filter="{ filterModel, filterCallback }">
-                            <InputText
-                                type="text"
-                                v-model="filterModel.value"
-                                @keydown.enter="filterCallback()"
-                                class="p-column-filter"
-                                v-tooltip.top.focus="
-                                    'Press enter key to filter'
-                                "
-                            />
-                        </template>
-                    </PrimeVueColumn>
+                    <template v-if="!fetchingDonors">
+                        <!-- Name -->
+                        <PrimeVueColumn
+                            field="name"
+                            header="Name"
+                            style="min-width: 12rem"
+                        >
+                            <template #body="{ data }">
+                                {{ data.name }}
+                            </template>
+                            <template #filter="{ filterModel, filterCallback }">
+                                <InputText
+                                    type="text"
+                                    v-model="filterModel.value"
+                                    @keydown.enter="filterCallback()"
+                                    class="p-column-filter"
+                                    v-tooltip.top.focus="
+                                        'Press enter key to filter'
+                                    "
+                                />
+                            </template>
+                        </PrimeVueColumn>
 
-                    <!-- Email -->
-                    <PrimeVueColumn
-                        field="email"
-                        header="Email"
-                        style="min-width: 12rem"
-                    >
-                        <template #body="{ data }">
-                            {{ data.email }}
-                        </template>
-                        <template #filter="{ filterModel, filterCallback }">
-                            <InputText
-                                type="text"
-                                v-model="filterModel.value"
-                                @keydown.enter="filterCallback()"
-                                class="p-column-filter"
-                                v-tooltip.top.focus="
-                                    'Press enter key to filter'
-                                "
-                            />
-                        </template>
-                    </PrimeVueColumn>
+                        <!-- Email -->
+                        <PrimeVueColumn
+                            field="email"
+                            header="Email"
+                            style="min-width: 12rem"
+                        >
+                            <template #body="{ data }">
+                                {{ data.email }}
+                            </template>
+                            <template #filter="{ filterModel, filterCallback }">
+                                <InputText
+                                    type="text"
+                                    v-model="filterModel.value"
+                                    @keydown.enter="filterCallback()"
+                                    class="p-column-filter"
+                                    v-tooltip.top.focus="
+                                        'Press enter key to filter'
+                                    "
+                                />
+                            </template>
+                        </PrimeVueColumn>
 
-                    <!-- Gender -->
-                    <PrimeVueColumn
-                        field="gender"
-                        header="Gender"
-                        style="min-width: 200px"
-                    >
-                        <template #body="{ data }">
-                            <span style="text-transform: capitalize">
-                                {{ data.gender }}
-                            </span>
-                        </template>
-                        <template #filter="{ filterModel, filterCallback }">
-                            <DropDown
-                                v-model="filterModel.value"
-                                @change="filterCallback"
-                                :options="['male', 'female']"
-                                class="p-column-filter"
-                                style="height: 2.2rem"
-                                :showClear="true"
-                            >
-                                <template #value="slotProps">
-                                    <span v-if="slotProps.value">
-                                        {{ slotProps.value }}
-                                    </span>
-                                    <span v-else>
-                                        {{ slotProps.placeholder }}
-                                    </span>
-                                </template>
-                                <template #option="slotProps">
-                                    <span>{{ slotProps.option }}</span>
-                                </template>
-                            </DropDown>
-                        </template>
-                    </PrimeVueColumn>
+                        <!-- Gender -->
+                        <PrimeVueColumn
+                            field="gender"
+                            header="Gender"
+                            style="min-width: 200px"
+                        >
+                            <template #body="{ data }">
+                                <span style="text-transform: capitalize">
+                                    {{ data.gender }}
+                                </span>
+                            </template>
+                            <template #filter="{ filterModel, filterCallback }">
+                                <DropDown
+                                    v-model="filterModel.value"
+                                    @change="filterCallback"
+                                    :options="['male', 'female']"
+                                    class="p-column-filter"
+                                    style="height: 2.2rem"
+                                    :showClear="true"
+                                >
+                                    <template #value="slotProps">
+                                        <span v-if="slotProps.value">
+                                            {{ slotProps.value }}
+                                        </span>
+                                        <span v-else>
+                                            {{ slotProps.placeholder }}
+                                        </span>
+                                    </template>
+                                    <template #option="slotProps">
+                                        <span>{{ slotProps.option }}</span>
+                                    </template>
+                                </DropDown>
+                            </template>
+                        </PrimeVueColumn>
 
-                    <!-- Blood Name -->
-                    <PrimeVueColumn
-                        field="blood.name"
-                        header="Blood Name"
-                        style="max-width: 14rem !important"
-                    >
-                        <template #body="{ data }">
-                            <span
-                                :class="'blood-badge type-' + data.blood.name"
-                            >
-                                Type {{ data.blood.name }}
-                            </span>
-                        </template>
-                        <template #filter="{ filterModel, filterCallback }">
-                            <MultiSelect
-                                v-model="filterModel.value"
-                                @change="filterCallback()"
-                                :options="BLOOD_TYPES"
-                                optionLabel=""
-                                class="p-column-filter"
-                            >
-                                <template #option="slotProps">
-                                    <span
-                                        :class="
-                                            'blood-badge type-' +
-                                            slotProps.option
-                                        "
-                                    >
-                                        Type {{ slotProps.option }}
-                                    </span>
-                                </template>
-                            </MultiSelect>
-                        </template>
-                    </PrimeVueColumn>
+                        <!-- Blood Name -->
+                        <PrimeVueColumn
+                            field="blood.name"
+                            header="Blood Name"
+                            style="max-width: 14rem !important"
+                        >
+                            <template #body="{ data }">
+                                <span
+                                    :class="
+                                        'blood-badge type-' + data.blood.name
+                                    "
+                                >
+                                    Type {{ data.blood.name }}
+                                </span>
+                            </template>
+                            <template #filter="{ filterModel, filterCallback }">
+                                <MultiSelect
+                                    v-model="filterModel.value"
+                                    @change="filterCallback()"
+                                    :options="BLOOD_TYPES"
+                                    optionLabel=""
+                                    class="p-column-filter"
+                                >
+                                    <template #option="slotProps">
+                                        <span
+                                            :class="
+                                                'blood-badge type-' +
+                                                slotProps.option
+                                            "
+                                        >
+                                            Type {{ slotProps.option }}
+                                        </span>
+                                    </template>
+                                </MultiSelect>
+                            </template>
+                        </PrimeVueColumn>
 
-                    <!-- Blood Type -->
-                    <PrimeVueColumn
-                        field="blood.type"
-                        header="Blood Type"
-                        style="max-width: 14rem !important"
-                    >
-                        <template #body="{ data }">
-                            {{ data.blood.type }}
-                        </template>
-                        <template #filter="{ filterModel, filterCallback }">
-                            <MultiSelect
-                                v-model="filterModel.value"
-                                @change="filterCallback()"
-                                :options="['Positive', 'Negative']"
-                                optionLabel=""
-                                class="p-column-filter"
-                            >
-                                <template #option="slotProps">
-                                    <span
-                                        :class="
-                                            'blood-badge type-' +
-                                            slotProps.option
-                                        "
-                                    >
-                                        {{ slotProps.option }}
-                                    </span>
-                                </template>
-                            </MultiSelect>
-                        </template>
-                    </PrimeVueColumn>
+                        <!-- Blood Type -->
+                        <PrimeVueColumn
+                            field="blood.type"
+                            header="Blood Type"
+                            style="max-width: 14rem !important"
+                        >
+                            <template #body="{ data }">
+                                {{ data.blood.type }}
+                            </template>
+                            <template #filter="{ filterModel, filterCallback }">
+                                <MultiSelect
+                                    v-model="filterModel.value"
+                                    @change="filterCallback()"
+                                    :options="['Positive', 'Negative']"
+                                    optionLabel=""
+                                    class="p-column-filter"
+                                >
+                                    <template #option="slotProps">
+                                        <span
+                                            :class="
+                                                'blood-badge type-' +
+                                                slotProps.option
+                                            "
+                                        >
+                                            {{ slotProps.option }}
+                                        </span>
+                                    </template>
+                                </MultiSelect>
+                            </template>
+                        </PrimeVueColumn>
+                    </template>
                 </PrimeVueTable>
             </div>
         </div>

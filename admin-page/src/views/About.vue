@@ -13,7 +13,7 @@ const login = async () => {
             const { status } = e.response;
             if (status === 400) {
                 errorMessage = "Email Or Password is invalid";
-            }
+            } else throw e;
         } else {
             throw e;
         }
