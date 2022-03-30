@@ -88,7 +88,7 @@ namespace backend.Controllers
                 // if approving successfully, add amount of blood in this transaction to quantity in Blood model
                 var transaction =
                     await _donorTransactionRepository.GetByEventAndDonor(participant._id, participant.eventId);
-                
+
                 await _bloodRepository.UpdateQuantity(transaction.blood.name, transaction.blood.type,
                     transaction.amount);
             }

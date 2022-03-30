@@ -44,11 +44,13 @@ namespace backend.Repositories
                 .Set(r => r.Quantity, request.Quantity)
                 .Set(r => r.Blood.Name, request.Blood.Name)
                 .Set(r => r.Blood.Type, request.Blood.Type)
-                .Set(r => r.Hospital._id, request.Hospital._id)
-                .Set(r => r.Hospital.Name, request.Hospital.Name);
-            
+                .Set(r => r.HospitalId, request.HospitalId)
+                .Set(r => r.HospitalName, request.HospitalName)
+                .Set(r => r.ApproveStatus, request.ApproveStatus)
+                .Set(r => r.RejectReason, request.RejectReason);
+
             var result = await _request.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount == 1;
         }
 

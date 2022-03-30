@@ -4,7 +4,7 @@ import OverlayPanel from "primevue/overlaypanel";
 
 import BloodRepo from "../../api/BloodRepo";
 import { BLOOD_TYPES } from "../../constants";
-import { determineStockStatus, JSONtoExcel } from "../../utils";
+import { determineStockStatus } from "../../utils";
 
 let bloodData = null;
 let bloods = $ref([]);
@@ -89,7 +89,7 @@ const downloadExcelFile = () => {
         return row;
     });
 
-    JSONtoExcel(excelData, "blood_data");
+    // JSONtoExcel(excelData, "blood_data");
 };
 </script>
 
@@ -120,7 +120,7 @@ const downloadExcelFile = () => {
                                     label="Expand All"
                                     class="mr-2 mb-2"
                                     @click="expandAllRows()"
-                                    :disabled="expandedRows.length > 0"
+                                    :disabled="expandedRows.length === 5"
                                 />
                                 <PrimeVueButton
                                     icon="pi pi-minus"

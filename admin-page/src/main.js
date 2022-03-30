@@ -37,14 +37,30 @@ app.component("PrimeVueButton", Button);
 
 app.mount("#app");
 
-// ** Error handler
-// app.config.errorHandler = (err, instance, info) => {
-//     console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
-//     console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
-//     console.log("🚀 ~ file: main.js ~ line 41 ~ instance", instance);
+// ** Warn handler
+app.config.warnHandler = (msg, instance, trace) => {
+    console.log("🚀 ~ file: main.js ~ line 42 ~ msg", msg);
+};
 
-//     if (!err.response && err.message === "Network Error") {
-//         // Handle server cannot reach error (Ex: forget to start the server)
-//         router.push({ name: "Server Error" });
-//     }
-// };
+// ** Error handler
+app.config.errorHandler = (err, instance, info) => {
+    if (!err.response && err.message === "Network Error") {
+        // Handle server cannot reach error (Ex: forget to start the server)
+        router.push({ name: "Server Error" });
+        return;
+    }
+
+    if (err.response) {
+        if (err.response.status === 500) router.push({ name: "Server Error" });
+        else if (err.response.status === 405)
+            router.push({ name: "Server Error" });
+        else if (err.response.status === 404)
+            router.push({ name: "404 Error" });
+        return;
+    }
+    throw err;
+
+    // console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
+    // console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
+    // console.log("🚀 ~ file: main.js ~ line 41 ~ instance", instance);
+};
