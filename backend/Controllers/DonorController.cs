@@ -74,6 +74,8 @@ namespace backend.Controllers
                         {
                             return BadRequest("Cannot update new information for this donor");
                         }
+
+                        result = "Update information for this donor successfully";
                     }
 
                     // set event, rejectReason, donorId property in transaction
