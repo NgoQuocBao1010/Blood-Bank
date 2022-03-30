@@ -22,6 +22,9 @@ import AppFooter from "../components/footer/AppFooter.vue";
 </template>
 
 <style lang="scss" scoped>
+main {
+    overflow-x: hidden;
+}
 .navbar {
     display: flex;
     align-items: center;

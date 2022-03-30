@@ -95,6 +95,9 @@ const router = createRouter({
             name: "Hospital Detail",
             component: () => import("./views/detail/HospitalDetail.vue"),
             props: true,
+            meta: {
+                layoutName: "LayoutDefault",
+            },
         },
         // Form
         {
@@ -147,6 +150,7 @@ const router = createRouter({
             component: () => import("./views/Login.vue"),
             meta: {
                 layoutName: "LayoutUnauth",
+                unguard: true,
             },
         },
         // Error Page
@@ -155,7 +159,8 @@ const router = createRouter({
             name: "Server Error",
             component: () => import("./views/error/ServerError.vue"),
             meta: {
-                layoutName: "LayoutDefault",
+                layoutName: "__dynamic",
+                unguard: true,
             },
         },
         {
@@ -163,7 +168,8 @@ const router = createRouter({
             name: "Authentication Error",
             component: () => import("./views/error/UnauthError.vue"),
             meta: {
-                layoutName: "LayoutDefault",
+                layoutName: "__dynamic",
+                unguard: true,
             },
         },
         {
@@ -171,7 +177,8 @@ const router = createRouter({
             name: "404 Error",
             component: () => import("./views/error/404Error.vue"),
             meta: {
-                layoutName: "LayoutDefault",
+                layoutName: "__dynamic",
+                unguard: true,
             },
         },
     ],
@@ -184,18 +191,26 @@ const router = createRouter({
     },
 });
 
+// Verify if user is logged in
 router.beforeEach((to, from, next) => {
     const user = useUserStore();
     if (!user.isLoggedIn) user.verifyToken();
 
-    if (
-        !["About", "Login", "Server Error"].includes(to.name) &&
-        !user.isLoggedIn
-    )
-        return next({ name: "Login" });
+    next();
+});
 
-    if (to.name === "Login" && user.isLoggedIn) {
+// Prevent logged in user to access login page
+router.beforeEach((to, from, next) => {
+    if (to.name === "Login" && useUserStore().isLoggedIn) {
         return next({ name: "Dashboard" });
+    }
+    next();
+});
+
+// Prevent unauth user to access to admin pages
+router.beforeEach((to, from, next) => {
+    if (!to.meta.unguard && !useUserStore().isLoggedIn) {
+        return next({ name: "Login" });
     }
 
     next();
