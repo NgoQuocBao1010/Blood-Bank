@@ -161,6 +161,10 @@
     border-color: var(--primary-color) !important;
 }
 
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background: rgba(var(--primary-color-rbg), 0.1);
+}
+
 // Checkbox
 .p-checkbox .p-checkbox-box.p-highlight {
     border-color: var(--primary-color) !important;
@@ -209,9 +213,23 @@
 }
 
 // Breadcumb
-
 .p-breadcrumb ul li .p-menuitem-link:focus {
     box-shadow: none !important;
+}
+
+// Radio button
+.p-radiobutton .p-radiobutton-box.p-highlight {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+}
+
+.p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+}
+
+.p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+    border-color: var(--primary-color);
 }
 
 // Layout Override
