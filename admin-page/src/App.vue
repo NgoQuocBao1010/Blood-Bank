@@ -1,46 +1,30 @@
 <script setup>
-import { onMounted } from "vue";
-import { RouterView } from "vue-router";
+import { useRoute } from "vue-router";
 import Toast from "primevue/toast";
+import { markRaw, watch } from "vue";
 
-import AppNavbar from "./components/navbar/AppNavbar.vue";
-import AppSidebar from "./components/sidebar/AppSidebar.vue";
-import AppFooter from "./components/footer/AppFooter.vue";
+let layout = $ref("section");
+const route = useRoute();
+watch(
+    () => route.meta?.layoutName,
+    async (layoutName) => {
+        try {
+            const layoutComponent =
+                layoutName && (await import(`./layouts/${layoutName}.vue`));
 
-let sidebarHide = $ref(null);
-
-const winWidth =
-    window.innerWidth ||
-    document.documentElement.clientWidth ||
-    document.body.clientWidth;
-
-onMounted(() => {
-    // Hide sidebar if window's width is lower than 1280
-    sidebarHide = winWidth <= 1280 ? true : false;
-});
+            layout = markRaw(layoutComponent?.default || "section");
+        } catch (e) {
+            layout = "section";
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
-    <main
-        class="layout-wrapper layout-static"
-        :class="{ 'layout-static-sidebar-inactive': sidebarHide }"
-    >
-        <!-- Navbar -->
-        <AppNavbar @toggleSidebar="sidebarHide = !sidebarHide" />
-
-        <!-- Sidebar -->
-        <div class="layout-sidebar scrollbar-style">
-            <AppSidebar />
-        </div>
-
-        <!-- Main -->
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view :key="$route.fullPath" />
-            </div>
-            <AppFooter v-once />
-        </div>
-    </main>
+    <component :is="layout">
+        <router-view />
+    </component>
 
     <Toast position="bottom-right" />
 </template>

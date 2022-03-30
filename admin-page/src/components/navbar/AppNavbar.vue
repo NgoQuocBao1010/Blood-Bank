@@ -2,7 +2,6 @@
 import InputText from "primevue/inputtext";
 import OverlayPanel from "primevue/overlaypanel";
 import { useToast } from "primevue/usetoast";
-import { useRouter } from "vue-router";
 
 import { useUserStore } from "../../stores/user";
 import AppRepo from "../../api/AppRepo";
