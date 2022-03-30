@@ -19,8 +19,7 @@ namespace backend.Controllers
                 {"GET api/Blood/${id}", "Return a Blood by ID"},
                 {"POST api/Blood", "Create a new Blood"},
                 {"PUT api/Blood/${id}", "Update 1 Blood by ID"},
-                {"DELETE api/Blood/${id}", "Delete 1 Blood by ID"},
-                {"GET api/Blood/type/${name}", "Return a Blood by its name"}
+                {"DELETE api/Blood/${id}", "Delete 1 Blood by ID"}
             };
             var endpointsDonor = new Dictionary<string, string>()
             {

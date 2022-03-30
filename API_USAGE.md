@@ -1,3 +1,22 @@
+- [Search Keyword by _id](#search-keyword-by-_id)
+- [Donors API](#donors-api)
+- [DonorTransaction API](#donortransaction-api)
+- [Participants API](#participants-api)
+- [Events](#events)
+- [Blood](#blood)
+- [User](#user)
+- [Event Submission](#event-submission)
+- [Hospital](#hospital)
+- [Hospital Request](#hospital-request)
+
+## Search Keyword by _id
+1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{_id}
+    ```
+    return JSON
+    ```
+    if id is invalid, return 404 Not Found error
+
+
 ## Donors API
 
 1. GET list successful donors, expected JSON return:  -> Endpoint: api/Donor/success
@@ -155,11 +174,45 @@
         },
         startDate: string,
         duration: int,
-        detail,
-        participants (default: 0)
+        detail
     }
     ```
-2. POST events data -> Endpoint: api/Event
+    
+2. GET an event data -> Endpoint: api/Event/{_id}
+    ```
+    {
+        _id,
+        name,
+        location: {
+            city,
+            address
+        },
+        startDate: string,
+        duration: int,
+        detail,
+        participants
+    }
+    ```
+    
+3. GET an event data with query parameter -> Endpoint: api/Event/{_id}/?status=upcoming
+
+- For checking the infomation of an upcoming Event 
+    ```
+    {
+        _id,
+        name,
+        location: {
+            city,
+            address
+        },
+        startDate: string,
+        duration: int,
+        detail,
+        participants
+    }
+    ```
+    
+4. POST events data -> Endpoint: api/Event
     ```
     {
         name,
@@ -173,8 +226,47 @@
     }
     ```
     
-3. DELETE events data -> Endpoint: api/Event/{_id}
+5. DELETE events data -> Endpoint: api/Event/{_id}
 
+    ```
+    Return true if delete success
+    ```
+
+
+6. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
+    ```
+    [
+        {
+            _id (CMND),
+            name (donor name),
+            dob : int -> string,
+            gender,
+            address,
+            phone,
+            email,
+            blood: {
+                name,
+                type,
+            }
+            transaction: {
+                _id,
+                blood: {
+                    name,
+                    type
+                },
+                eventDonated: {
+                    _id,
+                    name
+                },
+                dateDonated: string,
+                amount: int,
+                status: int,
+                rejectReason,
+                donorId
+            }
+        },
+    ]
+    ```
 
     
 ## Blood
@@ -198,6 +290,7 @@
         "password": "string"
     }
     ```
+    Return token when login success.
 
 2. GET all user -> Endpoint: api/user
     ```
@@ -326,7 +419,70 @@
     }
     ```
 
-4. DELETE hospital by id -> Endpoint: api/hospital/{id}
+4. PUT edit hospital -> Endpoint: api/hospital/{id}
+    ```
+    {
+        "name": "string",
+        "address": "string",
+        "phone": "string"
+    }
+    ```
+    Return **true** if update success.
+
+5. DELETE hospital by id -> Endpoint: api/hospital/{id}
+    ```
+    Return true if delete success
+    ```
+
+## Hospital Request
+
+1. GET all hospital request -> Endpoint: api/request
+    ```
+    [
+        {
+            "_id": "string",
+            "date": "string",
+            "quantity": int,
+            "blood": {
+                "name": "string",
+                "type": "string"
+            },
+            "hospitalId": "string",
+            "hospitalName": "string"
+        }
+    ]
+    ```
+
+2. GET hospital by id -> Endpoint: api/request/{id}
+    ```
+    {
+        "_id": "string",
+        "date": "string",
+        "quantity": int,
+        "blood": {
+            "name": "string",
+            "type": "string"
+        },
+        "hospitalId": "string",
+        "hospitalName": "string"
+    }
+    ```
+
+3. POST create request -> Endpoint: api/request
+    ```
+    {
+        "_id": "string",
+        "date": "string",
+        "quantity": int,
+        "blood": {
+            "name": "string",
+            "type": "string"
+        },
+        "hospitalId": "string"
+    }
+    ```
+
+4. DELETE request by id -> Endpoint: api/request/{id}
     ```
     Return true if delete success
     ```

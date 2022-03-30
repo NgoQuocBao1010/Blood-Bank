@@ -32,8 +32,8 @@ onBeforeMount(async () => {
 
   // console.log("hospital data: ", hospitals);
 
-  // hospitals && hospitals.length !== 0 && initFilters();
   initFilters();
+  hospitals && hospitals.length !== 0 && initFilters();
 });
 
 const onRowClick = (payload) => {
