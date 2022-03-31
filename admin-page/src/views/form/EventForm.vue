@@ -1,11 +1,12 @@
 <script setup>
-import { onBeforeMount, reactive } from "vue";
+import { onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import Calendar from "primevue/calendar";
+import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
@@ -62,7 +63,8 @@ onBeforeMount(async () => {
 
 const $v = $(useVuelidate(formRules, formData));
 const toast = useToast();
-let submitting = $ref(false);
+let loading = $ref(false);
+// Create or Edit event
 const submitData = async () => {
     // Form validation
     const isCorrect = await $v.$validate();
@@ -77,26 +79,29 @@ const submitData = async () => {
         return;
     }
     // Make API call to server
-    submitting = true;
+    loading = true;
     formData.startDate = formData.startDate.getTime().toString();
 
     if (isEditPage) {
-        setTimeout(() => {
-            submitting = false;
+        const { data, status } = await EventRepo.edit(_id, formData);
 
+        if (data && status === 200) {
+            loading = false;
+            await useEventStore().setEvents();
             toast.add({
                 severity: "success",
                 summary: "Successful",
-                detail: "New event is created",
+                detail: "Event is edited",
                 life: 3000,
             });
 
-            // router.push({ name: "Events Management" });
-        }, 800);
+            router.push({ name: "Event Detail", params: { _id } });
+        }
     } else {
-        const { data, status } = await EventRepo.createNewEvent(formData);
+        const { data, status } = await EventRepo.create(formData);
 
         if (data && status === 200) {
+            loading = false;
             await useEventStore().setEvents();
             toast.add({
                 severity: "success",
@@ -106,8 +111,32 @@ const submitData = async () => {
             });
 
             router.push({ name: "Events Management" });
-            submitting = false;
         }
+    }
+};
+
+// Delete event
+const openConfirm = () => {
+    toast.add({
+        severity: "warn",
+        group: "event-confirm",
+    });
+};
+const deleteEvent = async () => {
+    loading = true;
+    const { data, status } = await EventRepo.delete(_id);
+    loading = false;
+
+    if (data && status === 200) {
+        await useEventStore().setEvents();
+        toast.add({
+            severity: "success",
+            summary: "Successful",
+            detail: "Event is deleted",
+            life: 3000,
+        });
+
+        router.push({ name: "Events Management" });
     }
 };
 
@@ -164,6 +193,7 @@ const fixingVuevalidateBugs = (data) => {
                         <label>Pick the start date</label>
                         <Calendar
                             v-model="formData.startDate"
+                            :min-date="new Date()"
                             dateFormat="dd/mm/yy"
                             :placeholder="formData.startDate"
                         />
@@ -232,19 +262,59 @@ const fixingVuevalidateBugs = (data) => {
                     </div>
 
                     <!-- Submiitting button -->
-                    <div class="field col-12">
+                    <div class="field col-12 flex">
                         <PrimeVueButton
                             type="button"
                             label="Submit"
                             class="submit-btn mb-2 mr-2"
                             @click="submitData"
-                            :loading="submitting"
+                            :loading="loading"
+                        />
+                        <PrimeVueButton
+                            type="button"
+                            label="Delete"
+                            icon="pi pi-trash"
+                            class="delete-btn mb-2 mr-2"
+                            @click="openConfirm"
+                            :loading="loading"
+                            v-if="isEditPage"
                         />
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Confirm message -->
+    <Toast position="bottom-center" group="event-confirm" v-if="isEditPage">
+        <template #message="slotProps">
+            <div class="flex flex-column toast-container">
+                <div class="text-center toast-content">
+                    <i
+                        class="pi pi-exclamation-triangle"
+                        style="font-size: 3rem"
+                    ></i>
+                    <p>Are you sure to delete this event?</p>
+                </div>
+                <div class="grid p-fluid">
+                    <div class="col-6">
+                        <PrimeVueButton
+                            class="p-button-success"
+                            label="Yes"
+                            @click="deleteEvent"
+                        ></PrimeVueButton>
+                    </div>
+                    <div class="col-6">
+                        <PrimeVueButton
+                            class="p-button-secondary"
+                            label="No"
+                            @click="toast.removeGroup('event-confirm')"
+                        ></PrimeVueButton>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </Toast>
 </template>
 
 <style lang="scss" scoped>
@@ -254,9 +324,22 @@ const fixingVuevalidateBugs = (data) => {
     text-align: center;
     margin-bottom: 2rem;
 }
-
+.delete-btn,
 .submit-btn {
     margin-top: 3em;
     width: 8em;
+}
+
+.delete-btn {
+    background: red;
+    margin-left: auto;
+}
+
+.toast-container {
+    width: 100%;
+
+    .toast-content {
+        padding-block: 2rem;
+    }
 }
 </style>

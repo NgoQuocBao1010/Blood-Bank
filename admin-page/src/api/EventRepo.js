@@ -6,10 +6,18 @@ export default {
     getAll() {
         return Repository.get(`${resource}/`);
     },
-    getById(id) {
-        return Repository.get(`${resource}/${id}`);
+    getById(eventId) {
+        return Repository.get(`${resource}/${eventId}`);
     },
-    createNewEvent(data) {
+    create(data) {
+        console.log("Create call");
         return Repository.post(`${resource}/`, data);
+    },
+    edit(eventId, data) {
+        console.log("Edit call");
+        return Repository.put(`${resource}/${eventId}`, data);
+    },
+    delete(eventId) {
+        return Repository.delete(`${resource}/${eventId}`);
     },
 };
