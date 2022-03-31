@@ -61,6 +61,8 @@ const clearFilter = () => {
   initFilter();
 };
 
+let excelData;
+
 onBeforeMount(() => {
   let requestData;
 
@@ -70,9 +72,11 @@ onBeforeMount(() => {
       requestData = requestHistory.filter(
         (request) => request.hospitalId === hospital_id
       );
+      excelData = RequestsHelpers.transformRowsBeforeExcel(requestData);
     }
   } else {
     requestData = requestHistory;
+    excelData = RequestsHelpers.transformRowsBeforeExcel(requestData);
   }
 
   if (requestData) {
@@ -97,7 +101,7 @@ const downloadExcel = () => {
     });
     return;
   }
-  const excelData = RequestsHelpers.transformRowsBeforeExcel(requestHistory);
+
   JSONtoExcel(excelData, "Pending_Requests");
 };
 </script>
