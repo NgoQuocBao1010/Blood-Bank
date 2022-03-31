@@ -21,8 +21,8 @@ namespace backend.Repositories
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<User>(nameof(User));
-            _hospitalRepository = hospitalRepository;
             _eventRepository = eventRepository;
+            _hospitalRepository = hospitalRepository;
             _bloodRepository = bloodRepository;
             _eventSubmissionRepository = eventSubmissionRepository;
             _requestRepository = requestRepository;
@@ -127,29 +127,7 @@ namespace backend.Repositories
 
             _hospitalRepository.AddDefaultData(listHospital);
         }
-
-        public void AddDefaultUser()
-        {
-            AddDefaultHospital();
-            AddDefaultEventSubmission();
-            AddDefaultRequest();
-            var user = Get();
-            if (user.Result.Any()) return;
-
-            var admin = new User("admin@gmail.com", "admin", true);
-
-            _user.InsertOne(admin);
-
-
-            var hospital = _hospitalRepository.GetFirstHospital();
-            var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
-            {
-                hospital_id = hospital.Result._id
-            };
-            _user.InsertOne(newUser);
-        }
-
-
+        
         public void AddDefaultBlood()
         {
             var blood = _bloodRepository.Get();
@@ -169,10 +147,9 @@ namespace backend.Repositories
             };
             _bloodRepository.AddDefaultData(listBlood);
         }
-
+        
         public void AddDefaultEventSubmission()
         {
-            AddDefaultEvent();
 
             // Get the first eventId from default data.
             var listEvent = _eventRepository.Get();
@@ -226,7 +203,6 @@ namespace backend.Repositories
         
         public void AddDefaultRequest()
         {
-            AddDefaultBlood();
             var requests = _requestRepository.Get();
             if (requests.Result.Any()) return;
             var hospitals = _hospitalRepository.Get();
@@ -259,6 +235,29 @@ namespace backend.Repositories
             }
 
             _requestRepository.AddDefaultData(listRequest);
+        }
+
+        public void AddDefaultUser()
+        {
+            AddDefaultEvent();
+            AddDefaultHospital();
+            AddDefaultBlood();
+            AddDefaultEventSubmission();
+            AddDefaultRequest();
+            var user = Get();
+            if (user.Result.Any()) return;
+
+            var admin = new User("admin@gmail.com", "admin", true);
+
+            _user.InsertOne(admin);
+
+
+            var hospital = _hospitalRepository.GetFirstHospital();
+            var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
+            {
+                hospital_id = hospital.Result._id
+            };
+            _user.InsertOne(newUser);
         }
 
         public bool CheckUserPassword(User user, string password)
