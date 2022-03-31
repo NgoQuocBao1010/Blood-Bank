@@ -27,6 +27,12 @@ namespace backend.Repositories
             await _donor.InsertOneAsync(donor);
             return "Create Successfully";
         }
+        
+        public async Task<string> CreateMany(Donor donor)
+        {
+            await _donor.InsertOneAsync(donor);
+            return "Create Successfully";
+        }
 
         public Task<Donor> Get(string idNumber)
         {
@@ -86,6 +92,5 @@ namespace backend.Repositories
             return result.DeletedCount == 1;
         }
         
-
     }
 }

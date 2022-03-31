@@ -18,7 +18,6 @@ namespace backend.Controllers
         public BloodController(IBloodRepository bloodRepository)
         {
             _bloodRepository = bloodRepository;
-            AddDefaultData();
         }
 
         [HttpPost]
@@ -42,27 +41,6 @@ namespace backend.Controllers
                 return NotFound();
             }
             return new JsonResult(blood);
-        }
-        
-
-        public void AddDefaultData()
-        {
-            var blood = _bloodRepository.Get();
-            if (blood.Result.Any()) return;
-            var listBlood = new List<Blood>
-            {
-                new Blood("A", "Positive", 0),
-                new Blood("A", "Negative", 0),
-                new Blood("B", "Positive", 0),
-                new Blood("B", "Negative", 0),
-                new Blood("O", "Positive", 0),
-                new Blood("O", "Negative", 0),
-                new Blood("AB", "Positive", 0),
-                new Blood("AB", "Negative", 0),
-                new Blood("Rh", "Positive", 0),
-                new Blood("Rh", "Negative", 0)
-            };
-            _bloodRepository.AddDefaultData(listBlood);
         }
         
         

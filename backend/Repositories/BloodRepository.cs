@@ -8,7 +8,7 @@ namespace backend.Repositories
 {
     public class BloodRepository : IBloodRepository
     {
-        private readonly IMongoCollection<Blood> _blood;
+        private static IMongoCollection<Blood> _blood;
 
         public BloodRepository(IMongoClient client)
         {
@@ -24,8 +24,8 @@ namespace backend.Repositories
             await _blood.InsertOneAsync(blood);
             return blood._id;
         }
-
-        public void AddDefaultData(List<Blood> listBlood)
+        
+        public void AddDefaultData(IEnumerable<Blood> listBlood)
         {
             _blood.InsertMany(listBlood);
         }

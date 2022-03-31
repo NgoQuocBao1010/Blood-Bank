@@ -60,5 +60,10 @@ namespace backend.Repositories
             var result = await _request.DeleteOneAsync(filter);
             return result.DeletedCount == 1;
         }
+
+        public void AddDefaultData(IEnumerable<Request> listRequest)
+        {
+            _request.InsertMany(listRequest);
+        }
     }
 }

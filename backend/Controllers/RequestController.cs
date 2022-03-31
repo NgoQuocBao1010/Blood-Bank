@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -21,6 +22,7 @@ namespace backend.Controllers
             _requestRepository = requestRepository;
             _hospitalRepository = hospitalRepository;
         }
+        
 
         [HttpPut("approve")]
         public async Task<IActionResult> ApproveRequest(IEnumerable<Request> listRequest)
@@ -33,6 +35,7 @@ namespace backend.Controllers
                     result.ApproveStatus = 1;
                     await _requestRepository.Update(request._id, result);
                 }
+
                 return Ok("Approve request successfully!");
             }
             catch (Exception e)
@@ -54,6 +57,7 @@ namespace backend.Controllers
                     result.RejectReason = request.RejectReason;
                     await _requestRepository.Update(result._id, result);
                 }
+
                 return Ok("Reject request successfully!");
             }
             catch (Exception e)

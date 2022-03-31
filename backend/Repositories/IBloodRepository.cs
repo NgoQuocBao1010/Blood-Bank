@@ -9,7 +9,6 @@ namespace backend.Repositories
     {
         // Create
         Task<string> Create(Blood blood);
-        void AddDefaultData(List<Blood> listBlood);
         
         // Read
         Task<Blood> Get(string _id);
@@ -22,6 +21,8 @@ namespace backend.Repositories
         
         // Delete
         Task<bool> Delete(string _id);
+
+        void AddDefaultData(IEnumerable<Blood> listBlood);
 
     }
 }

@@ -26,24 +26,7 @@ namespace backend.Controllers
             _eventRepository = eventRepository;
         }
 
-        public async Task<bool> CheckValidListParticipant(ListParticipants data)
-        {
-            var eventDonated = await _eventRepository.Get(data.eventId);
-            foreach (var donor in data.listParticipants)
-            {
-                var listTransactionAttended = await _donorTransactionRepository.GetTransactionByDonor(donor._id);
-                // check if the participant has attended this event => return error and stop to create
-                if (listTransactionAttended.Any(transaction => transaction.eventDonated._id == data.eventId))
-                {
-                    var result = donor.name + " has attended the " + eventDonated.name +
-                                 " event already!";
-                    Console.WriteLine(result);
-                    return false;
-                }
-            }
 
-            return true;
-        }
 
         [HttpPost]
         public async Task<IActionResult> Create(ListParticipants data)
@@ -51,7 +34,7 @@ namespace backend.Controllers
             var result = "";
             var eventDonated = await _eventRepository.Get(data.eventId);
 
-            if (CheckValidListParticipant(data).Result)
+            if (_donorTransactionRepository.CheckValidListParticipant(data, eventDonated).Result)
             {
                 foreach (var donor in data.listParticipants)
                 {
@@ -190,14 +173,22 @@ namespace backend.Controllers
         public async Task<IActionResult> Update(string id, Donor donor)
         {
             var result = await _donorRepository.Update(id, donor);
-            return new JsonResult(result);
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return new JsonResult("Update Information Of Donor Successfully");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _donorRepository.Delete(id);
-            return new JsonResult(result);
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return new JsonResult("Delete Information Of Donor Successfully");
         }
     }
 }

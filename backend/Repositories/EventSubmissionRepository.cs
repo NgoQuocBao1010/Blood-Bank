@@ -16,6 +16,11 @@ namespace backend.Repositories
 
             _eventSubmission = collection;
         }
+        
+        public void AddDefaultData(IEnumerable<EventSubmission> listEventSubmissions)
+        {
+            _eventSubmission.InsertMany(listEventSubmissions);
+        }
 
         public async Task<string> Create(EventSubmission eventSubmission)
         {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Driver;
@@ -16,6 +17,11 @@ namespace backend.Repositories
 
             _hospital = collection;
         }
+        
+        public void AddDefaultData(IEnumerable<Hospital> listHospital)
+        {
+            _hospital.InsertMany(listHospital);
+        }
 
 
         public async Task<string> Create(Hospital hospital)
@@ -31,6 +37,13 @@ namespace backend.Repositories
 
             return hospital;
         }
+        
+        public Task<Hospital> GetFirstHospital()
+        {
+            var hospital =  _hospital.Find(_ => true).FirstOrDefaultAsync();
+
+            return hospital;
+        }
 
         public async Task<IEnumerable<Hospital>> Get()
         {
@@ -38,6 +51,7 @@ namespace backend.Repositories
 
             return hospital;
         }
+        
 
         public async Task<bool> Update(string _id, Hospital hospital)
         {
@@ -59,10 +73,6 @@ namespace backend.Repositories
 
             return result.DeletedCount == 1;
         }
-
-        public void AddDefaultData(IEnumerable<Hospital> listHospital)
-        {
-            _hospital.InsertMany(listHospital);
-        }
+        
     }
 }
