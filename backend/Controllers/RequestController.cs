@@ -15,11 +15,14 @@ namespace backend.Controllers
     {
         private readonly IRequestRepository _requestRepository;
         private readonly IHospitalRepository _hospitalRepository;
+        private readonly IBloodRepository _bloodRepository;
 
-        public RequestController(IRequestRepository requestRepository, IHospitalRepository hospitalRepository)
+        public RequestController(IRequestRepository requestRepository, IHospitalRepository hospitalRepository,
+            IBloodRepository bloodRepository)
         {
             _requestRepository = requestRepository;
             _hospitalRepository = hospitalRepository;
+            _bloodRepository = bloodRepository;
         }
 
         [HttpPut("approve")]
@@ -29,12 +32,17 @@ namespace backend.Controllers
             {
                 foreach (var request in listRequest)
                 {
-                    var result = await _requestRepository.Get(request._id);
-                    if (result == null)
-                    {
-                        throw new Exception();
-                    }
+                    // Check empty or approved request.
+                    var existRequest = await _requestRepository.Get(request._id);
+                    if (existRequest == null) throw new Exception();
+                    if (existRequest.Status == 1) throw new Exception("approved");
 
+                    // Check valid quantity request.
+                    var blood = _bloodRepository.GetByNameAndType(existRequest.Blood.Name, existRequest.Blood.Type);
+                    if (existRequest.Quantity > blood.Result.quantity) throw new Exception("quantity");
+
+                    await _bloodRepository.UpdateQuantity(existRequest.Blood.Name, existRequest.Blood.Type,
+                        -existRequest.Quantity);
                     _requestRepository.ApproveRequest(request);
                 }
 
@@ -42,8 +50,12 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return BadRequest("Request ID error!");
+                return e.Message switch
+                {
+                    "quantity" => BadRequest("Not enough blood!"),
+                    "approved" => BadRequest("Request already approved!"),
+                    _ => BadRequest("Request ID error!")
+                };
             }
         }
 
