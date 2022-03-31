@@ -42,7 +42,7 @@ namespace backend.Repositories
             return sortEvent;
         }
 
-        public async Task<bool> Update(string _id, Event e)
+        public async Task<long> Update(string _id, Event e)
         {
             var filter = Builders<Event>.Filter.Eq(events => events._id, _id);
             var update = Builders<Event>.Update
@@ -55,7 +55,7 @@ namespace backend.Repositories
 
             var result = await _event.UpdateOneAsync(filter, update);
 
-            return result.ModifiedCount == 1;
+            return result.ModifiedCount;
         }
         
         public async Task<bool> UpdateParticipant(string _id, int numOfParticipants)

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace backend.Repositories
 {
@@ -15,7 +16,7 @@ namespace backend.Repositories
         Task<IEnumerable<Event>> Get();
         
         // Update
-        Task<bool> Update(string _id, Event e);
+        Task<long> Update(string _id, Event e);
         
         // Update Number of Participants
         Task<bool> UpdateParticipant(string _id, int numOfParticipants);

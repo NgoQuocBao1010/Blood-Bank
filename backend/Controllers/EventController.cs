@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,8 @@ namespace backend.Controllers
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IDonorRepository _donorRepository;
 
-        public EventController(IEventRepository eventRepository, IDonorTransactionRepository donorTransactionRepository, IDonorRepository donorRepository)
+        public EventController(IEventRepository eventRepository, IDonorTransactionRepository donorTransactionRepository,
+            IDonorRepository donorRepository)
         {
             _eventRepository = eventRepository;
             _donorRepository = donorRepository;
@@ -41,7 +43,8 @@ namespace backend.Controllers
                     2, "This is a blood donation event at Nha Cua May", 10),
                 new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
                     100, "This is a blood donation event at Nomad", 10),
-                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"), "1671469200000",
+                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"),
+                    "1671469200000",
                     2, "This is a blood donation event at Cafe Station", 10)
             };
 
@@ -52,58 +55,119 @@ namespace backend.Controllers
         public async Task<IActionResult> Create(Event e)
         {
             var id = await _eventRepository.Create(e);
-            return new JsonResult(id);
+            return Ok(id);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var e = await _eventRepository.Get(id);
+            try
+            {
+                var result = await _eventRepository.Get(id);
+                if (result == null)
+                {
+                    throw new Exception();
+                }
 
-            return new JsonResult(e);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Event ID error");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var e = await _eventRepository.Get();
-            return new JsonResult(e);
+            try
+            {
+                var result = await _eventRepository.Get();
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Get Event error");
+            }
         }
-        
+
         [HttpGet("listParticipants/{id}")]
         public async Task<IActionResult> GetListParticipants(string id)
         {
-            var result = new List<Donor>();
-            var listDonor = await _donorRepository.Get();
-            foreach (var donor in listDonor)
+            try
             {
-                var transaction = await _donorTransactionRepository.GetByEventAndDonor(donor._id, id);
-                
-                if (transaction == null) continue;
-                
-                var tempDonor = await _donorRepository.Get(donor._id);
-                tempDonor.transaction = transaction;
-                result.Add(tempDonor);
+                var result = new List<Donor>();
+                var listDonor = await _donorRepository.Get();
+
+                foreach (var donor in listDonor)
+                {
+                    var transaction = await _donorTransactionRepository.GetByEventAndDonor(donor._id, id);
+
+                    if (transaction == null) continue;
+
+                    var tempDonor = await _donorRepository.Get(donor._id);
+                    tempDonor.transaction = transaction;
+                    result.Add(tempDonor);
+                }
+
+                var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+
+                return Ok(sortResult);
             }
-
-            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
-
-            return new JsonResult(sortResult);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("List participants ID error");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Event e)
         {
-            var result = await _eventRepository.Update(id, e);
-            return new JsonResult(result);
+            try
+            {
+                var exist = await _eventRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
+                var result = await _eventRepository.Update(id, e);
+                return Ok(result);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                return BadRequest("Event ID error");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _eventRepository.Delete(id);
+            try
+            {
+                var exist = await _eventRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
 
-            return new JsonResult(result);
+                var result = await _eventRepository.Delete(id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Event ID error");
+            }
         }
     }
 }
