@@ -15,6 +15,9 @@ import RequestsHelpers from "../../utils/helpers/Requests";
 import { JSONtoExcel } from "../../utils/excel";
 import { formatDate } from "../../utils/index";
 
+import { TRANSACTION_STATUS } from "../../constants";
+import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
+
 const route = useRoute();
 const hospital_id = route.params._id;
 
@@ -55,6 +58,7 @@ const initFilter = () => {
       value: null,
       matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
     },
+    approveStatus: { value: null, matchMode: FilterMatchMode.IN },
   };
 };
 const clearFilter = () => {
@@ -83,6 +87,7 @@ onBeforeMount(() => {
     requests = requestData.map((row) => {
       let request = { ...row };
       request.date = new Date(request.date * 1000);
+      request.status = DonorTransactionHelper.determineStatus(request);
       return request;
     });
   }
@@ -289,6 +294,44 @@ const downloadExcel = () => {
           class="p-column-filter"
           v-tooltip.top.focus="'Press enter key to filter'"
         />
+      </template>
+    </PrimeVueColumn>
+
+    <!-- Status -->
+    <PrimeVueColumn
+      field="approveStatus"
+      header="Status"
+      style="max-width: 14rem !important"
+    >
+      <template #body="{ data }">
+        <span
+          :class="'transaction-badge status-' + data.approveStatus"
+          style="cursor: pointer"
+          v-tooltip.bottom="{
+            value: `Failed Reason: ${data.rejectReason}`,
+            class: 'reason-tooltip',
+          }"
+          v-if="data.approveStatus === 'failed'"
+        >
+          {{ data.approveStatus }}
+        </span>
+        <span :class="'transaction-badge status-' + data.approveStatus" v-else>
+          {{ data.approveStatus }}
+        </span>
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+        <MultiSelect
+          v-model="filterModel.value"
+          @change="filterCallback()"
+          :options="TRANSACTION_STATUS"
+          class="p-column-filter"
+        >
+          <template #option="slotProps">
+            <span :class="'transaction-badge status-' + slotProps.option">
+              {{ slotProps.option }}
+            </span>
+          </template>
+        </MultiSelect>
       </template>
     </PrimeVueColumn>
 
