@@ -1,15 +1,14 @@
 <script setup>
 import { onBeforeMount, defineAsyncComponent } from "vue";
-import { useRoute } from "vue-router";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
-import { useToast } from "primevue/usetoast";
+import RequestRepo from "../api/RequestRepo";
 import useVuelidate from "@vuelidate/core";
+import { useRoute } from "vue-router";
+import { useToast } from "primevue/usetoast";
 import { required, numeric } from "@vuelidate/validators";
 import { BLOOD_TYPES } from "../constants";
-
 import HospitalRepo from "../api/HospitalRepo";
-import RequestRepo from "../api/RequestRepo";
 
 const AsyncRequestHistory = defineAsyncComponent({
   loader: () => import("../components/tables/RequestHistoryTable.vue"),
@@ -27,7 +26,7 @@ let formData = $ref({
     type: "",
   },
   hospitalId: hospital_id,
-  date: Math.floor(new Date(today).getTime() / 1000),
+  date: Math.floor(today.getTime() / 1000),
 });
 
 const formRules = $computed(() => {
@@ -57,7 +56,7 @@ const resetForm = () => {
       type: "",
     }),
     (formData.hospitalId = hospital_id),
-    (formData.date = Math.floor(new Date(today).getTime() / 1000));
+    (formData.date = Math.floor(today.getTime() / 1000));
 };
 
 onBeforeMount(async () => {
@@ -67,7 +66,6 @@ onBeforeMount(async () => {
 
   if (requestData.data && requestData.data.length !== 0) {
     requestHistory = requestData.data;
-    console.log(requestHistory);
   }
 });
 

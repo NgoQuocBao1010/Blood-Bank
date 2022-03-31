@@ -8,8 +8,6 @@ let requestHistory = $ref(null);
 onBeforeMount(async () => {
   const { data } = await RequestRepo.getAll();
   requestHistory = data;
-
-  console.log("data", requestHistory);
 });
 </script>
 
