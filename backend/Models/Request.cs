@@ -19,7 +19,7 @@ namespace backend.Models
         public RequestBlood Blood { get; set; }
         public string HospitalId { get; set; }
         public string HospitalName { get; set; }
-        public int ApproveStatus { get; set; }
+        public int Status { get; set; }
         public string RejectReason { get; set; }
     }
 }

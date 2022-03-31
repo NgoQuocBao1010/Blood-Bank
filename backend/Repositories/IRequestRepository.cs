@@ -18,5 +18,8 @@ namespace backend.Repositories
         
         // Delete
         Task<bool> Delete(string _id);
+
+        void ApproveRequest(Request request);
+        void RejectRequest(Request request);
     }
 }

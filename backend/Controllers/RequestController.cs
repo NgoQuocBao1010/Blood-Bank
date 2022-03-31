@@ -30,9 +30,14 @@ namespace backend.Controllers
                 foreach (var request in listRequest)
                 {
                     var result = await _requestRepository.Get(request._id);
-                    result.ApproveStatus = 1;
-                    await _requestRepository.Update(request._id, result);
+                    if (result == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    _requestRepository.ApproveRequest(request);
                 }
+
                 return Ok("Approve request successfully!");
             }
             catch (Exception e)
@@ -50,10 +55,14 @@ namespace backend.Controllers
                 foreach (var request in listRequest)
                 {
                     var result = await _requestRepository.Get(request._id);
-                    result.ApproveStatus = -1;
-                    result.RejectReason = request.RejectReason;
-                    await _requestRepository.Update(result._id, result);
+                    if (result == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    _requestRepository.RejectRequest(request);
                 }
+
                 return Ok("Reject request successfully!");
             }
             catch (Exception e)
@@ -86,12 +95,17 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Get(id);
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(result);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Request ID error!");
             }
         }
 
@@ -101,12 +115,17 @@ namespace backend.Controllers
             try
             {
                 var result = await _requestRepository.Get();
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(result);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Get request error!");
             }
         }
 
@@ -115,13 +134,19 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _requestRepository.Get();
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _requestRepository.Update(id, request);
                 return Ok(result);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Request ID error!");
             }
         }
 
@@ -130,13 +155,19 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _requestRepository.Get();
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _requestRepository.Delete(id);
                 return Ok(result);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Request ID error!");
             }
         }
     }
