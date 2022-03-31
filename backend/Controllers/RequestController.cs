@@ -66,11 +66,9 @@ namespace backend.Controllers
             {
                 foreach (var request in listRequest)
                 {
-                    var result = await _requestRepository.Get(request._id);
-                    if (result == null)
-                    {
-                        throw new Exception();
-                    }
+                    var existRequest = await _requestRepository.Get(request._id);
+                    if (existRequest == null) throw new Exception();
+                    if (existRequest.Status == -1) throw new Exception("rejected");
 
                     _requestRepository.RejectRequest(request);
                 }
@@ -79,8 +77,11 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return BadRequest("Request ID error!");
+                return e.Message switch
+                {
+                    "rejected" => BadRequest("Request already rejected!"),
+                    _ => BadRequest("Request ID error!")
+                };
             }
         }
 
