@@ -6,6 +6,7 @@ import InputNumber from "primevue/inputnumber";
 import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import Calendar from "primevue/calendar";
+import Breadcrumb from "primevue/breadcrumb";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
@@ -20,11 +21,21 @@ const isEditPage = $computed(
     () => router.currentRoute.value.name === "Event Edit"
 );
 
+// Props
 const { _id, eventData } = defineProps({
     _id: String,
     eventData: String,
 });
 
+// Breadcums
+// Naviagtion settings
+const home = $ref({
+    icon: "fa-solid fa-calendar-days",
+    to: { name: "Events Management" },
+});
+let items = $ref(null);
+
+// Form data and validation rules
 let formData = $ref({
     name: "",
     location: {
@@ -58,6 +69,19 @@ onBeforeMount(async () => {
             const { data } = await EventRepo.getById(_id);
             fixingVuevalidateBugs(data);
         }
+    }
+
+    // Setup breadcum
+    if (isEditPage) {
+        items = [
+            {
+                label: `${formData.name} event`,
+                to: { name: "Event Detail", params: { _id } },
+            },
+            { label: "Edit Form" },
+        ];
+    } else {
+        items = [{ label: "Event Creation Form" }];
     }
 });
 
@@ -154,8 +178,20 @@ const fixingVuevalidateBugs = (data) => {
 <template>
     <div class="grid">
         <div class="col-12">
+            <!-- Navigation -->
+            <Breadcrumb
+                :home="home"
+                :model="items"
+                style="margin-bottom: 1rem; border-radius: 15px"
+            />
+
             <div class="card">
-                <h3 class="title">Blood Donations Events Creation Forms</h3>
+                <h3 class="title" v-if="isEditPage">
+                    {{ formData?.name }} Event
+                </h3>
+                <h3 class="title" v-else>
+                    Blood Donations Events Creation Forms
+                </h3>
 
                 <!-- Form -->
                 <div class="p-fluid formgrid grid">
@@ -299,7 +335,6 @@ const fixingVuevalidateBugs = (data) => {
                 <div class="grid p-fluid">
                     <div class="col-6">
                         <PrimeVueButton
-                            class="p-button-success"
                             label="Yes"
                             @click="deleteEvent"
                         ></PrimeVueButton>
