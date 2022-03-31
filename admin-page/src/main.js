@@ -59,8 +59,4 @@ app.config.errorHandler = (err, instance, info) => {
         return;
     }
     throw err;
-
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ instance", instance);
 };

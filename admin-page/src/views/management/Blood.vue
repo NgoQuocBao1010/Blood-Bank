@@ -72,9 +72,6 @@ onBeforeMount(async () => {
 
 const downloadExcelFile = () => {
     const excelData = bloodData.map((el) => {
-        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
-        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
-        console.log("🚀 ~ file: Blood.vue ~ line 78 ~ onBeforeMount ~ e", e);
         const row = { ...el };
 
         row["Blood Group"] = row["name"];

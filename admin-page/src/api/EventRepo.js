@@ -10,11 +10,9 @@ export default {
         return Repository.get(`${resource}/${eventId}`);
     },
     create(data) {
-        console.log("Create call");
         return Repository.post(`${resource}/`, data);
     },
     edit(eventId, data) {
-        console.log("Edit call");
         return Repository.put(`${resource}/${eventId}`, data);
     },
     delete(eventId) {

@@ -54,7 +54,6 @@ watch(
         if (newValue) return;
         if (hosiptals) return;
 
-        console.log("Getting hospital");
         const { data } = await HospitalRepo.getAll();
         hosiptals = data;
         formData.hospitalId = hosiptals[0]._id;
