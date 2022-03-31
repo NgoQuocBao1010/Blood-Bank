@@ -1,6 +1,4 @@
-<script setup>
-import { RouterLink } from "vue-router";
-</script>
+<script setup></script>
 
 <template>
     <div class="grid">
@@ -10,7 +8,7 @@ import { RouterLink } from "vue-router";
                 <h3>
                     You can login here
 
-                    <RouterLink :to="{ name: 'About' }">
+                    <RouterLink :to="{ name: 'Login' }">
                         👉 here 👈
                     </RouterLink>
                 </h3>

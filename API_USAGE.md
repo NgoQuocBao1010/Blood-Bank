@@ -174,11 +174,45 @@
         },
         startDate: string,
         duration: int,
-        detail,
-        participants (default: 0)
+        detail
     }
     ```
-2. POST events data -> Endpoint: api/Event
+    
+2. GET an event data -> Endpoint: api/Event/{_id}
+    ```
+    {
+        _id,
+        name,
+        location: {
+            city,
+            address
+        },
+        startDate: string,
+        duration: int,
+        detail,
+        participants
+    }
+    ```
+    
+3. GET an event data with query parameter -> Endpoint: api/Event/{_id}/?status=upcoming
+
+- For checking the infomation of an upcoming Event 
+    ```
+    {
+        _id,
+        name,
+        location: {
+            city,
+            address
+        },
+        startDate: string,
+        duration: int,
+        detail,
+        participants
+    }
+    ```
+    
+4. POST events data -> Endpoint: api/Event
     ```
     {
         name,
@@ -192,14 +226,14 @@
     }
     ```
     
-3. DELETE events data -> Endpoint: api/Event/{_id}
+5. DELETE events data -> Endpoint: api/Event/{_id}
 
     ```
     Return true if delete success
     ```
 
 
-4. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
+6. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
     ```
     [
         {

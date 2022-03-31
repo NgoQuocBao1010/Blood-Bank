@@ -1,28 +1,44 @@
 <script setup>
 import InputText from "primevue/inputtext";
+import RadioButton from "primevue/radiobutton";
+import Dropdown from "primevue/dropdown";
 import Divider from "primevue/divider";
 import Dialog from "primevue/dialog";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
-import { required, email, minLength } from "@vuelidate/validators";
+import { helpers, required, email } from "@vuelidate/validators";
 
 import { useUserStore } from "../../stores/user";
+import UserRepo from "../../api/UserRepo";
+import HospitalRepo from "../../api/HospitalRepo";
+import { watch } from "vue";
 
-const user = useUserStore();
+const userStore = useUserStore();
 const toast = useToast();
 
+// Formdata and Validalation rules
 let formData = $ref({
     newEmail: "",
+    isAdmin: true,
+    hospitalId: "Fallback Value",
     verifyInfo: {
-        email: user.email,
+        email: userStore.email,
         password: "",
     },
 });
 const formRules = $computed(() => {
     return {
-        newEmail: { required, email },
+        newEmail: {
+            required: helpers.withMessage("This field is required", required),
+            email: helpers.withMessage("Please provide a valid email", email),
+        },
         verifyInfo: {
-            password: { required, minLength: minLength(3) },
+            password: {
+                required: helpers.withMessage(
+                    "This field is required",
+                    required
+                ),
+            },
         },
     };
 });
@@ -30,6 +46,20 @@ const resultData = $ref({
     show: false,
     password: "GadCVV",
 });
+
+let hosiptals = $ref(null);
+watch(
+    () => formData.isAdmin,
+    async (newValue) => {
+        if (newValue) return;
+        if (hosiptals) return;
+
+        console.log("Getting hospital");
+        const { data } = await HospitalRepo.getAll();
+        hosiptals = data;
+        formData.hospitalId = hosiptals[0]._id;
+    }
+);
 
 const $v = $(useVuelidate(formRules, formData));
 let submitting = $ref(false);
@@ -48,12 +78,35 @@ const submitData = async () => {
     }
     // Make API call to server
     submitting = true;
+    const isVerified = await verifyAccount(
+        formData.verifyInfo.email,
+        formData.verifyInfo.password
+    );
 
-    setTimeout(() => {
+    if (!isVerified) {
         submitting = false;
+        return;
+    }
+};
 
-        resultData.show = true;
-    }, 1000);
+const verifyAccount = async (email, password) => {
+    try {
+        await userStore.login(email, password);
+        return true;
+    } catch (e) {
+        if (e.response?.status === 400) {
+            toast.add({
+                severity: "error",
+                summary: "Account Verify Failed",
+                detail: "Your password is invalid.",
+                life: 3000,
+            });
+
+            return false;
+        }
+
+        throw e;
+    }
 };
 
 const copy = (value) => {
@@ -74,16 +127,68 @@ const copy = (value) => {
 
         <div class="p-fluid formgrid grid">
             <!-- New Account -->
-            <div class="field col-12">
+            <div class="field col-12 md:col-6">
                 <label for="new-account">New Account</label>
                 <InputText
                     v-model="formData.newEmail"
                     id="new-account"
                     placeholder="Enter the email for new account"
                     type="text"
+                    :class="{ 'p-invalid': $v.newEmail.$error }"
                 />
+                <span v-if="$v.newEmail.$error" class="app-form-error">
+                    {{ $v.newEmail.$errors[0].$message }}
+                </span>
             </div>
 
+            <!-- Account type -->
+            <div class="field-radiobutton col-12 md:col-3 flex-center">
+                <RadioButton
+                    name="account_type"
+                    :value="true"
+                    v-model="formData.isAdmin"
+                />
+                <label for="account_type">Admin Account</label>
+            </div>
+
+            <div class="field-radiobutton col-12 md:col-3 flex-center">
+                <RadioButton
+                    name="account_type"
+                    :value="false"
+                    v-model="formData.isAdmin"
+                />
+                <label for="account_type">Hospital Account</label>
+            </div>
+
+            <!-- Hospital -->
+            <div class="field col-12" v-if="hosiptals && !formData.isAdmin">
+                <Dropdown
+                    v-model="formData.hospitalId"
+                    :options="hosiptals"
+                    optionValue="_id"
+                    class="p-column-filter"
+                    placeholder="Choose hospital"
+                    :showClear="true"
+                >
+                    <template #value="slotProps">
+                        <span v-if="slotProps.value">
+                            {{
+                                hosiptals.find(
+                                    (el) => el._id === slotProps.value
+                                )?.name
+                            }}
+                        </span>
+                        <span v-else>
+                            {{ slotProps.placeholder }}
+                        </span>
+                    </template>
+                    <template #option="slotProps">
+                        <span>{{ slotProps.option.name }}</span>
+                    </template>
+                </Dropdown>
+            </div>
+
+            <!-- Divider -->
             <Divider>
                 <span class="app-note">
                     ** Verify your account before submit **
@@ -108,7 +213,14 @@ const copy = (value) => {
                     v-model="formData.verifyInfo.password"
                     id="password"
                     type="password"
+                    :class="{ 'p-invalid': $v.verifyInfo.password.$error }"
                 />
+                <span
+                    v-if="$v.verifyInfo.password.$error"
+                    class="app-form-error"
+                >
+                    {{ $v.verifyInfo.password.$errors[0].$message }}
+                </span>
             </div>
 
             <!-- Submit -->

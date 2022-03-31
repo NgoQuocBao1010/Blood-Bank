@@ -1,3 +1,4 @@
+.transaction-badge,
 .account-badge,
 .event-badge,
 .stock-badge,
@@ -37,17 +38,21 @@
     }
 }
 
+.transaction-badge,
 .stock-badge {
+    &.status-success,
     &.status-great {
         background: #c8e6c9;
         color: #256029;
     }
 
+    &.status-pending,
     &.status-good {
         background: #feedaf;
         color: #8a5340;
     }
 
+    &.status-failed,
     &.status-low {
         background: #ffcdd2;
         color: #c63737;

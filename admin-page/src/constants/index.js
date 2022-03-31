@@ -16,4 +16,6 @@ const PRIMARY_CITIES = [
     "Đà Lạt",
 ];
 
-export { THEMES, BLOOD_TYPES, PRIMARY_CITIES };
+const TRANSACTION_STATUS = ["pending", "failed", "success"];
+
+export { THEMES, BLOOD_TYPES, PRIMARY_CITIES, TRANSACTION_STATUS };
