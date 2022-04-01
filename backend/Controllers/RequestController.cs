@@ -95,7 +95,7 @@ namespace backend.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Request ID error!");
             }
         }
 
@@ -110,7 +110,7 @@ namespace backend.Controllers
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest("Hospital ID error!");
+                return BadRequest("Request ID error!");
             }
         }
 

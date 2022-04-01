@@ -43,6 +43,19 @@ namespace backend.Controllers
             return new JsonResult(id);
         }
         
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Get()
+        {
+            var listEvents = await _eventRepository.Get();
+            if (listEvents == null)
+            {
+                return NotFound();
+            }
+            
+            return new JsonResult(listEvents);
+        }
+        
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery] string? status)
@@ -66,17 +79,6 @@ namespace backend.Controllers
             return new JsonResult(e);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var listEvents = await _eventRepository.Get();
-            if (listEvents == null)
-            {
-                return NotFound();
-            }
-            
-            return new JsonResult(listEvents);
-        }
 
         [HttpGet("listParticipants/{id}")]
         public async Task<IActionResult> GetListParticipants(string id)

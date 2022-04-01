@@ -22,7 +22,7 @@ namespace backend.Repositories
         // Delete
         Task<bool> Delete(string _id);
 
-        void AddDefaultData(IEnumerable<Blood> listBlood);
+        void AddDefaultData();
 
     }
 }

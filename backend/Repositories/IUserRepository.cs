@@ -21,12 +21,7 @@ namespace backend.Repositories
         // Delete
         Task<bool> Delete(string _id);
 
-        void AddDefaultUser();
-        void AddDefaultHospital();
-        void AddDefaultEvent();
-        void AddDefaultBlood();
-        void AddDefaultEventSubmission();
-        void AddDefaultRequest();
+        void AddDefaultData();
 
         // Check login password
         bool CheckUserPassword(User user, string password);

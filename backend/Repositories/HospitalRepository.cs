@@ -16,10 +16,20 @@ namespace backend.Repositories
             var collection = database.GetCollection<Hospital>(nameof(Hospital));
 
             _hospital = collection;
+            AddDefaultData();
         }
         
-        public void AddDefaultData(IEnumerable<Hospital> listHospital)
+        public void AddDefaultData()
         {
+            var hospital = Get();
+            if (hospital.Result.Any()) return;
+            var listHospital = new List<Hospital>
+            {
+                new("Hoan My", "Can Tho", "9876543210"),
+                new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
+                new("Benh Vien 121", "Can Tho", "0123456780"),
+            };
+            
             _hospital.InsertMany(listHospital);
         }
 
