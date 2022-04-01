@@ -10,15 +10,12 @@ namespace backend.Repositories
     public class DonorRepository : IDonorRepository
     {
         private readonly IMongoCollection<Donor> _donor;
-        private readonly IMongoCollection<DonorTransaction> _donorTransaction;
         public DonorRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Donor>(nameof(Donor));
-            var collection1 = database.GetCollection<DonorTransaction>(nameof(DonorTransaction));
 
             _donor = collection;
-            _donorTransaction = collection1;
         }
 
 
@@ -28,11 +25,6 @@ namespace backend.Repositories
             return "Create Successfully";
         }
         
-        public async Task<string> CreateMany(Donor donor)
-        {
-            await _donor.InsertOneAsync(donor);
-            return "Create Successfully";
-        }
 
         public Task<Donor> Get(string idNumber)
         {
@@ -48,13 +40,6 @@ namespace backend.Repositories
             return donor;
         }
         
-        // public async Task<IEnumerable<DonorTransaction>> GetTransaction(string transactionId)
-        // {
-        //     var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donorId, transactionId);
-        //     var transaction = await _donorTransaction.Find(filter).ToListAsync();
-        //
-        //     return transaction;
-        // }
 
         public async Task<IEnumerable<Donor>> GetDonorsSuccess(List<string> listDonorId)
         {

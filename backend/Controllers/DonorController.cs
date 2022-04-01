@@ -61,6 +61,8 @@ namespace backend.Controllers
                         result = "Update information for this donor successfully";
                     }
 
+                    Console.WriteLine(data.eventId);
+                    Console.WriteLine(eventDonated.name);
                     // set event, rejectReason, donorId property in transaction
                     donor.transaction.eventDonated = new EventDonated
                     {
@@ -131,7 +133,13 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            foreach (var donor in donors)
+            var enumerable = donors.ToList();
+            if (!enumerable.Any())
+            {
+                return new JsonResult(donors);
+            }
+
+            foreach (var donor in enumerable)
             {
                 var tempDonor = await _donorRepository.Get(donor._id);
                 var listTransaction = await _donorTransactionRepository.GetPendingTransaction(donor._id);
