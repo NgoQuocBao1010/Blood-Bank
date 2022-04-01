@@ -71,7 +71,8 @@ namespace backend.Repositories
         public async void RejectRequest(Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
-            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = -1);
+            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = -1)
+                .Set(r => r.RejectReason, request.RejectReason);
             await _request.UpdateOneAsync(filter, update);
         }
     }
