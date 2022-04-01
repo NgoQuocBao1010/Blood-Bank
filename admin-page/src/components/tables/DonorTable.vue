@@ -97,7 +97,11 @@ const downloadExcel = () => {
         return;
     }
     const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
-    JSONtoExcel(excelData, "Pending_Donors");
+
+    JSONtoExcel(
+        excelData,
+        participants ? "Pending_Donors" : "Event_Participants"
+    );
 };
 
 let newParticipants = $ref({

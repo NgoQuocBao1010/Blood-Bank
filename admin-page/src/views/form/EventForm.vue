@@ -369,12 +369,4 @@ const fixingVuevalidateBugs = (data) => {
     background: red;
     margin-left: auto;
 }
-
-.toast-container {
-    width: 100%;
-
-    .toast-content {
-        padding-block: 2rem;
-    }
-}
 </style>

@@ -1,6 +1,5 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
-import { RouterLink } from "vue-router";
 import dayjs from "dayjs";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";

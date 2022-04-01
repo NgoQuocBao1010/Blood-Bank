@@ -263,6 +263,15 @@
     }
 }
 
+.toast-container {
+    width: 100%;
+    padding-left: 1.2rem;
+
+    .toast-content {
+        padding-block: 2rem;
+    }
+}
+
 body::-webkit-scrollbar,
 .scrollbar-style::-webkit-scrollbar {
     width: 0.6em;

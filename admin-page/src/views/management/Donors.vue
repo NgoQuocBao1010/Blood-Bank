@@ -9,22 +9,6 @@ import { FilterMatchMode } from "primevue/api";
 import DonorRepos from "../../api/DonorRepo";
 import { BLOOD_TYPES } from "../../constants";
 
-// const donors = [
-//     {
-//         _id: "3dbf5ab8-4a39-43d9-8fda-2e1b4de09ca2",
-//         name: "Quoc Bao 1",
-//         phone: "0945127866",
-//         address: "1st street, Can Tho city, VietNam",
-//         gender: "male",
-//         email: "baobao@gmail.com",
-//         dob: new Date("05/11/2000").getTime().toString(),
-//         blood: {
-//             name: "A",
-//             type: "Negative",
-//         },
-//     },
-// ];
-
 let donors = $ref(null);
 let fetchingDonors = $ref(true);
 // Filter configuration
