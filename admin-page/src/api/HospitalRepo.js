@@ -12,4 +12,20 @@ export default {
     useLocalToken();
     return Repository.get(`${resource}/${id}`);
   },
+  post(params) {
+    useLocalToken();
+    return Repository.post(`${resource}/`, {
+      name: params.name,
+      address: params.address,
+      phone: params.phone,
+    });
+  },
+  put(params) {
+    useLocalToken();
+    return Repository.put(`${resource}/${params._id}`, {
+      name: params.name,
+      address: params.address,
+      phone: params.phone,
+    });
+  },
 };
