@@ -449,6 +449,8 @@
             },
             "hospitalId": "string",
             "hospitalName": "string"
+            "status": int,
+            "rejectReason": "string"
         }
     ]
     ```
@@ -464,7 +466,9 @@
             "type": "string"
         },
         "hospitalId": "string",
-        "hospitalName": "string"
+        "hospitalName": "string",
+        "status": int,
+        "rejectReason": "string"
     }
     ```
 
@@ -486,3 +490,24 @@
     ```
     Return true if delete success
     ```
+
+5. PUT approve request -> Endpoint: api/request/approve
+    ```
+    [
+        {
+            "_id": "string"
+        }
+    ]
+    ```
+    Return status 200 if success. Error will return 400 bad request status.
+
+6. PUT reject request -> Endpoint: api/request/reject
+    ```
+    [
+        {
+            "_id": "string",
+            "rejectReason": "string"
+        }
+    ]
+    ```
+    Return status **200** if success. Error will return **400** bad request status.
