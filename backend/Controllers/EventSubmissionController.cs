@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -83,6 +84,12 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _eventSubmissionRepository.Get();
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+                
                 var result = await _eventSubmissionRepository.Update(id, eventSubmission);
                 return Ok(result);
             }
@@ -98,6 +105,12 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _eventSubmissionRepository.Get();
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+                
                 var result = await _eventSubmissionRepository.Delete(id);
                 return Ok(result);
             }
