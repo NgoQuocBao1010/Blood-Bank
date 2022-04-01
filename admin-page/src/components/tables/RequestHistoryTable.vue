@@ -17,6 +17,8 @@ import { formatDate } from "../../utils/index";
 
 import { TRANSACTION_STATUS } from "../../constants";
 import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
+import RequestRepo from "../../api/RequestRepo";
+import Dialog from "primevue/dialog";
 
 const route = useRoute();
 const hospital_id = route.params._id;
@@ -35,6 +37,7 @@ const { requestHistory, isAcitivy } = defineProps({
 let requests = $ref(null);
 let selectedRequests = $ref([]);
 // let fetchingData = $ref(true);
+const emits = defineEmits(["updateRequests"]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -108,6 +111,48 @@ const downloadExcel = () => {
   }
 
   JSONtoExcel(excelData, "Pending_Requests");
+};
+
+// Approve reject
+let isApprove = $ref(null);
+let rejectReason = $ref("");
+let showConfirmDialog = $ref(false);
+const openConfirmDialog = (approve = true) => {
+  isApprove = approve;
+  showConfirmDialog = true;
+};
+const handleRequests = async () => {
+  if (!isApprove && !rejectReason) {
+    toast.add({
+      severity: "error",
+      summary: "Invalid Reject Reason",
+      detail: "Please provide a reason for rejecting these requests",
+      life: 4000,
+    });
+
+    return;
+  }
+
+  const requests = JSON.parse(JSON.stringify(selectedRequests)).map((row) => {
+    let transformData = {};
+
+    transformData["_id"] = row._id;
+    transformData["rejectReason"] = rejectReason;
+    return transformData;
+  });
+
+  const { data, status } = isApprove
+    ? await RequestRepo.approveRequests(requests)
+    : await RequestRepo.rejectRequests(requests);
+
+  if (data && status === 200) {
+    toast.add({
+      severity: "success",
+      summary: isApprove ? "requests Approved" : "requests Rejected",
+      life: 2000,
+    });
+    emits("updateRequests");
+  }
 };
 </script>
 
@@ -342,6 +387,7 @@ const downloadExcel = () => {
         icon="pi pi-check-circle"
         label="Approve"
         class="p-button p-button-sm mr-2 approve-btn"
+        @click="openConfirmDialog"
       />
 
       <PrimeVueButton
@@ -349,9 +395,63 @@ const downloadExcel = () => {
         icon="pi pi-times-circle"
         label="Reject"
         class="p-button p-button-sm reject-btn"
+        @click="openConfirmDialog(false)"
       />
     </template>
   </PrimeVueTable>
+
+  <!-- Approve Reject dialog -->
+  <Dialog
+    :header="isApprove ? 'Approving blood requests' : 'Reject blood requests'"
+    v-model:visible="showConfirmDialog"
+    :style="{ width: '50vw' }"
+    position="bottom"
+    :modal="true"
+  >
+    <p class="m-0" v-if="isApprove">
+      You are approving
+      <span class="app-highlight">
+        {{
+          selectedRequests.length > 1
+            ? `${selectedRequests.length} "requests"`
+            : `${selectedRequests.length} "request"`
+        }}
+      </span>
+      . Are you sure to proceed?
+    </p>
+    <template v-else>
+      <p class="m-0">
+        You are rejecting
+        <span class="app-highlight">
+          {{
+            selectedRequests.length > 1
+              ? `${selectedRequests.length} "requests"`
+              : `${selectedRequests.length} "request"`
+          }}
+        </span>
+        . Please provide a reason below.
+      </p>
+      <InputText
+        class="reject-input"
+        placeholder="Type in the reject reason"
+        v-model="rejectReason"
+      />
+    </template>
+
+    <template #footer>
+      <PrimeVueButton
+        label="Cancel"
+        icon="pi pi-times"
+        @click="showConfirmDialog = false"
+        class="p-button-text"
+      />
+      <PrimeVueButton
+        label="Proceed"
+        icon="pi pi-check"
+        @click="handleRequests"
+      />
+    </template>
+  </Dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -365,5 +465,10 @@ const downloadExcel = () => {
 .reject-btn {
   border: none !important;
   background: #ff6363 !important;
+}
+
+.reject-input {
+  margin-top: 1rem;
+  width: 80%;
 }
 </style>

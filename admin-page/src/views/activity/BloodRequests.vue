@@ -5,9 +5,14 @@ import RequestRepo from "../../api/RequestRepo";
 
 let requestHistory = $ref(null);
 
-onBeforeMount(async () => {
+const updateRequests = async () => {
+  requestHistory = null;
   const { data } = await RequestRepo.getAll();
   requestHistory = data;
+};
+
+onBeforeMount(async () => {
+  await updateRequests();
 });
 </script>
 
@@ -23,6 +28,7 @@ onBeforeMount(async () => {
           v-if="requestHistory"
           :requestHistory="requestHistory"
           :isAcitivy="true"
+          @updateRequests="updateRequests"
         />
       </div>
     </div>

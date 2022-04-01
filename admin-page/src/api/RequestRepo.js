@@ -26,4 +26,11 @@ export default {
       hospitalId: params.hospitalId,
     });
   },
+
+  approveRequests(data) {
+    return Repository.put(`${resource}/approve`, data);
+  },
+  rejectRequests(data) {
+    return Repository.put(`${resource}/reject`, data);
+  },
 };
