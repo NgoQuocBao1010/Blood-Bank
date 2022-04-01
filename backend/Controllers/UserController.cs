@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
@@ -26,20 +27,8 @@ namespace backend.Controllers
         {
             _userRepository = userRepository;
             _configuration = configuration;
-            AddDefaultData();
         }
-
-        public void AddDefaultData()
-        {
-            var user = _userRepository.Get();
-            if (user.Result.Any()) return;
-            var listUser = new List<User>
-            {
-                new("admin@gmail.com", "admin", true)
-            };
-
-            _userRepository.AddDefaultData(listUser);
-        }
+        
 
         [HttpPost("login")]
         [AllowAnonymous]

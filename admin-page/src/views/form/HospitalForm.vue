@@ -45,9 +45,18 @@ onBeforeMount(async () => {
   }
 });
 
+// Helpers
+const fixingVuevalidateBugs = (data) => {
+  formData.name = data.name;
+  formData.address = data.address;
+  formData.phone = data.phone;
+};
+
 const $v = $(useVuelidate(formRules, formData));
 const toast = useToast();
 let submitting = $ref(false);
+let errorMessage = $ref(null);
+
 const submitData = async () => {
   // Form validation
   const isCorrect = await $v.$validate();
@@ -63,8 +72,28 @@ const submitData = async () => {
   }
   // Make API call to server
   submitting = true;
-
-  setTimeout(() => {
+  try {
+    if (name === "Hospital Edit" && _id) {
+      await HospitalRepo.put({
+        _id: _id,
+        name: formData.name,
+        address: formData.address,
+        phone: formData.phone,
+      });
+      router.push({ name: "Hospital Detail", params: { _id } });
+    } else {
+      const response = await HospitalRepo.post({
+        name: formData.name,
+        address: formData.address,
+        phone: formData.phone,
+      });
+      const hospitalId = response.data.id;
+      router.push({
+        name: "Hospital Detail",
+        params: { _id: hospitalId },
+      });
+    }
+    errorMessage = null;
     submitting = false;
 
     toast.add({
@@ -73,17 +102,25 @@ const submitData = async () => {
       detail:
         name === "Hospital Edit"
           ? "Hospital is updated"
-          : "New hospital is created",
+          : "New hospital is added",
       life: 3000,
     });
-  }, 2000);
-};
-
-// Helpers
-const fixingVuevalidateBugs = (data) => {
-  formData.name = data.name;
-  formData.address = data.address;
-  formData.phone = data.phone;
+  } catch (e) {
+    if (e.response) {
+      const { status } = e.response;
+      if (status === 400) {
+        errorMessage = "You have an error";
+        toast.add({
+          severity: "error",
+          summary: "Check your information",
+          detail: errorMessage,
+          life: 3000,
+        });
+      }
+    } else {
+      throw e;
+    }
+  }
 };
 </script>
 

@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize]
+    [Authorize]
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -27,65 +27,63 @@ namespace backend.Controllers
         }
 
 
+
         [HttpPost]
         public async Task<IActionResult> Create(ListParticipants data)
         {
             var result = "";
             var eventDonated = await _eventRepository.Get(data.eventId);
 
-            foreach (var donor in data.listParticipants)
+            if (_donorTransactionRepository.CheckValidListParticipant(data, eventDonated).Result)
             {
-                // check this participant exists or not
-                var exist = await _donorRepository.Get(donor._id);
-
-                donor.blood = donor.transaction.blood;
-                // if this participant does not exist
-                if (exist == null)
+                foreach (var donor in data.listParticipants)
                 {
-                    result = await _donorRepository.Create(donor);
-                    if (result == null)
+                    // check this participant exists or not
+                    var exist = await _donorRepository.Get(donor._id);
+                    donor.blood = donor.transaction.blood;
+                    // if this participant does not exist
+                    if (exist == null)
                     {
-                        return NotFound();
-                    }
-                }
-                else
-                {
-                    // get list transaction of a donor
-                    var listTransactionAttended = await _donorTransactionRepository.GetTransactionByDonor(donor._id);
-                    // check if the participant has attended this event => return error and stop to create
-                    if (listTransactionAttended.Any(transaction => transaction.eventDonated._id == data.eventId))
-                    {
-                        result = donor.name + " has attended the " + eventDonated.name +
-                                 " event already!";
-                        return new JsonResult(result);
+                        result = await _donorRepository.Create(donor);
+                        if (result == null)
+                        {
+                            return BadRequest();
+                        }
                     }
                     else
                     {
-                        await Update(exist._id, donor);
+                        var update = await Update(exist._id, donor);
+                        if (update == null)
+                        {
+                            return BadRequest("Cannot update new information for this donor");
+                        }
+
+                        result = "Update information for this donor successfully";
                     }
-                }
 
-                // set event, rejectReason, donorId property in transaction
-                donor.transaction.eventDonated = new EventDonated
-                {
-                    _id = data.eventId,
-                    name = eventDonated.name
-                };
-                donor.transaction.rejectReason = "";
-                donor.transaction.donorId = donor._id;
+                    // set event, rejectReason, donorId property in transaction
+                    donor.transaction.eventDonated = new EventDonated
+                    {
+                        _id = data.eventId,
+                        name = eventDonated.name
+                    };
+                    donor.transaction.rejectReason = "";
+                    donor.transaction.donorId = donor._id;
 
-                // Create a transaction of a participant
-                var transaction = await _donorTransactionRepository.Create(donor.transaction);
+                    // Create a transaction of a participant
+                    var transaction = await _donorTransactionRepository.Create(donor.transaction);
 
-                if (transaction == null) continue;
-
-                // add participants to number of participants in Event
-                var currentEvent = await _eventRepository.Get(data.eventId);
-                var sum = currentEvent.participants + 1;
-                await _eventRepository.UpdateParticipant(data.eventId, sum);
-
-                result = transaction;
+                    if (transaction == null)
+                    {
+                        return BadRequest();
+                    }
+                } 
+            } 
+            else
+            {
+                return BadRequest("Some participants may have already attended this event");
             }
+
 
             return new JsonResult(result);
         }
@@ -94,6 +92,11 @@ namespace backend.Controllers
         public async Task<IActionResult> GetInfo(string id)
         {
             var donor = await _donorRepository.Get(id);
+            if (donor == null)
+            {
+                return NotFound();
+            }
+
             return new JsonResult(donor);
         }
 
@@ -128,7 +131,13 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            foreach (var donor in donors)
+            var enumerable = donors.ToList();
+            if (!enumerable.Any())
+            {
+                return new JsonResult(donors);
+            }
+
+            foreach (var donor in enumerable)
             {
                 var tempDonor = await _donorRepository.Get(donor._id);
                 var listTransaction = await _donorTransactionRepository.GetPendingTransaction(donor._id);
@@ -170,14 +179,22 @@ namespace backend.Controllers
         public async Task<IActionResult> Update(string id, Donor donor)
         {
             var result = await _donorRepository.Update(id, donor);
-            return new JsonResult(result);
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return new JsonResult("Update Information Of Donor Successfully");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _donorRepository.Delete(id);
-            return new JsonResult(result);
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return new JsonResult("Delete Information Of Donor Successfully");
         }
     }
 }

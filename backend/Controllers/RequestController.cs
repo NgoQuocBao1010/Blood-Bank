@@ -45,7 +45,6 @@ namespace backend.Controllers
                         -existRequest.Quantity);
                     _requestRepository.ApproveRequest(request);
                 }
-
                 return Ok("Approve request successfully!");
             }
             catch (Exception e)
@@ -72,7 +71,6 @@ namespace backend.Controllers
 
                     _requestRepository.RejectRequest(request);
                 }
-
                 return Ok("Reject request successfully!");
             }
             catch (Exception e)

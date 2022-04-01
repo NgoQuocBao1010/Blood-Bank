@@ -15,10 +15,31 @@ namespace backend.Repositories
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Event>(nameof(Event));
             _event = collection;
+            AddDefaultData();
         }
         
-        public void AddDefaultData(IEnumerable<Event> listEvent)
+        public void AddDefaultData()
         {
+            var e = Get();
+            if (e.Result.Any()) return;
+
+            var listEvent = new List<Event>
+            {
+                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1612976400000",
+                    2, "This is a blood donation event at F+"),
+                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1639069200000",
+                    2, "This is a blood donation event at Nga 6"),
+                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1646067600000",
+                    2, "This is a blood donation event at Cho Ray"),
+                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1644080400000",
+                    2, "This is a blood donation event at Nha Cua May"),
+                new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
+                    100, "This is a blood donation event at Nomad"),
+                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"),
+                    "1671469200000",
+                    2, "This is a blood donation event at Cafe Station")
+            };
+
             _event.InsertMany(listEvent);
         }
 

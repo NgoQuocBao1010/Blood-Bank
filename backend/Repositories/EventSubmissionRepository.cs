@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Driver;
@@ -8,13 +9,69 @@ namespace backend.Repositories
     public class EventSubmissionRepository : IEventSubmissionRepository
     {
         private readonly IMongoCollection<EventSubmission> _eventSubmission;
+        private readonly IEventRepository _eventRepository;
 
         public EventSubmissionRepository(IMongoClient client)
         {
+            _eventRepository = new EventRepository(client);
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<EventSubmission>(nameof(EventSubmission));
 
             _eventSubmission = collection;
+            AddDefaultData();
+        }
+        
+        public void AddDefaultData()
+        {
+            _eventRepository.AddDefaultData();
+            // Get the first eventId from default data.
+            var firstEvent = _eventRepository.Get();
+            var eventId = firstEvent.Result.First()._id;
+
+            var eventSubmission = Get();
+            if (eventSubmission.Result.Any()) return;
+
+            var listEventSubmission = new List<EventSubmission>
+            {
+                new(eventId,
+                    "093201234567",
+                    "Trương Hoàng Thuận",
+                    "0123456789",
+                    "thuan@gmail.com",
+                    "Cần Thơ",
+                    "male",
+                    "973468800",
+                    "1640390400"),
+                new(eventId,
+                    "093212345678",
+                    "Ngô Hồng Quốc Bảo",
+                    "1234567890",
+                    "bao@gmail.com",
+                    "Cần Thơ",
+                    "male",
+                    "971136000",
+                    "1640390400"),
+                new(eventId,
+                    "093223456789",
+                    "Bùi Quốc Trọng",
+                    "2345678901",
+                    "trong@gmail.com",
+                    "Hồ Chí Minh",
+                    "male",
+                    "958003200",
+                    "1640390400"),
+                new(eventId,
+                    "0932345678912",
+                    "Lê Chánh Nhựt",
+                    "3456789012",
+                    "nhut@gmail.com",
+                    "Cần Thơ",
+                    "male",
+                    "949881600",
+                    "1640390400")
+            };
+            
+            _eventSubmission.InsertMany(listEventSubmission);
         }
 
         public async Task<string> Create(EventSubmission eventSubmission)
@@ -33,6 +90,13 @@ namespace backend.Repositories
         public async Task<IEnumerable<EventSubmission>> Get()
         {
             var request = await _eventSubmission.Find(_ => true).ToListAsync();
+            return request;
+        }
+        
+        public async Task<IEnumerable<EventSubmission>> GetByEvent(string eventId)
+        {
+            var filter = Builders<EventSubmission>.Filter.Eq(es => es.EventId, eventId);
+            var request = await _eventSubmission.Find(filter).ToListAsync();
             return request;
         }
 
