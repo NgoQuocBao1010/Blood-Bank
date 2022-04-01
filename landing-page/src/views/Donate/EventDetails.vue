@@ -21,8 +21,9 @@ import {
   numeric,
 } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import moment from "moment";
 import { useRoute } from "vue-router";
+
+import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 
 const route = useRoute();
 const eventId = route.params.eventId;
@@ -30,10 +31,12 @@ const eventId = route.params.eventId;
 const donateDialog = ref(false);
 const submitted = ref(false);
 const toast = useToast();
+const today = new Date();
 
 const donateData = reactive({
   eventId: "",
   fullname: "",
+  idCardNumber: "",
   dob: "",
   gender: "",
   phone: "",
@@ -48,6 +51,10 @@ const rules = {
     required,
     minLength: minLength(6),
     maxLength: maxLength(30),
+  },
+  idCardNumber: {
+    required,
+    numeric,
   },
   gender: { required },
   phone: {
@@ -68,35 +75,54 @@ const formatDate = (date) => {
   return moment(date).format("DD/MM/YYYY");
 };
 
-const handleSubmitForm = () => {
+const handleSubmitForm = async () => {
   submitted.value = true;
   v$.value.$validate();
   if (!v$.value.$error) {
-    donateData.dob = formatDate(donateData.dob);
-    donateData.latestDonationDate = formatDate(donateData.latestDonationDate);
-    toast.add({
-      severity: "success",
-      summary: "Successful",
-      detail: "Your information is saved!!!",
-      life: 3000,
-    });
-    console.log("donateData :", {
+    donateData.dob = Math.floor(new Date(donateData.dob) / 1000).toString();
+    donateData.latestDonationDate = donateData.latestDonationDate
+      ? (Math.floor(new Date(donateData.latestDonationDate)) / 1000).toString()
+      : "";
+
+    const data = {
       eventId: eventId,
       fullname: donateData.fullname,
+      idCardNumber: donateData.idCardNumber,
       gender: donateData.gender,
       dob: donateData.dob,
       email: donateData.email,
       phone: donateData.phone,
       address: donateData.address,
-      lastestDonationDate: donateData.latestDonationDate,
-      medicalHistory: donateData.medicalHistory,
-    });
-    resetForm();
+      latestDonationDate: donateData.latestDonationDate,
+    };
+    try {
+      await EventSubmissionRepo.post(data);
+      toast.add({
+        severity: "success",
+        summary: "Successful",
+        detail: "Your information is saved!!!",
+        life: 3000,
+      });
+
+      resetForm();
+    } catch (error) {
+      if (error.response.status == 400) {
+        toast.add({
+          severity: "error",
+          summary: "Form Error",
+          detail: error.response.title,
+          life: 3000,
+        });
+      } else {
+        throw error;
+      }
+    }
   }
 };
 
 const resetForm = () => {
   donateData.fullname = "";
+  donateData.idCardNumber = "";
   donateData.gender = "";
   donateData.dob = "";
   donateData.phone = "";
@@ -131,6 +157,24 @@ const resetForm = () => {
                 <small class="p-error" v-if="v$.fullname.$error && submitted">{{
                   v$.fullname.$errors[0].$message
                 }}</small>
+              </div>
+
+              <div class="field">
+                <label for="idCardNumber">Identify Card Number</label>
+                <InputText
+                  id="idCardNumber"
+                  v-model="donateData.idCardNumber"
+                  required="true"
+                  autofocus
+                  :class="{
+                    'p-invalid': submitted && !donateData.idCardNumber,
+                  }"
+                />
+                <small
+                  class="p-error"
+                  v-if="v$.idCardNumber.$error && submitted"
+                  >{{ v$.idCardNumber.$errors[0].$message }}</small
+                >
               </div>
 
               <div
