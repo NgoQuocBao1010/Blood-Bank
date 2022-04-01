@@ -50,7 +50,7 @@ namespace backend.Repositories
                 .Set(r => r.Blood.Type, request.Blood.Type)
                 .Set(r => r.HospitalId, request.HospitalId)
                 .Set(r => r.HospitalName, request.HospitalName)
-                .Set(r => r.ApproveStatus, request.ApproveStatus)
+                .Set(r => r.Status, request.Status)
                 .Set(r => r.RejectReason, request.RejectReason);
 
             var result = await _request.UpdateOneAsync(filter, update);
@@ -99,6 +99,21 @@ namespace backend.Repositories
             }
 
             _request.InsertMany(listRequest);
+        }
+        
+        public async void ApproveRequest(Request request)
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
+            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = 1);
+            await _request.UpdateOneAsync(filter, update);
+        }
+
+        public async void RejectRequest(Request request)
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
+            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = -1)
+                .Set(r => r.RejectReason, request.RejectReason);
+            await _request.UpdateOneAsync(filter, update);
         }
     }
 }

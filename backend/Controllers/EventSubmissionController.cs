@@ -23,8 +23,19 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EventSubmission eventSubmission)
         {
-            var result = await _eventSubmissionRepository.Create(eventSubmission);
-            return Ok(new {id = result});
+            try
+            {
+                var existEventSubmission = await _eventSubmissionRepository.Get(eventSubmission.EventId);
+                if (existEventSubmission == null) throw new Exception();
+
+                var result = await _eventSubmissionRepository.Create(eventSubmission);
+                return Ok(new {id = result});
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Event ID error!");
+            }
         }
 
         [HttpGet("{id}")]
