@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import Dropdown from "primevue/dropdown";
 import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
@@ -24,14 +24,19 @@ import { useVuelidate } from "@vuelidate/core";
 import { useRoute } from "vue-router";
 
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
+import EventRepo from "../../api/EventRepo";
+import moment from "moment";
+import { determineStatus, formatDate } from "../../utils/index";
 
 const route = useRoute();
 const eventId = route.params.eventId;
 
-const donateDialog = ref(false);
 const submitted = ref(false);
 const toast = useToast();
 const today = new Date();
+
+let loadingData = ref(true);
+let eventData = ref(null);
 
 const donateData = reactive({
   eventId: "",
@@ -71,9 +76,13 @@ const rules = {
 
 const v$ = useVuelidate(rules, donateData);
 
-const formatDate = (date) => {
-  return moment(date).format("DD/MM/YYYY");
-};
+onBeforeMount(async () => {
+  const data = await EventRepo.getById(eventId);
+  let event = { ...data.data };
+  event["startDate"] = new Date(parseInt(event.startDate));
+  event["status"] = determineStatus(event);
+  eventData.value = event;
+});
 
 const handleSubmitForm = async () => {
   submitted.value = true;
@@ -140,13 +149,14 @@ const resetForm = () => {
     <div class="col-12">
       <div class="card">
         <div class="form-donation flex justify-content-center">
+          <!-- Form submission -->
           <div class="card py-4 px-4">
             <h2 class="text-center" style="color: var(--DARK_BLUE)">
               Donation Form
             </h2>
             <div class="p-fluid">
               <div class="field">
-                <label for="fullname">Full name</label>
+                <label for="fullname" class="text-800">Full name</label>
                 <InputText
                   id="fullname"
                   v-model="donateData.fullname"
@@ -160,7 +170,9 @@ const resetForm = () => {
               </div>
 
               <div class="field">
-                <label for="idCardNumber">Identify Card Number</label>
+                <label for="idCardNumber" class="text-800"
+                  >Identify Card Number</label
+                >
                 <InputText
                   id="idCardNumber"
                   v-model="donateData.idCardNumber"
@@ -181,7 +193,7 @@ const resetForm = () => {
                 class="field flex"
                 :class="{ 'p-invalid': submitted && !donateData.gender }"
               >
-                <div class="field-radiobutton mr-3">
+                <div class="field-radiobutton mr-3 text-800">
                   <RadioButton
                     id="male"
                     name="gender"
@@ -190,7 +202,7 @@ const resetForm = () => {
                   />
                   <label for="male">Male</label>
                 </div>
-                <div class="field-radiobutton mr-3">
+                <div class="field-radiobutton mr-3 text-800">
                   <RadioButton
                     id="female"
                     name="gender"
@@ -199,7 +211,7 @@ const resetForm = () => {
                   />
                   <label for="female">Female</label>
                 </div>
-                <div class="field-radiobutton mr-3">
+                <div class="field-radiobutton mr-3 text-800">
                   <RadioButton
                     id="other"
                     name="gender"
@@ -213,7 +225,7 @@ const resetForm = () => {
                 }}</small>
               </div>
               <div class="field">
-                <label for="dob">Birthday</label>
+                <label for="dob" class="text-800">Birthday</label>
                 <Calendar
                   id="dob"
                   v-model="donateData.dob"
@@ -227,7 +239,7 @@ const resetForm = () => {
                 }}</small>
               </div>
               <div class="field">
-                <label for="phone">Phone</label>
+                <label for="phone" class="text-800">Phone</label>
                 <InputText
                   id="phone"
                   v-model.trim="donateData.phone"
@@ -240,7 +252,7 @@ const resetForm = () => {
                 }}</small>
               </div>
               <div class="field">
-                <label for="email">Email</label>
+                <label for="email" class="text-800">Email</label>
                 <InputText
                   id="email"
                   v-model.trim="donateData.email"
@@ -253,7 +265,7 @@ const resetForm = () => {
                 }}</small>
               </div>
               <div class="field">
-                <label for="address">Address</label>
+                <label for="address" class="text-800">Address</label>
                 <InputText
                   id="fullname"
                   v-model.trim="donateData.address"
@@ -267,7 +279,9 @@ const resetForm = () => {
               </div>
 
               <div class="field">
-                <label for="lastestDoantionDate">Lastest donate</label>
+                <label for="lastestDoantionDate" class="text-800"
+                  >Lastest donate</label
+                >
                 <Calendar
                   id="lastestDoantionDate"
                   v-model="donateData.latestDonationDate"
@@ -278,9 +292,9 @@ const resetForm = () => {
               </div>
 
               <div class="field">
-                <label class="mb-3">Medical history</label>
+                <label class="mb-3 text-800">Medical history</label>
                 <div class="formgrid grid">
-                  <div class="field-radiobutton col-6">
+                  <div class="field-radiobutton col-6 text-800">
                     <Checkbox
                       id="high_blood"
                       name="medicalHistory"
@@ -289,7 +303,7 @@ const resetForm = () => {
                     />
                     <label for="category1">High blood pressure</label>
                   </div>
-                  <div class="field-radiobutton col-6">
+                  <div class="field-radiobutton col-6 text-800">
                     <Checkbox
                       id="heart_disease"
                       name="medicalHistory"
@@ -315,28 +329,40 @@ const resetForm = () => {
               <b>to</b>
             </Divider>
           </div>
+
+          <!-- Event Information -->
           <div class="col-5 align-items-center justify-content-center">
-            <h2 style="color: var(--PRIMARY_COLOR)">Event TITLE</h2>
+            <!-- Event Title -->
+            <h2 style="color: var(--PRIMARY_COLOR)">
+              {{ eventData.name }}
+            </h2>
             <br />
+
+            <!-- Event Status -->
+            <Divider layout="horizontal" align="left">
+              <span
+                class="p-tag flex justify-content-center align-items-center"
+              >
+                <i class="pi pi-circle-fill mr-2"></i>
+                Status</span
+              >
+            </Divider>
+            <p class="line-height-3 m-0 text-800">{{ eventData.status }}</p>
+
+            <!-- Event Details -->
             <Divider layout="horizontal" align="left">
               <span
                 class="p-tag flex justify-content-center align-items-center"
               >
                 <i class="pi pi-search mr-2"></i>
-                Description</span
+                Details</span
               >
             </Divider>
-            <p class="line-height-3 m-0">
-              Event description: Sed ut perspiciatis unde omnis iste natus error
-              sit voluptatem accusantium doloremque laudantium, totam rem
-              aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-              architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
-              voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed
-              quia consequuntur magni dolores eos qui ratione voluptatem sequi
-              nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-              modi.
+            <p class="line-height-3 m-0 text-800">
+              {{ eventData.detail }}
             </p>
 
+            <!-- Event Time -->
             <Divider layout="horizontal" align="left">
               <span
                 class="p-tag flex justify-content-center align-items-center"
@@ -346,16 +372,13 @@ const resetForm = () => {
               >
             </Divider>
 
-            <p class="line-height-3 m-0">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus.
+            <p class="line-height-3 m-0 text-800">
+              <span>Start Date: {{ formatDate(eventData.startDate) }}</span>
+              <br />
+              <span>Duration: {{ eventData.duration }} days</span>
             </p>
 
+            <!-- Event Location -->
             <Divider layout="horizontal" align="left">
               <span
                 class="p-tag flex justify-content-center align-items-center"
@@ -365,14 +388,23 @@ const resetForm = () => {
               >
             </Divider>
 
-            <p class="line-height-3 m-0">
-              Temporibus autem quibusdam et aut officiis debitis aut rerum
-              necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-              molestiae non recusandae. Itaque earum rerum hic tenetur a
-              sapiente delectus, ut aut reiciendis voluptatibus maiores alias
-              consequatur aut perferendis doloribus asperiores repellat. Donec
-              vel volutpat ipsum. Integer nunc magna, posuere ut tincidunt eget,
-              egestas vitae sapien. Morbi dapibus luctus odio.
+            <p class="line-height-3 m-0 text-800">
+              <span>Address: Cafe Station</span>
+              <br />
+              <span>City: Can Tho</span>
+            </p>
+
+            <!-- Event Participants -->
+            <Divider layout="horizontal" align="left">
+              <span
+                class="p-tag flex justify-content-center align-items-center"
+              >
+                <i class="pi pi-users mr-2"></i>
+                Participants</span
+              >
+            </Divider>
+            <p class="line-height-3 m-0 text-800">
+              <span>{{ eventData.participants }}</span>
             </p>
           </div>
         </div>
