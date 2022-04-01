@@ -9,13 +9,25 @@ namespace backend.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IMongoCollection<User> _user;
+        private readonly IHospitalRepository _hospitalRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IEventSubmissionRepository _eventSubmissionRepository;
+        private readonly IBloodRepository _bloodRepository;
+        private readonly IRequestRepository _requestRepository;
 
         public UserRepository(IMongoClient client)
         {
+            _hospitalRepository = new HospitalRepository(client);
+            _eventRepository = new EventRepository(client);
+            _eventSubmissionRepository = new EventSubmissionRepository(client);
+            _bloodRepository = new BloodRepository(client);
+            _requestRepository = new RequestRepository(client);
+            
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<User>(nameof(User));
 
             _user = collection;
+            AddDefaultData();
         }
 
         public async Task<string> Create(User user)
@@ -70,9 +82,28 @@ namespace backend.Repositories
             return result.DeletedCount == 1;
         }
 
-        public void AddDefaultData(IEnumerable<User> listUser)
+        public void AddDefaultData()
         {
-            _user.InsertMany(listUser);
+            _hospitalRepository.AddDefaultData();
+            _eventRepository.AddDefaultData();
+            _eventSubmissionRepository.AddDefaultData();
+            _bloodRepository.AddDefaultData();
+            _requestRepository.AddDefaultData();
+            
+            var user = Get();
+            if (user.Result.Any()) return;
+
+            var admin = new User("admin@gmail.com", "admin", true);
+
+            _user.InsertOne(admin);
+
+
+            var hospital = _hospitalRepository.GetFirstHospital();
+            var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
+            {
+                hospital_id = hospital.Result._id
+            };
+            _user.InsertOne(newUser);
         }
 
         public bool CheckUserPassword(User user, string password)

@@ -8,7 +8,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [AllowAnonymous]
+    [Authorize]
     public class EventSubmissionController : ControllerBase
     {
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
