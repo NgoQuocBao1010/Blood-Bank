@@ -1,23 +1,12 @@
 <script setup>
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, onBeforeMount } from "vue";
 import Breadcrumb from "primevue/breadcrumb";
 
+import DonorRepo from "../../api/DonorRepo";
+import DonorTransactionRepo from "../../api/DonorTransaction";
 import { formatDate } from "../../utils";
 
 // *** Mock data ***
-const data = {
-    _id: "080011114356",
-    name: "Quoc Bao 1",
-    phone: "0945127866",
-    address: "1st street, Can Tho city, VietNam",
-    gender: "male",
-    email: "baobao@gmail.com",
-    dob: new Date("05/11/2000").getTime().toString(),
-    blood: {
-        name: "A",
-        type: "Negative",
-    },
-};
 const transactionData = [
     {
         _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
@@ -48,16 +37,30 @@ const transactionData = [
     },
 ];
 // *** END of mock data **
-
-const AsyncTransactionTable = defineAsyncComponent({
-    loader: () => import("../../components/tables/TransactionTable.vue"),
-});
-
 const props = defineProps({
     _id: String,
 });
 
-let showTransactions = $ref(false);
+let donor = $ref(null);
+
+onBeforeMount(async () => {
+    const { data } = await DonorRepo.getById(props._id);
+    donor = data;
+});
+
+let listDonation = $ref(null);
+let fetchingDonations = $ref(false);
+const AsyncTransactionTable = defineAsyncComponent({
+    loader: () => import("../../components/tables/TransactionTable.vue"),
+});
+const getListTransaction = async () => {
+    fetchingDonations = true;
+    const { data } = await DonorTransactionRepo.getListTransactionByDonor(
+        props._id
+    );
+    listDonation = data;
+    fetchingDonations = false;
+};
 
 // Naviagtion settings
 const home = $ref({
@@ -78,8 +81,8 @@ let items = [{ label: "Donor Detail" }];
             />
 
             <!-- Personal Information -->
-            <div class="card">
-                <h3 class="app-highlight">{{ data.name }}</h3>
+            <div class="card" v-if="donor">
+                <h3 class="app-highlight">{{ donor.name }}</h3>
 
                 <!-- Details -->
                 <div class="card__information">
@@ -87,19 +90,19 @@ let items = [{ label: "Donor Detail" }];
                     <div class="section">
                         <p>
                             <i class="fa-solid fa-id-card"></i>
-                            {{ data._id }}
+                            {{ donor._id }}
                         </p>
                         <p style="text-transform: capitalize">
                             <i class="fa-solid fa-mars"></i>
-                            {{ data.gender }}
+                            {{ donor.gender }}
                         </p>
                         <p>
                             <i class="fa-solid fa-cake-candles"></i>
-                            {{ formatDate(parseInt(data.dob)) }}
+                            {{ formatDate(parseInt(donor.dob)) }}
                         </p>
                         <p>
                             <i class="fa-solid fa-location-pin"></i>
-                            {{ data.address }}
+                            {{ donor.address }}
                         </p>
                     </div>
 
@@ -107,18 +110,18 @@ let items = [{ label: "Donor Detail" }];
                     <div class="section">
                         <p>
                             <i class="fa-solid fa-phone"></i>
-                            {{ data.phone }}
+                            {{ donor.phone }}
                         </p>
                         <p>
                             <i class="fa-solid fa-envelope"></i>
-                            {{ data.email }}
+                            {{ donor.email }}
                         </p>
                         <p>
                             <i class="fa-solid fa-hand-holding-droplet"></i>
                             <span
-                                :class="'blood-badge type-' + data.blood.name"
+                                :class="'blood-badge type-' + donor.blood.name"
                             >
-                                {{ data.blood.name }} {{ data.blood.type }}
+                                {{ donor.blood.name }} {{ donor.blood.type }}
                             </span>
                         </p>
                     </div>
@@ -126,21 +129,21 @@ let items = [{ label: "Donor Detail" }];
             </div>
 
             <!-- List of transaction (Donate times) -->
-            <div class="card">
+            <div class="card" v-if="donor">
                 <div
                     class="flex-center"
                     style="width: 100%"
-                    v-if="!showTransactions"
+                    v-if="!listDonation"
                 >
                     <PrimeVueButton
                         label="Show Donor Donations"
-                        @click="showTransactions = !showTransactions"
+                        @click="getListTransaction"
+                        :loading="fetchingDonations"
                     />
                 </div>
 
                 <template v-else>
-                    <h3>Donations Table</h3>
-                    <AsyncTransactionTable :transactionData="transactionData" />
+                    <AsyncTransactionTable :transactionData="listDonation" />
                 </template>
             </div>
         </div>
