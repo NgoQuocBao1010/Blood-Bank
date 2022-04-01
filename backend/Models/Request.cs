@@ -28,14 +28,14 @@ namespace backend.Models
         public int Status { get; set; }
         public string RejectReason { get; set; }
 
-        public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int approveStatus, string rejectReason)
+        public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int Status, string rejectReason)
         {
             Date = date;
             Quantity = quantity;
             Blood = blood;
             HospitalId = hospitalId;
             HospitalName = hospitalName;
-            ApproveStatus = approveStatus;
+            this.Status = Status;
             RejectReason = rejectReason;
         }
     }
