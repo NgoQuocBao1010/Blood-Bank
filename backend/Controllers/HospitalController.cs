@@ -35,6 +35,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
@@ -50,6 +55,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get();
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
