@@ -62,10 +62,5 @@ namespace backend.Repositories
             var result = await _eventSubmission.DeleteOneAsync(filter);
             return result.DeletedCount == 1;
         }
-
-        public void AddDefaultData(IEnumerable<EventSubmission> listEventSubmission)
-        {
-            _eventSubmission.InsertMany(listEventSubmission);
-        }
     }
 }
