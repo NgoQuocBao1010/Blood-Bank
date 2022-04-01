@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,12 +48,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var blood = await _bloodRepository.Get();
-            if (blood == null)
+            try
             {
-                return NotFound();
+                var blood = await _bloodRepository.Get();
+                return Ok(blood);
             }
-            return new JsonResult(blood);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest();
+            }
         }
 
         [HttpPut("{id}")]

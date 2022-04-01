@@ -58,6 +58,7 @@ namespace backend.Controllers
         
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery] string? status)
         {
             var e = await _eventRepository.Get(id);
