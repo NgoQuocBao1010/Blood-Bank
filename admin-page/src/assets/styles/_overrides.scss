@@ -232,6 +232,11 @@
     border-color: var(--primary-color);
 }
 
+// Progress bra
+.p-progressbar .p-progressbar-value {
+    background-color: var(--primary-color);
+}
+
 // Layout Override
 .layout-sidebar {
     width: 250px;

@@ -1,15 +1,24 @@
 <script setup>
+import ProgressBar from "primevue/progressbar";
 import { onBeforeMount } from "vue";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
 
 let donorsData = $ref(null);
+let fetchingDonors = $ref(false);
 
 const updateParticipants = async () => {
-    donorsData = null;
-    const { data } = await DonorRepo.getAll();
-    donorsData = data;
+    fetchingDonors = true;
+    try {
+        donorsData = null;
+        const { data } = await DonorRepo.getAll();
+        donorsData = data;
+    } catch (e) {
+        throw e;
+    } finally {
+        fetchingDonors = false;
+    }
 };
 
 onBeforeMount(async () => {
@@ -31,6 +40,19 @@ onBeforeMount(async () => {
                     :participants="true"
                     @updateParticipants="updateParticipants"
                 />
+
+                <!-- Progress bar -->
+                <div
+                    class="flex flex-center"
+                    style="flex-direction: column; margin-block: 3rem"
+                    v-else
+                >
+                    <h5>Loading ...</h5>
+                    <ProgressBar
+                        mode="indeterminate"
+                        style="height: 0.5em; width: 100%"
+                    />
+                </div>
             </div>
         </div>
     </div>
