@@ -8,7 +8,7 @@ namespace backend.Repositories
 {
     public class BloodRepository : IBloodRepository
     {
-        private readonly IMongoCollection<Blood> _blood;
+        private static IMongoCollection<Blood> _blood;
 
         public BloodRepository(IMongoClient client)
         {
@@ -16,6 +16,7 @@ namespace backend.Repositories
             var collection = database.GetCollection<Blood>(nameof(Blood));
 
             _blood = collection;
+            AddDefaultData();
         }
 
 
@@ -24,9 +25,24 @@ namespace backend.Repositories
             await _blood.InsertOneAsync(blood);
             return blood._id;
         }
-
-        public void AddDefaultData(List<Blood> listBlood)
+        
+        public void AddDefaultData()
         {
+            var blood = Get();
+            if (blood.Result.Any()) return;
+            var listBlood = new List<Blood>
+            {
+                new Blood("A", "Positive", 0),
+                new Blood("A", "Negative", 0),
+                new Blood("B", "Positive", 0),
+                new Blood("B", "Negative", 0),
+                new Blood("O", "Positive", 0),
+                new Blood("O", "Negative", 0),
+                new Blood("AB", "Positive", 0),
+                new Blood("AB", "Negative", 0),
+                new Blood("Rh", "Positive", 0),
+                new Blood("Rh", "Negative", 0)
+            };
             _blood.InsertMany(listBlood);
         }
 

@@ -163,10 +163,13 @@ const downloadExcelFile = () => {
 
                     <!-- Empty data fallback -->
                     <template #empty>
-                        No data found. Probably a server problem.
+                        <h4 style="text-align: center">
+                            No data found. Probably a server problem.
+                        </h4>
                     </template>
 
                     <!-- Loading fallback -->
+
                     <template #loading>
                         <h4 style="text-align: center">Fetching data ...</h4>
                     </template>

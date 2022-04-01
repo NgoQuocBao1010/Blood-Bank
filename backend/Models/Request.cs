@@ -7,6 +7,12 @@ namespace backend.Models
     {
         public string Name { get; set; }
         public string Type { get; set; }
+
+        public RequestBlood(string name, string type)
+        {
+            Name = name;
+            Type = type;
+        }
     }
 
     public class Request
@@ -21,5 +27,16 @@ namespace backend.Models
         public string HospitalName { get; set; }
         public int ApproveStatus { get; set; }
         public string RejectReason { get; set; }
+
+        public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int approveStatus, string rejectReason)
+        {
+            Date = date;
+            Quantity = quantity;
+            Blood = blood;
+            HospitalId = hospitalId;
+            HospitalName = hospitalName;
+            ApproveStatus = approveStatus;
+            RejectReason = rejectReason;
+        }
     }
 }

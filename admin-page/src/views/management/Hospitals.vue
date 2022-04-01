@@ -32,6 +32,7 @@ onBeforeMount(async () => {
 
   // console.log("hospital data: ", hospitals);
 
+  initFilters();
   hospitals && hospitals.length !== 0 && initFilters();
 });
 
@@ -117,7 +118,7 @@ const onRowClick = (payload) => {
           <!-- Hospital's name -->
           <PrimeVueColumn field="name" header="Name" style="min-width: 20rem">
             <template #body="{ data }">
-              {{ data && data.name }}
+              {{ data.name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
@@ -139,7 +140,7 @@ const onRowClick = (payload) => {
             style="max-width: 18rem"
           >
             <template #body="{ data }">
-              {{ data && data.address }}
+              {{ data.address }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText
@@ -161,7 +162,7 @@ const onRowClick = (payload) => {
             style="max-width: 6rem"
           >
             <template #body="{ data }">
-              {{ data && data.phone }}
+              {{ data.phone }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
               <InputText

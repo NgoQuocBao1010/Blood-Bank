@@ -4,51 +4,17 @@ import { RouterLink } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 
 import HospitalRepo from "../../api/HospitalRepo";
+import RequestRepo from "../../api/RequestRepo";
 
 const AsyncRequestHistory = defineAsyncComponent({
   loader: () => import("../../components/tables/RequestHistoryTable.vue"),
 });
 
-const requestHistory = [
-  {
-    _id: "800000100001",
-    hospital_id: "62272d644a3850baa259a81b",
-    name: "Hoan My",
-    dateRequested: new Date("2022-09-13").getTime(),
-    blood: {
-      name: "O",
-      type: "Negative",
-    },
-    amount: 500,
-  },
-  {
-    _id: "800000100002",
-    hospital_id: "62272d9d4a3850baa259a81c",
-    name: "Nga 6",
-    dateRequested: new Date("2022-09-27").getTime(),
-    blood: {
-      name: "A",
-      type: "Positive",
-    },
-    amount: 350,
-  },
-  {
-    _id: "800000100003",
-    hospital_id: "62272db04a3850baa259a81d",
-    name: "O Mon",
-    dateRequested: new Date("2022-10-05").getTime(),
-    blood: {
-      name: "AB",
-      type: "Positive",
-    },
-    amount: 350,
-  },
-];
-// *** END of mock data **
 const { _id } = defineProps({
   _id: String,
 });
 
+let requestHistory = $ref(null);
 let hospital = $ref(null);
 let showRequestHistory = $ref(false);
 
@@ -60,8 +26,14 @@ const home = $ref({
 let items = $ref(null);
 
 onBeforeMount(async () => {
-  const { data } = await HospitalRepo.get(_id);
-  hospital = data;
+  const hospitalData = await HospitalRepo.get(_id);
+  const requestData = await RequestRepo.getAll();
+
+  requestHistory = requestData.data;
+
+  console.log(requestHistory);
+  hospital = hospitalData.data;
+
   items = [
     {
       label: hospital ? `${hospital.name}` : "Unknown hospital",

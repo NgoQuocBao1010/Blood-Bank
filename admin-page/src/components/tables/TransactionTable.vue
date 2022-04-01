@@ -4,11 +4,14 @@ import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import DropDown from "primevue/dropdown";
+import MultiSelect from "primevue/multiselect";
 import { FilterMatchMode } from "primevue/api";
 
+import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
 import { formatDate } from "../../utils";
+import { TRANSACTION_STATUS } from "../../constants";
 
-const { transactionData, participants } = defineProps({
+const { transactionData } = defineProps({
     transactionData: {
         type: Array,
         required: true,
@@ -17,8 +20,23 @@ const { transactionData, participants } = defineProps({
 
 let transactions = $ref(null);
 const events = transactionData
-    ? [...new Set(transactionData.map((row) => row._event.name))]
+    ? [...new Set(transactionData.map((row) => row.eventDonated.name))]
     : [];
+
+onBeforeMount(() => {
+    initFilter();
+    transactions = transactionData.map((row) => {
+        let transaction = { ...row };
+
+        transaction.dateDonated = new Date(parseInt(transaction.dateDonated));
+        transaction.status =
+            DonorTransactionHelper.determineStatus(transaction);
+
+        return transaction;
+    });
+
+    console.log(transactions);
+});
 
 // Filter configurations
 let filters = $ref(null);
@@ -29,7 +47,7 @@ const initFilter = () => {
             value: null,
             matchMode: FilterMatchMode.DATE_IS,
         },
-        "_event.name": {
+        "eventDonated.name": {
             value: null,
             matchMode: FilterMatchMode.EQUALS,
         },
@@ -37,24 +55,21 @@ const initFilter = () => {
             value: null,
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
         },
+        status: { value: null, matchMode: FilterMatchMode.IN },
     };
 };
 const clearFilter = () => {
     initFilter();
 };
-
-onBeforeMount(() => {
-    transactions = transactionData.map((row) => {
-        let transaction = { ...row };
-
-        transaction.dateDonated = new Date(parseInt(transaction.dateDonated));
-        return transaction;
-    });
-    initFilter();
-});
 </script>
 
 <template>
+    <div class="flex justify-content-between align-content-center">
+        <h3>Donations Table</h3>
+        <p class="app-note">
+            ** Hover on the FAILED badge to view the failed reason **
+        </p>
+    </div>
     <PrimeVueTable
         :value="transactions"
         :paginator="true"
@@ -67,7 +82,12 @@ onBeforeMount(() => {
         v-model:filters="filters"
         :filters="filters"
         responsiveLayout="scroll"
-        :globalFilterFields="['dateDonated', '_event.name', 'amount']"
+        :globalFilterFields="[
+            'dateDonated',
+            'eventDonated.name',
+            'amount',
+            'status',
+        ]"
     >
         <!-- Header of the table -->
         <template #header>
@@ -101,14 +121,16 @@ onBeforeMount(() => {
         </template>
 
         <!-- Empty data fallback -->
-        <template #empty> No transaction found. </template>
+
+        <template #empty>
+            <h4 style="text-align: center">No transaction found.</h4>
+        </template>
 
         <!-- Columns -->
-
         <!-- Event name -->
-        <PrimeVueColumn field="_event.name" header="Event">
+        <PrimeVueColumn field="eventDonated.name" header="Event">
             <template #body="{ data }">
-                {{ data._event.name }}
+                {{ data.eventDonated.name }}
             </template>
             <template #filter="{ filterModel, filterCallback }">
                 <DropDown
@@ -173,7 +195,50 @@ onBeforeMount(() => {
                 />
             </template>
         </PrimeVueColumn>
+
+        <!-- Status -->
+        <PrimeVueColumn
+            field="status"
+            header="Status"
+            style="max-width: 14rem !important"
+        >
+            <template #body="{ data }">
+                <span
+                    :class="'transaction-badge status-' + data.status"
+                    style="cursor: pointer"
+                    v-tooltip.bottom="{
+                        value: `Failed Reason: ${data.rejectReason}`,
+                        class: 'reason-tooltip',
+                    }"
+                    v-if="data.status === 'failed'"
+                >
+                    {{ data.status }}
+                </span>
+                <span :class="'transaction-badge status-' + data.status" v-else>
+                    {{ data.status }}
+                </span>
+            </template>
+            <template #filter="{ filterModel, filterCallback }">
+                <MultiSelect
+                    v-model="filterModel.value"
+                    @change="filterCallback()"
+                    :options="TRANSACTION_STATUS"
+                    class="p-column-filter"
+                >
+                    <template #option="slotProps">
+                        <span
+                            :class="
+                                'transaction-badge status-' + slotProps.option
+                            "
+                        >
+                            {{ slotProps.option }}
+                        </span>
+                    </template>
+                </MultiSelect>
+            </template>
+        </PrimeVueColumn>
     </PrimeVueTable>
 </template>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "../../assets/styles/badge.scss";
+</style>

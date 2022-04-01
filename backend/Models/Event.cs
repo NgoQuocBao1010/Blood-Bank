@@ -17,14 +17,13 @@ namespace backend.Models
 
     public class Event
     {
-        public Event(string name, Location location, string startDate, int duration, string detail, int participants)
+        public Event(string name, Location location, string startDate, int duration, string detail)
         {
             this.name = name;
             this.location = location;
             this.startDate = startDate;
             this.duration = duration;
             this.detail = detail;
-            this.participants = participants;
         }
 
         [BsonRepresentation(BsonType.ObjectId)]
@@ -35,6 +34,7 @@ namespace backend.Models
         public string startDate { get; set; }
         public int duration { get; set; }
         public string detail { get; set; }
+        [BsonIgnore]
         public int participants { get; set; }
     }
 }
