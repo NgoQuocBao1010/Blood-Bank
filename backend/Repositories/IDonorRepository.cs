@@ -12,7 +12,6 @@ namespace backend.Repositories
         // Read
         Task<Donor> Get(string _id);
         Task<IEnumerable<Donor>> Get();
-        // Task<IEnumerable<DonorTransaction>> GetTransaction(string transaction_id);
         
         // List Donor Success
         Task<IEnumerable<Donor>> GetDonorsSuccess(List<string> listDonorId);
@@ -22,5 +21,7 @@ namespace backend.Repositories
         
         // Delete
         Task<bool> Delete(string _id);
+        
+
     }
 }

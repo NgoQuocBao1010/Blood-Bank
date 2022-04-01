@@ -5,6 +5,19 @@ namespace backend.Models
 {
     public class EventSubmission
     {
+        public EventSubmission(string eventId, string idCardNumber, string fullName, string phone, string email, string address, string gender, string dob, string latestDonationDate)
+        {
+            EventId = eventId;
+            IdCardNumber = idCardNumber;
+            FullName = fullName;
+            Phone = phone;
+            Email = email;
+            Address = address;
+            Gender = gender;
+            Dob = dob;
+            LatestDonationDate = latestDonationDate;
+        }
+      
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
 
