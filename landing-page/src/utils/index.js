@@ -7,12 +7,12 @@ const formatDate = (date) => {
 const determineStatus = (event) => {
   const endDate = moment(event.startDate).add(event.duration, "day");
   if (moment().isAfter(endDate, "day")) {
-    return "Passed";
+    return "passed";
   } else if (moment().isBefore(event.startDate, "day")) {
-    return "Up coming";
+    return "upcoming";
   }
 
-  return "On going";
+  return "ongoing";
 };
 
 export { determineStatus, formatDate };
