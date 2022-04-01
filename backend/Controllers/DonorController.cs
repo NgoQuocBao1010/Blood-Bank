@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize]
+    [Authorize]
     public class DonorController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
@@ -61,8 +61,6 @@ namespace backend.Controllers
                         result = "Update information for this donor successfully";
                     }
 
-                    Console.WriteLine(data.eventId);
-                    Console.WriteLine(eventDonated.name);
                     // set event, rejectReason, donorId property in transaction
                     donor.transaction.eventDonated = new EventDonated
                     {

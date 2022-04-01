@@ -1,4 +1,5 @@
 import Repository from "./Repository";
+import { useLocalToken } from "./helpers";
 
 const resource = "/donortransaction";
 
