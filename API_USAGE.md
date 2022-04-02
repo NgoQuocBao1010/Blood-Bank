@@ -55,6 +55,42 @@
     }
     ```
     
+3. GET list failure donors, expected JSON return:  -> Endpoint: api/Donor/failure
+
+    ```
+    [
+        {
+            _id (CMND),
+            name (donor name),
+            dob : int -> string,
+            gender,
+            address,
+            phone,
+            email,
+            blood: {
+                name,
+                type,
+            }
+            transaction: {
+                _id,
+                blood: {
+                    name,
+                    type
+                },
+                eventDonated: {
+                    _id,
+                    name
+                },
+                dateDonated: string,
+                amount: int,
+                status: int,
+                rejectReason,
+                donorId
+            }
+        },
+    ]
+    ```
+    
 ## DonorTransaction API
 
 1. GET list donation of a donor, expected JSON return:  -> Endpoint: api/DonorTransaction/listDonation/{_id}  (id of donor)
