@@ -61,7 +61,7 @@ const initFilter = () => {
       value: null,
       matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
     },
-    approveStatus: { value: null, matchMode: FilterMatchMode.IN },
+    status: { value: null, matchMode: FilterMatchMode.IN },
   };
 };
 const clearFilter = () => {
@@ -89,7 +89,7 @@ onBeforeMount(() => {
   if (requestData) {
     requests = requestData.map((row) => {
       let request = { ...row };
-      request.date = new Date(request.date * 1000);
+      request.date = new Date(parseInt(request.date));
       request.status = DonorTransactionHelper.determineStatus(request);
       return request;
     });
@@ -259,8 +259,8 @@ const handleRequests = async () => {
       <template #filter="{ filterModel, filterCallback }">
         <Calendar
           v-model="filterModel.value"
-          dateFormat="mm/dd/yy"
-          placeholder="mm/dd/yyyy"
+          dateFormat="dd/mm/yy"
+          placeholder="dd/mm/yyyy"
           @date-select="filterCallback()"
         />
       </template>
@@ -344,24 +344,25 @@ const handleRequests = async () => {
 
     <!-- Status -->
     <PrimeVueColumn
-      field="approveStatus"
+      field="status"
       header="Status"
       style="max-width: 14rem !important"
+      v-if="!isAcitivy"
     >
       <template #body="{ data }">
         <span
-          :class="'transaction-badge status-' + data.approveStatus"
+          :class="'transaction-badge status-' + data.status"
           style="cursor: pointer"
           v-tooltip.bottom="{
             value: `Failed Reason: ${data.rejectReason}`,
             class: 'reason-tooltip',
           }"
-          v-if="data.approveStatus === 'failed'"
+          v-if="data.status === 'failed'"
         >
-          {{ data.approveStatus }}
+          {{ data.status }}
         </span>
-        <span :class="'transaction-badge status-' + data.approveStatus" v-else>
-          {{ data.approveStatus }}
+        <span :class="'transaction-badge status-' + data.status" v-else>
+          {{ data.status }}
         </span>
       </template>
       <template #filter="{ filterModel, filterCallback }">

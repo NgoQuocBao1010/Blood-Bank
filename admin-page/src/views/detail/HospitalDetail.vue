@@ -36,7 +36,7 @@ onBeforeMount(async () => {
 
   items = [
     {
-      label: hospital ? `${hospital.name}` : "Unknown hospital",
+      label: hospital ? `${hospital.name} hospital` : "Unknown hospital",
     },
   ];
 });

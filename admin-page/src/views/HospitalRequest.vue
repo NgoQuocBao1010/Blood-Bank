@@ -26,7 +26,7 @@ let formData = $ref({
     type: "",
   },
   hospitalId: hospital_id,
-  date: Math.floor(today.getTime() / 1000),
+  date: today.getTime(),
 });
 
 const formRules = $computed(() => {
@@ -56,7 +56,7 @@ const resetForm = () => {
       type: "",
     }),
     (formData.hospitalId = hospital_id),
-    (formData.date = Math.floor(today.getTime() / 1000));
+    (formData.date = today.getTime());
 };
 
 onBeforeMount(async () => {
