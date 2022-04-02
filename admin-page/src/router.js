@@ -208,6 +208,13 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
+// Force logout user when there is unauth action
+router.beforeEach((to, from, next) => {
+    if (to.name === "Unauthorized Error") useUserStore().logout();
+
+    next();
+});
+
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
     if (to.name === "Login" && useUserStore().isLoggedIn) {

@@ -2,11 +2,12 @@
 import InputText from "primevue/inputtext";
 import OverlayPanel from "primevue/overlaypanel";
 import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
 import { useUserStore } from "../../stores/user";
 import AppRepo from "../../api/AppRepo";
-import router from "../../router";
 
+const router = useRouter();
 const userStore = useUserStore();
 const emit = defineEmits(["toggleSidebar"]);
 const toast = useToast();
@@ -57,6 +58,11 @@ let accountBtn = $ref(null);
 const toggleAccountPanel = (event) => {
     // Toggle info button about stock status
     accountBtn.toggle(event);
+};
+
+const logout = () => {
+    userStore.logout();
+    router.push({ name: "Login" });
 };
 </script>
 
@@ -134,7 +140,7 @@ const toggleAccountPanel = (event) => {
                     icon="fa-solid fa-arrow-right-from-bracket"
                     class="p-button-sm"
                     label="logout"
-                    @click="userStore.logout()"
+                    @click="logout()"
                 />
             </p>
             <p v-else>

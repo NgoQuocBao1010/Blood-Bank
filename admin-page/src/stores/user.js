@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import router from "../router";
 
 import UserRepo from "../api/UserRepo";
 
@@ -38,8 +37,6 @@ export const useUserStore = defineStore("user", {
         logout() {
             localStorage.removeItem("userToken");
             this.$reset();
-
-            router.push({ name: "Login" });
         },
     },
 });
