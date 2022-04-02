@@ -6,6 +6,7 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
@@ -31,6 +32,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
@@ -71,6 +73,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Hospital hospital)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _hospitalRepository.Get(id);
@@ -92,6 +95,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _hospitalRepository.Get(id);

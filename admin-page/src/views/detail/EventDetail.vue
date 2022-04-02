@@ -68,7 +68,6 @@ let showDonorTable = $ref(false);
 let donorsData = $ref(null);
 const getParticipants = async () => {
     const { data } = await EventRepo.getParticipants(props._id);
-    console.log("Hello", data);
     donorsData = data ? data : [];
     showDonorTable = true;
 };

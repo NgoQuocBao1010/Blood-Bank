@@ -14,7 +14,7 @@ namespace backend.Repositories
         Task<IEnumerable<Donor>> Get();
         
         // List Donor Success
-        Task<IEnumerable<Donor>> GetDonorsSuccess(List<string> listDonorId);
+        Task<IEnumerable<Donor>> GetListDonorById(List<string> listDonorId);
         
         // Update
         Task<bool> Update(string _id, Donor donor);

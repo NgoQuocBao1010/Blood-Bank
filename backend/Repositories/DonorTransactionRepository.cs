@@ -46,10 +46,10 @@ namespace backend.Repositories
             return donorTransaction;
         }
 
-        public async Task<IEnumerable<DonorTransaction>> GetPendingTransaction(string donorId)
+        public async Task<IEnumerable<DonorTransaction>> GetTransactionByStatus(string donorId, int status)
         {
             var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donorId, donorId)
-                         & Builders<DonorTransaction>.Filter.Eq(dt => dt.status, 0);
+                         & Builders<DonorTransaction>.Filter.Eq(dt => dt.status, status);
             var transactions = await _donorTransaction.Find(filter).ToListAsync();
 
             return transactions;
