@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { BLOOD_TYPES } from "../../constants";
 
 const KEYS_TRANSFORM = {
