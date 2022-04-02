@@ -44,6 +44,7 @@ namespace backend.Controllers
         public async Task<IActionResult> Get(string id)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+            try
             {
                 var result = await _eventSubmissionRepository.Get(id);
                 if (result == null)
@@ -85,7 +86,7 @@ namespace backend.Controllers
         {
 
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
-
+            try
             {
                 var exist = await _eventSubmissionRepository.Get();
                 if (exist == null)
