@@ -1,5 +1,4 @@
 import Repository from "./Repository";
-import { useLocalToken } from "./helpers";
 
 const resource = "/event";
 
@@ -7,11 +6,19 @@ export default {
     getAll() {
         return Repository.get(`${resource}/`);
     },
-    getById(id) {
-        return Repository.get(`${resource}/${id}`);
+    getById(eventId) {
+        return Repository.get(`${resource}/${eventId}`);
     },
-    createNewEvent(data) {
-        useLocalToken();
+    getParticipants(eventId) {
+        return Repository.get(`${resource}/listParticipants/${eventId}`);
+    },
+    create(data) {
         return Repository.post(`${resource}/`, data);
+    },
+    edit(eventId, data) {
+        return Repository.put(`${resource}/${eventId}`, data);
+    },
+    delete(eventId) {
+        return Repository.delete(`${resource}/${eventId}`);
     },
 };

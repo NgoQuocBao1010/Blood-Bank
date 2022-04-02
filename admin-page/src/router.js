@@ -155,18 +155,18 @@ const router = createRouter({
         },
         // Error Page
         {
-            path: "/error/server",
-            name: "Server Error",
-            component: () => import("./views/error/ServerError.vue"),
+            path: "/error/unauth",
+            name: "Unauthorized Error",
+            component: () => import("./views/error/UnauthError.vue"),
             meta: {
-                layoutName: "__dynamic",
+                layoutName: "LayoutUnauth",
                 unguard: true,
             },
         },
         {
-            path: "/error/authentication",
-            name: "Authentication Error",
-            component: () => import("./views/error/UnauthError.vue"),
+            path: "/error/server",
+            name: "Server Error",
+            component: () => import("./views/error/ServerError.vue"),
             meta: {
                 layoutName: "__dynamic",
                 unguard: true,
@@ -208,10 +208,17 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
+// Force logout user when there is unauth action
+router.beforeEach((to, from, next) => {
+    if (to.name === "Unauthorized Error") useUserStore().logout();
+
+    next();
+});
+
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
     if (to.name === "Login" && useUserStore().isLoggedIn) {
-        return next({ name: "Dashboard" });
+        return next({ name: from.name ? from.name : "Dashboard" });
     }
     next();
 });
@@ -219,7 +226,7 @@ router.beforeEach((to, from, next) => {
 // Prevent unauth user to access to admin pages
 router.beforeEach((to, from, next) => {
     if (!to.meta.unguard && !useUserStore().isLoggedIn) {
-        return next({ name: "Login" });
+        return next({ name: "Unauthorized Error" });
     }
 
     next();

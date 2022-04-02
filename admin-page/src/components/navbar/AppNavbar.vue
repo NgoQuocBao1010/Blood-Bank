@@ -2,11 +2,12 @@
 import InputText from "primevue/inputtext";
 import OverlayPanel from "primevue/overlaypanel";
 import { useToast } from "primevue/usetoast";
+import { useRouter } from "vue-router";
 
 import { useUserStore } from "../../stores/user";
 import AppRepo from "../../api/AppRepo";
-import router from "../../router";
 
+const router = useRouter();
 const userStore = useUserStore();
 const emit = defineEmits(["toggleSidebar"]);
 const toast = useToast();
@@ -19,33 +20,26 @@ const searchID = async () => {
         );
 
         if (data && status === 200) {
-            if ("Donor" in data) {
-                return router.push({
-                    name: "Donor Detail",
-                    params: { _id: keywordSearch },
-                });
-            }
+            const { type } = data;
 
-            if ("Event" in data) {
-                return router.push({
-                    name: "Event Detail",
-                    params: { _id: keywordSearch },
-                });
-            }
+            router.push({
+                name: `${type} Detail`,
+                params: { _id: keywordSearch },
+            });
+
+            keywordSearch = "";
         }
     } catch (e) {
-        if (e.response) {
-            const { status } = e.response;
-            if (status === 404) {
-                toast.add({
-                    severity: "error",
-                    summary: "ID not matching",
-                    detail: "No object from Database is matched with your given ID",
-                    life: 3000,
-                });
-            } else {
-                throw e;
-            }
+        if (!e.response) throw e;
+
+        const { status } = e.response;
+        if (status === 404) {
+            toast.add({
+                severity: "error",
+                summary: "ID not matching",
+                detail: "No object from Database is matched with your given ID",
+                life: 3000,
+            });
         } else {
             throw e;
         }
@@ -56,6 +50,11 @@ let accountBtn = $ref(null);
 const toggleAccountPanel = (event) => {
     // Toggle info button about stock status
     accountBtn.toggle(event);
+};
+
+const logout = () => {
+    userStore.logout();
+    router.push({ name: "Login" });
 };
 </script>
 
@@ -133,7 +132,7 @@ const toggleAccountPanel = (event) => {
                     icon="fa-solid fa-arrow-right-from-bracket"
                     class="p-button-sm"
                     label="logout"
-                    @click="userStore.logout()"
+                    @click="logout()"
                 />
             </p>
             <p v-else>

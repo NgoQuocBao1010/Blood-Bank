@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import router from "../router";
 
 import UserRepo from "../api/UserRepo";
+import { useLocalToken } from "../api/helpers";
 
 export const useUserStore = defineStore("user", {
     state: () => {
@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
             if (this.token) {
                 this.email = "admin@gmail.com";
                 this.isLoggedIn = true;
+                useLocalToken();
             }
 
             return this.token ? false : true;
@@ -34,12 +35,12 @@ export const useUserStore = defineStore("user", {
             this.setToken(authToken);
             this.email = email;
             this.isLoggedIn = true;
+
+            useLocalToken();
         },
         logout() {
             localStorage.removeItem("userToken");
             this.$reset();
-
-            router.push({ name: "Login" });
         },
     },
 });
