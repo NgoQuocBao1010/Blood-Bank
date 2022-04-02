@@ -19,33 +19,34 @@ const searchID = async () => {
         );
 
         if (data && status === 200) {
-            if ("Donor" in data) {
-                return router.push({
-                    name: "Donor Detail",
-                    params: { _id: keywordSearch },
-                });
+            const { type } = data;
+
+            let redirectPage = null;
+            switch (type) {
+                case "Donor":
+                    redirectPage = "Donor Detail";
+                case "Event":
+                    redirectPage = "Event Detail";
             }
 
-            if ("Event" in data) {
-                return router.push({
-                    name: "Event Detail",
-                    params: { _id: keywordSearch },
-                });
-            }
+            router.push({
+                name: redirectPage,
+                params: { _id: keywordSearch },
+            });
+
+            keywordSearch = "";
         }
     } catch (e) {
-        if (e.response) {
-            const { status } = e.response;
-            if (status === 404) {
-                toast.add({
-                    severity: "error",
-                    summary: "ID not matching",
-                    detail: "No object from Database is matched with your given ID",
-                    life: 3000,
-                });
-            } else {
-                throw e;
-            }
+        if (!e.response) throw e;
+
+        const { status } = e.response;
+        if (status === 404) {
+            toast.add({
+                severity: "error",
+                summary: "ID not matching",
+                detail: "No object from Database is matched with your given ID",
+                life: 3000,
+            });
         } else {
             throw e;
         }
