@@ -3,16 +3,16 @@ import { onBeforeMount } from "vue";
 import OverlayPanel from "primevue/overlaypanel";
 
 import BloodRepo from "../../api/BloodRepo";
-import { BLOOD_TYPES } from "../../constants";
-import { determineStockStatus } from "../../utils";
+import BloodHelper from "../../utils/helpers/Blood";
+import { JSONtoExcel } from "../../utils/excel";
 
 let bloodData = null;
-let bloods = $ref([]);
+let tableData = $ref([]);
 let fetchingData = $ref(true);
 
 let expandedRows = $ref([]);
 const expandAllRows = () => {
-    expandedRows = bloods.filter((el) => el._id);
+    expandedRows = tableData.filter((el) => el._id);
 };
 
 let stockInfo = $ref(null);
@@ -25,68 +25,13 @@ onBeforeMount(async () => {
     const { data } = await BloodRepo.getAll();
     fetchingData = false;
     bloodData = data;
-
-    BLOOD_TYPES.forEach((name) => {
-        const data = bloodData.filter((el) => el.name === name);
-
-        // Evaluate stock status of blood type positive
-        const positiveData = data.find((el) => el.type === "Positive");
-        const {
-            status: positiveStockStatus,
-            displayStatus: positiveStatusDisplay,
-        } = determineStockStatus(positiveData.quantity);
-
-        // Evaluate stock status of blood type negative
-        const negativeData = data.find((el) => el.type === "Negative");
-        const {
-            status: negativeStockStatus,
-            displayStatus: negativeStatusDisplay,
-        } = determineStockStatus(negativeData.quantity);
-
-        bloods.push({
-            _id: positiveData._id,
-            name: positiveData.name,
-            quantity: positiveData.quantity + negativeData.quantity,
-            inStock:
-                !["out", "low"].includes(positiveStockStatus) &&
-                !["out", "low"].includes(negativeStatusDisplay),
-            types: [
-                {
-                    name: "positive",
-                    bloodType: positiveData.name,
-                    quantity: positiveData.quantity,
-                    status: positiveStockStatus,
-                    displayStatus: positiveStatusDisplay,
-                },
-                {
-                    name: "negative",
-                    bloodType: negativeData.name,
-                    quantity: negativeData.quantity,
-                    status: negativeStockStatus,
-                    displayStatus: negativeStatusDisplay,
-                },
-            ],
-        });
-    });
+    tableData = BloodHelper.transformDataForTable(bloodData);
 });
 
 const downloadExcelFile = () => {
-    const excelData = bloodData.map((el) => {
-        const row = { ...el };
-
-        row["Blood Group"] = row["name"];
-        row["Blood Type"] = row["type"];
-        row["Quantity (ml)"] = row["quantity"];
-
-        delete row["id"];
-        delete row["name"];
-        delete row["type"];
-        delete row["quantity"];
-
-        return row;
-    });
-
-    // JSONtoExcel(excelData, "blood_data");
+    const excelData = BloodHelper.transformRowsForExcelDownload(bloodData);
+    console.log(excelData);
+    JSONtoExcel(excelData, "blood_data");
 };
 </script>
 
@@ -99,7 +44,7 @@ const downloadExcelFile = () => {
 
                 <!-- Blood Table -->
                 <PrimeVueTable
-                    :value="bloods"
+                    :value="tableData"
                     :loading="fetchingData"
                     dataKey="_id"
                     v-model:expandedRows="expandedRows"
@@ -166,11 +111,11 @@ const downloadExcelFile = () => {
                     </template>
 
                     <!-- Loading fallback -->
-
                     <template #loading>
                         <h4 style="text-align: center">Fetching data ...</h4>
                     </template>
 
+                    <template v-if="tableData"> </template>
                     <!-- Expand Icon -->
                     <PrimeVueColumn
                         :expander="true"
