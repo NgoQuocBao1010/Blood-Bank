@@ -12,7 +12,7 @@ namespace backend.Repositories
         
         // Read
         Task<DonorTransaction> Get(string _id);
-        Task<IEnumerable<DonorTransaction>> GetPendingTransaction(string donorId);
+        Task<IEnumerable<DonorTransaction>> GetTransactionByStatus(string donorId, int status);
         Task<IEnumerable<DonorTransaction>> Get();
         Task<DonorTransaction> GetByEventAndDonor(string _id, string eventId);
 

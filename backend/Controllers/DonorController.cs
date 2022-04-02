@@ -6,6 +6,7 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
@@ -91,6 +92,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetInfo(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var donor = await _donorRepository.Get(id);
             if (donor == null)
             {
@@ -110,7 +112,7 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            var listTransaction = await _donorTransactionRepository.GetPendingTransaction(donor._id);
+            var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, 0);
             foreach (var transaction in listTransaction)
             {
                 donor.transaction = transaction;
@@ -140,7 +142,7 @@ namespace backend.Controllers
             foreach (var donor in enumerable)
             {
                 var tempDonor = await _donorRepository.Get(donor._id);
-                var listTransaction = await _donorTransactionRepository.GetPendingTransaction(donor._id);
+                var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, 0);
                 foreach (var transaction in listTransaction)
                 {
                     tempDonor.transaction = transaction;
@@ -154,7 +156,7 @@ namespace backend.Controllers
         }
 
         [HttpGet("success")]
-        public async Task<IActionResult> GetDonorSuccess()
+        public async Task<IActionResult> GetDonorsSuccess()
         {
             var listDonorId = new List<string>();
             var transactions = await _donorTransactionRepository.Get();
@@ -166,7 +168,7 @@ namespace backend.Controllers
                 }
             }
 
-            var donors = await _donorRepository.GetDonorsSuccess(listDonorId);
+            var donors = await _donorRepository.GetListDonorById(listDonorId);
             if (donors == null)
             {
                 return NotFound();
@@ -174,10 +176,44 @@ namespace backend.Controllers
 
             return new JsonResult(donors);
         }
+        
+        [HttpGet("failure")]
+        public async Task<IActionResult> GetDonorsFailure()
+        {
+            var result = new List<Donor>();
+            var donors = await _donorRepository.Get();
+            if (donors == null)
+            {
+                return NotFound();
+            }
+
+            var listDonors = donors.ToList();
+            if (!listDonors.Any())
+            {
+                return new JsonResult(donors);
+            }
+
+            foreach (var donor in listDonors)
+            {
+                var tempDonor = await _donorRepository.Get(donor._id);
+                var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, -1);
+                foreach (var transaction in listTransaction)
+                {
+                    tempDonor.transaction = transaction;
+                    result.Add(tempDonor);
+                    tempDonor = await _donorRepository.Get(donor._id);
+                }
+            }
+
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+            return new JsonResult(sortResult);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Donor donor)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+
             var result = await _donorRepository.Update(id, donor);
             if (!result)
             {
@@ -189,6 +225,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var result = await _donorRepository.Delete(id);
             if (!result)
             {

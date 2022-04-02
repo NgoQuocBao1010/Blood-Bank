@@ -87,6 +87,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var user = await _userRepository.Get(id);
             if (user == null)
             {
@@ -111,6 +112,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, User user)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var result = await _userRepository.Update(id, user);
             return new JsonResult(result);
         }
@@ -118,6 +120,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var result = await _userRepository.Delete(id);
             return new JsonResult(result);
         }

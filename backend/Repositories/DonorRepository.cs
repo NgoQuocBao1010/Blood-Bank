@@ -41,7 +41,7 @@ namespace backend.Repositories
         }
         
 
-        public async Task<IEnumerable<Donor>> GetDonorsSuccess(List<string> listDonorId)
+        public async Task<IEnumerable<Donor>> GetListDonorById(List<string> listDonorId)
         {
             var listDonorSuccess = new List<Donor>();
             foreach (var id in listDonorId)

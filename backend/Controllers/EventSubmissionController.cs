@@ -6,6 +6,7 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
@@ -42,6 +43,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var result = await _eventSubmissionRepository.Get(id);
@@ -82,6 +84,8 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, EventSubmission eventSubmission)
         {
+
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _eventSubmissionRepository.Get();
@@ -103,6 +107,8 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _eventSubmissionRepository.Get();
