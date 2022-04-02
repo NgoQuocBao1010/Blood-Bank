@@ -4,13 +4,14 @@
     <div class="grid">
         <div class="col-12">
             <div class="card flex-center">
-                <h3>Sorry ⛔, you are not allowed to view this page 🔐</h3>
                 <h3>
-                    You can login here
-
-                    <RouterLink :to="{ name: 'Login' }">
-                        👉 here 👈
-                    </RouterLink>
+                    Sorry ✋, it seems that you are currently not authorized to
+                    view this page ⛔️
+                </h3>
+                <h3>
+                    Please try
+                    <router-link :to="{ name: 'Login' }">logged in</router-link>
+                    to your account again 🙏
                 </h3>
             </div>
         </div>

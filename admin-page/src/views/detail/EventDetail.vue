@@ -1,11 +1,10 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
-import { RouterLink } from "vue-router";
-import dayjs from "dayjs";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
 
 import EventRepo from "../../api/EventRepo";
+import EventHelper from "../../utils/helpers/Event";
 import { formatDate } from "../../utils";
 
 const AsyncDonorTable = defineAsyncComponent({
@@ -13,50 +12,50 @@ const AsyncDonorTable = defineAsyncComponent({
 });
 
 // *** Mock data ***
-const donorsData = [
-    {
-        _id: "800000100001",
-        name: "Quoc Bao 1",
-        blood: {
-            name: "O",
-            type: "Negative",
-        },
-        transaction: {
-            _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
-            eventDonated: {
-                _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
-                name: "event",
-            },
-            blood: {
-                name: "O",
-                type: "Negative",
-            },
-            amount: 500,
-            dateDonated: new Date("2022-09-13").getTime(),
-        },
-    },
-    {
-        _id: "800000000001",
-        name: "Quoc Bao",
-        blood: {
-            name: "A",
-            type: "Positive",
-        },
-        transaction: {
-            _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
-            eventDonated: {
-                _id: "de169f18-226d-48e0-9579-b18184e2c260",
-                name: "event1",
-            },
-            blood: {
-                name: "A",
-                type: "Positive",
-            },
-            amount: 420,
-            dateDonated: new Date("2022-09-13").getTime(),
-        },
-    },
-];
+// const donorsData = [
+//     {
+//         _id: "800000100001",
+//         name: "Quoc Bao 1",
+//         blood: {
+//             name: "O",
+//             type: "Negative",
+//         },
+//         transaction: {
+//             _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
+//             eventDonated: {
+//                 _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
+//                 name: "event",
+//             },
+//             blood: {
+//                 name: "O",
+//                 type: "Negative",
+//             },
+//             amount: 500,
+//             dateDonated: new Date("2022-09-13").getTime(),
+//         },
+//     },
+//     {
+//         _id: "800000000001",
+//         name: "Quoc Bao",
+//         blood: {
+//             name: "A",
+//             type: "Positive",
+//         },
+//         transaction: {
+//             _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
+//             eventDonated: {
+//                 _id: "de169f18-226d-48e0-9579-b18184e2c260",
+//                 name: "event1",
+//             },
+//             blood: {
+//                 name: "A",
+//                 type: "Positive",
+//             },
+//             amount: 420,
+//             dateDonated: new Date("2022-09-13").getTime(),
+//         },
+//     },
+// ];
 // *** END of mock data **
 const props = defineProps({
     _id: String,
@@ -64,7 +63,15 @@ const props = defineProps({
 
 let event = $ref();
 let catchedData = $ref({});
+
 let showDonorTable = $ref(false);
+let donorsData = $ref(null);
+const getParticipants = async () => {
+    const { data } = await EventRepo.getParticipants(props._id);
+    console.log("Hello", data);
+    donorsData = data ? data : [];
+    showDonorTable = true;
+};
 
 // Naviagtion settings
 const home = $ref({
@@ -79,15 +86,7 @@ onBeforeMount(async () => {
     catchedData = JSON.stringify(data);
     event = { ...data };
     event["startDate"] = new Date(parseInt(event["startDate"]));
-
-    const endDate = dayjs(event.startDate).add(event.duration, "day");
-    if (dayjs().isAfter(endDate, "day")) {
-        event["status"] = "passed";
-    } else if (dayjs().isBefore(event.startDate, "day")) {
-        event["status"] = "upcoming";
-    } else {
-        event["status"] = "ongoing";
-    }
+    event["status"] = EventHelper.determineStatus(event);
 
     items = [{ label: event ? `${event.name} event` : "Unknown event" }];
 });
@@ -104,83 +103,106 @@ onBeforeMount(async () => {
             />
 
             <!-- Event Content -->
-            <div class="card flex">
-                <!-- Left content -->
-                <div class="card__content flex-center">
-                    <img
-                        src="../../assets/images/event.png"
-                        alt="Event Image"
-                    />
-                </div>
+            <template v-if="event">
+                <div class="card flex">
+                    <!-- Left content -->
+                    <div class="card__content flex-center">
+                        <img
+                            src="../../assets/images/event.png"
+                            alt="Event Image"
+                        />
+                    </div>
 
-                <!-- Right content -->
-                <div class="card__content">
-                    <h2 class="event-title">{{ event?.name }}</h2>
+                    <!-- Right content -->
+                    <div class="card__content">
+                        <h2 class="event-title">{{ event.name }}</h2>
 
-                    <!-- Overview information -->
-                    <Divider>
-                        <b class="app-highlight" style="padding-inline: 1rem">
-                            Overview
-                        </b>
-                    </Divider>
-                    <ul class="event-overview">
-                        <!-- Start date -->
-                        <li>
-                            <b>Start Date: </b>
-                            <span class="info">
-                                {{ formatDate(event?.startDate) }}
-                            </span>
-                        </li>
-                        <!-- Duration -->
-                        <li>
-                            <b>Duration: </b>
-                            <span class="info">{{ event?.duration }} days</span>
-                        </li>
-                        <!-- Status -->
-                        <li>
-                            <b>Status: </b>
-                            <span
-                                :class="`info event-badge event-${event?.status}`"
+                        <Divider>
+                            <b
+                                class="app-highlight"
+                                style="padding-inline: 1rem"
                             >
-                                {{ event?.status }}
-                            </span>
-                        </li>
-                        <!-- Address -->
-                        <li>
-                            <b>Address: </b>
-                            <span class="info">
-                                {{ event?.location.address }},
-                                {{ event?.location.city }}
-                            </span>
-                        </li>
-                    </ul>
+                                Overview
+                            </b>
+                        </Divider>
 
-                    <!-- Event detail -->
-                    <Divider>
-                        <b class="app-highlight" style="padding-inline: 1rem">
-                            Event Description
-                        </b>
-                    </Divider>
-                    <p>{{ event?.detail }}</p>
+                        <!-- Overview information -->
+                        <ul class="event-overview">
+                            <!-- Start date -->
+                            <li>
+                                <b>Start Date: </b>
+                                <span class="info">
+                                    {{ formatDate(event.startDate) }}
+                                </span>
+                            </li>
 
-                    <!-- Edit Button -->
-                    <RouterLink
-                        :to="{
-                            name: 'Event Edit',
-                            params: {
-                                _id,
-                                eventData: catchedData,
-                            },
-                        }"
-                        v-ripple
-                        class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon edit-btn"
-                        v-if="event?.status !== 'passed'"
-                    >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        Edit
-                    </RouterLink>
+                            <!-- Duration -->
+                            <li>
+                                <b>Duration: </b>
+                                <span class="info"
+                                    >{{ event.duration }} days</span
+                                >
+                            </li>
+
+                            <!-- Status -->
+                            <li>
+                                <b>Status: </b>
+                                <span
+                                    :class="`info event-badge event-${event.status}`"
+                                >
+                                    {{ event.status }}
+                                </span>
+                            </li>
+
+                            <!-- Address -->
+                            <li>
+                                <b>Address: </b>
+                                <span class="info">
+                                    {{ event.location.address }},
+                                    {{ event.location.city }}
+                                </span>
+                            </li>
+
+                            <!-- Participants -->
+                            <li v-if="event.participants">
+                                <b>Participants: </b>
+                                <span class="info">
+                                    {{ event.participants }} successful donors
+                                </span>
+                            </li>
+                        </ul>
+
+                        <Divider>
+                            <b
+                                class="app-highlight"
+                                style="padding-inline: 1rem"
+                            >
+                                Event Description
+                            </b>
+                        </Divider>
+
+                        <!-- Event detail -->
+                        <p>{{ event.detail }}</p>
+
+                        <!-- Edit Button -->
+                        <RouterLink
+                            :to="{
+                                name: 'Event Edit',
+                                params: {
+                                    _id,
+                                    eventData: catchedData,
+                                },
+                            }"
+                            v-ripple
+                            class="p-button p-button-sm p-component mb-2 p-ripple app-router-link-icon edit-btn"
+                            v-if="event.status !== 'passed'"
+                        >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            Edit
+                        </RouterLink>
+                    </div>
                 </div>
-            </div>
+            </template>
 
             <!-- Event participants -->
             <div class="card">
@@ -191,7 +213,7 @@ onBeforeMount(async () => {
                 >
                     <PrimeVueButton
                         label="Show Event Participants"
-                        @click="showDonorTable = !showDonorTable"
+                        @click="getParticipants"
                     />
                 </div>
 

@@ -96,8 +96,12 @@ const downloadExcel = () => {
         });
         return;
     }
-    const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
-    JSONtoExcel(excelData, "Pending_Donors");
+    const excelData = DonorsHelpers.transformRowsForExcelDownload(donorsData);
+
+    JSONtoExcel(
+        excelData,
+        participants ? "Pending_Donors" : "Event_Participants"
+    );
 };
 
 let newParticipants = $ref({
@@ -129,7 +133,7 @@ const importExcel = async () => {
 
     const excelData = await excelToJson(newParticipants.files);
     newParticipants.listParticipants =
-        DonorsHelpers.reformAfterExcel(excelData);
+        DonorsHelpers.reformAfterExcelImport(excelData);
     selectEventsDialog = false;
 
     const { data, status } = await DonorRepo.importParticipants(
