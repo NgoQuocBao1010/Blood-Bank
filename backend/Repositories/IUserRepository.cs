@@ -13,6 +13,7 @@ namespace backend.Repositories
         Task<User> Get(string _id);
         Task<User> GetByEmail(string email);
         Task<bool> CheckUserEmail(string email);
+        Task<bool> CheckHospitalId(string hospitalId);
         Task<IEnumerable<User>> Get();
 
         // Update

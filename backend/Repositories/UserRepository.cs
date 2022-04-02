@@ -66,6 +66,13 @@ namespace backend.Repositories
             return user.Any();
         }
 
+        public async Task<bool> CheckHospitalId(string hospitalId)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.hospital_id, hospitalId);
+            var user = await _user.Find(filter).ToListAsync();
+            return user.Any();
+        }
+
         public async Task<IEnumerable<User>> Get()
         {
             var user = await _user.Find(_ => true).ToListAsync();

@@ -20,7 +20,7 @@ namespace backend.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost("verify")]
+        [HttpGet("verify")]
         [AllowAnonymous]
         public async Task<IActionResult> VerifyToken()
         {
@@ -73,16 +73,19 @@ namespace backend.Controllers
         {
             try
             {
-                var exist = await _userRepository.CheckUserEmail(user.email);
-                if (exist) return BadRequest("User existed!");
-                if (user.isAdmin)
-                {
-                    user.hospital_id = null;
-                }
+                // Check exist user or hospital account.
+                var existUser = await _userRepository.CheckUserEmail(user.email);
+                var existHospital = await _userRepository.CheckHospitalId(user.hospital_id);
+                if (existUser || existHospital)
+                    return BadRequest("User existed!");
 
+                // Check create admin account. If not check existed hospital account.
+                if (user.hospital_id != null) user.isAdmin = true;
+
+                // Generate password and create account if success.
                 user.password = _userRepository.GeneratePassword(8);
-
                 var newUser = await _userRepository.Create(user);
+
                 return Ok(new
                 {
                     newUser.email,
@@ -91,7 +94,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest("Create user error!");
             }
         }
@@ -111,7 +113,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest("User id error!");
             }
         }
@@ -131,7 +132,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest("Get user error!");
             }
         }
@@ -152,7 +152,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest("User id error!");
             }
         }
@@ -173,7 +172,6 @@ namespace backend.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return BadRequest("User id error!");
             }
         }
