@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -17,6 +18,28 @@ namespace backend.Controllers
         public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+        }
+
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyToken()
+        {
+            try
+            {
+                var userId = User.Claims.First(c => c.Type == "UserID").Value;
+                var existUser = await _userRepository.Get(userId);
+                if (existUser == null) throw new Exception("deleted");
+
+                return Ok(existUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return e.Message switch
+                {
+                    "deleted" => BadRequest("User was deleted!"),
+                    _ => BadRequest("User ID error!")
+                };
+            }
         }
 
         [HttpPost("login")]
