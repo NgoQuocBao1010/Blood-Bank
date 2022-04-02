@@ -31,7 +31,7 @@ export const useEventStore = defineStore("event", {
         names: (state) => state.events?.map((event) => event.name),
         getEventById: (state) => {
             return (eventID) =>
-                state.events.find((event) => event._id === eventID);
+                state.events?.find((event) => event._id === eventID);
         },
     },
 });

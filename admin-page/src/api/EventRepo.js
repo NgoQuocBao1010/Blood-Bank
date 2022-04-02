@@ -9,6 +9,9 @@ export default {
     getById(eventId) {
         return Repository.get(`${resource}/${eventId}`);
     },
+    getParticipants(eventId) {
+        return Repository.get(`${resource}/listParticipants/${eventId}`);
+    },
     create(data) {
         return Repository.post(`${resource}/`, data);
     },
