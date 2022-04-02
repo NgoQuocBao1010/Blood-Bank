@@ -19,22 +19,8 @@ namespace backend.Controllers
         public HospitalController(IHospitalRepository hospitalRepository)
         {
             _hospitalRepository = hospitalRepository;
-            AddDefaultData();
         }
-
-        public void AddDefaultData()
-        {
-            var hospital = _hospitalRepository.Get();
-            if (hospital.Result.Any()) return;
-            var listHospital = new List<Hospital>
-            {
-                new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
-                new("Hoan My", "Can Tho", "9876543210"),
-                new("Benh Vien 121", "Can Tho", "0123456780"),
-            };
-
-            _hospitalRepository.AddDefaultData(listHospital);
-        }
+        
 
         [HttpPost]
         public async Task<IActionResult> Create(Hospital hospital)
@@ -49,6 +35,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
@@ -64,6 +55,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get();
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
