@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
@@ -20,7 +20,6 @@ namespace backend.Controllers
         {
             _hospitalRepository = hospitalRepository;
         }
-        
 
         [HttpPost]
         public async Task<IActionResult> Create(Hospital hospital)
@@ -74,6 +73,12 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Update(id, hospital);
                 return Ok(result);
             }
@@ -89,6 +94,12 @@ namespace backend.Controllers
         {
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Delete(id);
                 return Ok(result);
             }

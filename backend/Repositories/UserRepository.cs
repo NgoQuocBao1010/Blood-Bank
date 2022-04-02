@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -116,11 +117,16 @@ namespace backend.Repositories
 
         public string Login(User user)
         {
+            // Get user role.
+            var role = (user.isAdmin) ? "admin" : "hospital";
+            var options = new IdentityOptions();
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new("UserID", user._id)
+                    new("UserID", user._id),
+                    new(options.ClaimsIdentity.RoleClaimType, role)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials =

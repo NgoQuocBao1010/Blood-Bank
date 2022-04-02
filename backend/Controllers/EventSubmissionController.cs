@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class EventSubmissionController : ControllerBase
     {
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
@@ -22,6 +22,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create(EventSubmission eventSubmission)
         {
             try
@@ -89,7 +90,7 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                
+
                 var result = await _eventSubmissionRepository.Update(id, eventSubmission);
                 return Ok(result);
             }
@@ -110,7 +111,7 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                
+
                 var result = await _eventSubmissionRepository.Delete(id);
                 return Ok(result);
             }

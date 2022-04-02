@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -21,6 +21,7 @@ namespace backend.Controllers
         }
 
         [HttpPost("verify")]
+        [AllowAnonymous]
         public async Task<IActionResult> VerifyToken()
         {
             try
