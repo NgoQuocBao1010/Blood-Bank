@@ -39,10 +39,10 @@ namespace backend.Repositories
             AddDefaultData();
         }
 
-        public async Task<string> Create(User user)
+        public async Task<User> Create(User user)
         {
             await _user.InsertOneAsync(user);
-            return user._id;
+            return user;
         }
 
         public Task<User> Get(string _id)
@@ -144,6 +144,13 @@ namespace backend.Repositories
         public bool CheckUserPassword(User user, string password)
         {
             return user.password.Equals(password);
+        }
+
+        public string GeneratePassword(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

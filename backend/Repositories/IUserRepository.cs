@@ -7,7 +7,7 @@ namespace backend.Repositories
     public interface IUserRepository
     {
         // Create
-        Task<string> Create(User user);
+        Task<User> Create(User user);
 
         // Read
         Task<User> Get(string _id);
@@ -26,5 +26,7 @@ namespace backend.Repositories
         // Login functions.
         string Login(User user);
         bool CheckUserPassword(User user, string password);
+        
+        string GeneratePassword(int length);
     }
 }

@@ -80,8 +80,14 @@ namespace backend.Controllers
                     user.hospital_id = null;
                 }
 
-                var id = await _userRepository.Create(user);
-                return Ok(id);
+                user.password = _userRepository.GeneratePassword(8);
+
+                var newUser = await _userRepository.Create(user);
+                return Ok(new
+                {
+                    newUser.email,
+                    newUser.password
+                });
             }
             catch (Exception e)
             {
