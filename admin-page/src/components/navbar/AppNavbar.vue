@@ -22,16 +22,8 @@ const searchID = async () => {
         if (data && status === 200) {
             const { type } = data;
 
-            let redirectPage = null;
-            switch (type) {
-                case "Donor":
-                    redirectPage = "Donor Detail";
-                case "Event":
-                    redirectPage = "Event Detail";
-            }
-
             router.push({
-                name: redirectPage,
+                name: `${type} Detail`,
                 params: { _id: keywordSearch },
             });
 
