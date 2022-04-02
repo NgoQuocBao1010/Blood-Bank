@@ -1,31 +1,26 @@
 import Repository from "./Repository";
-import { useLocalToken } from "./helpers";
 
 const resource = "/Hospital";
 
 export default {
-  getAll() {
-    useLocalToken();
-    return Repository.get(`${resource}`);
-  },
-  get(id) {
-    useLocalToken();
-    return Repository.get(`${resource}/${id}`);
-  },
-  post(params) {
-    useLocalToken();
-    return Repository.post(`${resource}/`, {
-      name: params.name,
-      address: params.address,
-      phone: params.phone,
-    });
-  },
-  put(params) {
-    useLocalToken();
-    return Repository.put(`${resource}/${params._id}`, {
-      name: params.name,
-      address: params.address,
-      phone: params.phone,
-    });
-  },
+    getAll() {
+        return Repository.get(`${resource}`);
+    },
+    get(id) {
+        return Repository.get(`${resource}/${id}`);
+    },
+    post(params) {
+        return Repository.post(`${resource}/`, {
+            name: params.name,
+            address: params.address,
+            phone: params.phone,
+        });
+    },
+    put(params) {
+        return Repository.put(`${resource}/${params._id}`, {
+            name: params.name,
+            address: params.address,
+            phone: params.phone,
+        });
+    },
 };
