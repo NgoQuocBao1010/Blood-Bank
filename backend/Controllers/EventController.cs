@@ -1,7 +1,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
@@ -113,24 +112,46 @@ namespace backend.Controllers
         public async Task<IActionResult> Update(string id, Event e)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
-            var result = await _eventRepository.Update(id, e);
-            if (!result)
+            try
             {
-                return BadRequest();
+                var exist = await _eventRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
+                var result = await _eventRepository.Update(id, e);
+                return Ok(result);
             }
-            return new JsonResult("Update Information Of Event Successfully");
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                return BadRequest("Event ID error");
+            }
+
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
-            var result = await _eventRepository.Delete(id);
-            if (!result)
+
+            try
             {
-                return BadRequest();
+                var exist = await _eventRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
+                var result = await _eventRepository.Delete(id);
+                return Ok(result);
             }
-            return new JsonResult("Delete Information Of Event Successfully");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Event ID error");
+            }
         }
     }
 }

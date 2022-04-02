@@ -32,16 +32,16 @@ namespace backend.Repositories
             if (blood.Result.Any()) return;
             var listBlood = new List<Blood>
             {
-                new Blood("A", "Positive", 0),
-                new Blood("A", "Negative", 0),
-                new Blood("B", "Positive", 0),
-                new Blood("B", "Negative", 0),
-                new Blood("O", "Positive", 0),
-                new Blood("O", "Negative", 0),
-                new Blood("AB", "Positive", 0),
-                new Blood("AB", "Negative", 0),
-                new Blood("Rh", "Positive", 0),
-                new Blood("Rh", "Negative", 0)
+                new Blood("A", "Positive", 50000),
+                new Blood("A", "Negative", 55000),
+                new Blood("B", "Positive", 40000),
+                new Blood("B", "Negative", 45000),
+                new Blood("O", "Positive", 30000),
+                new Blood("O", "Negative", 20000),
+                new Blood("AB", "Positive", 10000),
+                new Blood("AB", "Negative", 15000),
+                new Blood("Rh", "Positive", 2000),
+                new Blood("Rh", "Negative", 1000)
             };
             _blood.InsertMany(listBlood);
         }
