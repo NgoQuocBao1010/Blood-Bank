@@ -16,14 +16,15 @@ namespace backend.Repositories
         Task<IEnumerable<User>> Get();
 
         // Update
-        Task<bool> Update(string _id, User user);
+        Task<long> Update(string _id, User user);
 
         // Delete
         Task<bool> Delete(string _id);
 
         void AddDefaultData();
 
-        // Check login password
+        // Login functions.
+        string Login(User user);
         bool CheckUserPassword(User user, string password);
     }
 }

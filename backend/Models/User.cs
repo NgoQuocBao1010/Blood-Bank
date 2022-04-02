@@ -20,14 +20,5 @@ namespace backend.Models
             this.password = password;
             this.isAdmin = isAdmin;
         }
-        
-        // public User(string email, string password, bool isAdmin, string hospitalId)
-        // {
-        //     this.email = email;
-        //     this.password = password;
-        //     this.isAdmin = isAdmin;
-        //     hospital_id = hospitalId;
-        // }
-        
     }
 }
