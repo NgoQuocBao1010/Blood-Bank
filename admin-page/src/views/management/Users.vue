@@ -6,6 +6,7 @@ import { FilterMatchMode } from "primevue/api";
 
 import UserRepo from "../../api/UserRepo";
 import UserCreation from "../../components/form/UserCreation.vue";
+import { useUserStore } from "../../stores/user";
 
 let users = $ref(null);
 let fetchingData = $ref(true);
@@ -35,6 +36,14 @@ onBeforeMount(async () => {
 
     initFilter();
 });
+
+const getRowClass = (data) => {
+    return data.email === useUserStore().email ? "active-user" : "";
+};
+
+const deleteUser = (userId) => {
+    console.log(userId);
+};
 </script>
 
 <template>
@@ -53,6 +62,7 @@ onBeforeMount(async () => {
                     responsiveLayout="scroll"
                     :rows="5"
                     :rowHover="true"
+                    :rowClass="getRowClass"
                     :paginator="true"
                     removableSort
                     v-model:filters="filters"
@@ -152,6 +162,18 @@ onBeforeMount(async () => {
                                     </span>
                                 </template>
                             </DropDown>
+                        </template>
+                    </PrimeVueColumn>
+
+                    <!-- Delete Icon -->
+                    <PrimeVueColumn>
+                        <template #body="{ data }">
+                            <PrimeVueButton
+                                icon="pi pi-trash"
+                                type="button"
+                                class="p-button-text"
+                                @click="deleteUser(data._id)"
+                            ></PrimeVueButton>
                         </template>
                     </PrimeVueColumn>
                 </PrimeVueTable>

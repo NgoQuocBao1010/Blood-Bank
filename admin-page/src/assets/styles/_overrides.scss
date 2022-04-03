@@ -334,6 +334,11 @@ body::-webkit-scrollbar,
     width: max-content;
 }
 
+// Datatable row
+.active-user {
+    background: rgba(var(--primary-color-rbg), 0.2) !important;
+}
+
 @media (min-width: 992px) {
     .layout-wrapper {
         &.layout-static {
