@@ -24,7 +24,7 @@ const clearFilter = () => {
     initFilter();
 };
 
-onBeforeMount(async () => {
+const fetchingUsersData = async () => {
     const { data } = await UserRepo.getAll();
 
     users = data.map((row) => ({
@@ -33,16 +33,25 @@ onBeforeMount(async () => {
     }));
 
     fetchingData = false;
+};
 
+onBeforeMount(async () => {
     initFilter();
+    await fetchingUsersData();
 });
 
 const getRowClass = (data) => {
     return data.email === useUserStore().email ? "active-user" : "";
 };
 
-const deleteUser = (userId) => {
-    console.log(userId);
+const deleteUser = async (userId) => {
+    fetchingData = true;
+    const { data, status } = await UserRepo.delete(userId);
+
+    if (data && status === 200) {
+        users = users.filter((el) => el._id !== userId);
+        fetchingData = false;
+    }
 };
 </script>
 

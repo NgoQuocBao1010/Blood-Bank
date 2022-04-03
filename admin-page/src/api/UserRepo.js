@@ -9,4 +9,7 @@ export default {
     getToken(email, password) {
         return Repository.post(`${resource}/login/`, { email, password });
     },
+    delete(userId) {
+        return Repository.delete(`${resource}/${userId}`);
+    },
 };
