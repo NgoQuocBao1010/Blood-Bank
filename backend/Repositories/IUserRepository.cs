@@ -7,23 +7,27 @@ namespace backend.Repositories
     public interface IUserRepository
     {
         // Create
-        Task<string> Create(User user);
+        Task<User> Create(User user);
 
         // Read
         Task<User> Get(string _id);
         Task<User> GetByEmail(string email);
         Task<bool> CheckUserEmail(string email);
+        Task<bool> CheckHospitalId(string hospitalId);
         Task<IEnumerable<User>> Get();
 
         // Update
-        Task<bool> Update(string _id, User user);
+        Task<long> Update(string _id, User user);
 
         // Delete
         Task<bool> Delete(string _id);
 
         void AddDefaultData();
 
-        // Check login password
+        // Login functions.
+        string Login(User user);
         bool CheckUserPassword(User user, string password);
+        
+        string GeneratePassword(int length);
     }
 }
