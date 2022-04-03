@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -37,9 +35,8 @@ namespace backend.Controllers
                 var result = await _eventSubmissionRepository.Create(eventSubmission);
                 return Ok(new {id = result});
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event ID error!");
             }
         }
@@ -58,9 +55,8 @@ namespace backend.Controllers
 
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -78,9 +74,8 @@ namespace backend.Controllers
 
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -100,9 +95,8 @@ namespace backend.Controllers
                 var result = await _eventSubmissionRepository.Update(id, eventSubmission);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -122,9 +116,8 @@ namespace backend.Controllers
                 var result = await _eventSubmissionRepository.Delete(id);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }

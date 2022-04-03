@@ -15,10 +15,12 @@ namespace backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IHospitalRepository _hospitalRepository;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IHospitalRepository hospitalRepository)
         {
             _userRepository = userRepository;
+            _hospitalRepository = hospitalRepository;
         }
 
         [HttpGet("verify")]
@@ -74,14 +76,30 @@ namespace backend.Controllers
         {
             try
             {
-                // Check exist user or hospital account.
+                // Check exist user account.
                 var existUser = await _userRepository.CheckUserEmail(user.email);
-                var existHospital = await _userRepository.CheckHospitalId(user.hospital_id);
-                if (existUser || existHospital)
-                    return BadRequest("User existed!");
+                if (existUser)
+                    return BadRequest("Email existed!");
+
+                // Set role for admin if success.
+                user.isAdmin = true;
 
                 // Check create admin account. If not check existed hospital account.
-                if (user.hospital_id != null) user.isAdmin = true;
+                if (user.hospital_id != null)
+                {
+                    // Check exist hospital.
+                    var existHospital = await _hospitalRepository.Get(user.hospital_id);
+                    if (existHospital == null)
+                        return BadRequest("Invalid hospital ID!");
+
+                    // Check duplicate hospital user.
+                    var existHospitalUser = await _userRepository.CheckHospitalId(user.hospital_id);
+                    if (existHospitalUser)
+                        return BadRequest("Hospital account existed!");
+
+                    // Set role for hospital if success.
+                    user.isAdmin = false;
+                }
 
                 // Generate password and create account if success.
                 user.password = _userRepository.GeneratePassword(8);
@@ -93,7 +111,7 @@ namespace backend.Controllers
                     newUser.password
                 });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Create user error!");
             }
@@ -113,7 +131,7 @@ namespace backend.Controllers
 
                 return Ok(user);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("User id error!");
             }
@@ -132,7 +150,7 @@ namespace backend.Controllers
 
                 return Ok(user);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Get user error!");
             }
@@ -153,7 +171,7 @@ namespace backend.Controllers
                 var result = await _userRepository.Update(id, user);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("User id error!");
             }
@@ -174,7 +192,7 @@ namespace backend.Controllers
                 var result = await _userRepository.Delete(id);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("User id error!");
             }
