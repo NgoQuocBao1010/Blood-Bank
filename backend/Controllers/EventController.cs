@@ -67,8 +67,7 @@ namespace backend.Controllers
                 return NotFound("Cannot find any Event from this _id");
             }
 
-            if (time == null) return new JsonResult(e);
-            if (long.Parse(time) < long.Parse(e.startDate))
+            if (time != null && long.Parse(time) < long.Parse(e.startDate))
             {
                 var eventSubmission = await _eventSubmissionRepository.GetByEvent(id);
                 e.participants = eventSubmission.Count();
