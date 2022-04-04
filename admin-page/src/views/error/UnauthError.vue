@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+import { onBeforeMount } from "vue";
+import { useUserStore } from "../../stores/user";
+const userStore = useUserStore();
+
+onBeforeMount(async () => {
+    if (userStore.token) await userStore.verifyToken();
+});
+</script>
 
 <template>
     <div class="grid">
@@ -8,7 +16,16 @@
                     Sorry ✋, it seems that you are currently not authorized to
                     view this page ⛔️
                 </h3>
-                <h3>
+
+                <!-- Auth user naviagate to other roles -->
+                <h3 v-if="userStore.isLoggedIn">
+                    Click
+                    <router-link :to="userStore.defaultPage">here</router-link>
+                    to return
+                </h3>
+
+                <!-- Unauth user try to naviagate to auth page -->
+                <h3 v-else>
                     Please try
                     <router-link :to="{ name: 'Login' }">logged in</router-link>
                     to your account again 🙏

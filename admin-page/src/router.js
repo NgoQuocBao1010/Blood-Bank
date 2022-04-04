@@ -141,6 +141,7 @@ const router = createRouter({
             component: () => import("./views/About.vue"),
             meta: {
                 layoutName: "LayoutDefault",
+                isGlobal: true,
             },
         },
         // Login Page
@@ -161,6 +162,7 @@ const router = createRouter({
             meta: {
                 layoutName: "LayoutUnauth",
                 unguard: true,
+                isGlobal: true,
             },
         },
         {
@@ -170,6 +172,7 @@ const router = createRouter({
             meta: {
                 layoutName: "__dynamic",
                 unguard: true,
+                isGlobal: true,
             },
         },
         {
@@ -179,6 +182,7 @@ const router = createRouter({
             meta: {
                 layoutName: "__dynamic",
                 unguard: true,
+                isGlobal: true,
             },
         },
         // Hospital request page
@@ -188,6 +192,7 @@ const router = createRouter({
             component: () => import("./views/HospitalRequest.vue"),
             meta: {
                 layoutName: "LayoutDefault",
+                isHospital: true,
             },
         },
     ],
@@ -221,10 +226,27 @@ router.beforeEach(async (to, from, next) => {
     }
 });
 
+// Descriminate between admin and hospital account
+router.beforeEach((to, from, next) => {
+    if (to.meta.isGlobal) return next();
+
+    if (useUserStore().isAdmin && to.meta.isHospital) {
+        return next({ name: "Unauthorized Error" });
+    }
+
+    if (!useUserStore().isAdmin && !to.meta.isHospital) {
+        return next({ name: "Unauthorized Error" });
+    }
+
+    next();
+});
+
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
     if (to.name === "Login" && useUserStore().token) {
-        return next({ name: from.name ? from.name : "Dashboard" });
+        return next({
+            name: from.name ? from.name : useUserStore().defaultPage,
+        });
     }
     next();
 });

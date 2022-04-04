@@ -69,7 +69,7 @@ const submitData = async () => {
             life: 3000,
         });
 
-        router.push({ name: "Dashboard" });
+        router.push(userStore.defaultPage);
     } catch (e) {
         if (e.response) {
             const { status } = e.response;

@@ -20,15 +20,18 @@ export const useUserStore = defineStore("user", {
             this.token = authToken;
             localStorage.setItem("userToken", this.token);
         },
+        setState(userInfo) {
+            this.isLoggedIn = true;
+            this.email = userInfo.email;
+            this.isAdmin = userInfo.isAdmin;
+            this.hospitalId = userInfo.hospitalId;
+        },
         async verifyToken() {
             try {
                 useLocalToken();
                 const { data, status } = await UserRepo.verifyToken();
                 if (data && status === 200) {
-                    this.isLoggedIn = true;
-                    this.email = data.email;
-                    this.isAdmin = data.isAdmin;
-                    this.hospitalId = data.hospitalId;
+                    this.setState(data);
                 }
             } catch (e) {
                 console.log(e.response);
@@ -41,8 +44,7 @@ export const useUserStore = defineStore("user", {
 
             const authToken = data.token;
             this.setToken(authToken);
-            this.email = email;
-            this.isLoggedIn = true;
+            await this.verifyToken();
 
             useLocalToken();
         },
@@ -50,5 +52,14 @@ export const useUserStore = defineStore("user", {
             localStorage.removeItem("userToken");
             this.$reset();
         },
+    },
+    getters: {
+        defaultPage: (state) =>
+            state.isAdmin
+                ? { name: "Dashboard" }
+                : {
+                      name: "Hospital Page",
+                      params: { _id: state.hospitalId },
+                  },
     },
 });
