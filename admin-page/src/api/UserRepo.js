@@ -12,6 +12,9 @@ export default {
     verifyToken() {
         return Repository.get(`${resource}/verify`);
     },
+    createAccount(data) {
+        return Repository.post(`${resource}/`, data);
+    },
     delete(userId) {
         return Repository.delete(`${resource}/${userId}`);
     },

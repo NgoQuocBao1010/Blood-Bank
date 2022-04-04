@@ -24,12 +24,11 @@ export const useUserStore = defineStore("user", {
             try {
                 useLocalToken();
                 const { data, status } = await UserRepo.verifyToken();
-                console.log(data);
                 if (data && status === 200) {
                     this.isLoggedIn = true;
                     this.email = data.email;
                     this.isAdmin = data.isAdmin;
-                    this.hospitalId = data.hospital_id;
+                    this.hospitalId = data.hospitalId;
                 }
             } catch (e) {
                 console.log(e.response);
