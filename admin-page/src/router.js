@@ -209,9 +209,15 @@ router.beforeEach(async (to, from, next) => {
         }
         next();
     } catch (err) {
-        if (err.response && err.response.status === 401) {
-            return next({ name: "Unauthorized Error" });
+        if (!err.response) return next({ name: "Server Error" });
+        if (err.response) {
+            if (err.response.status === 401)
+                return next({ name: "Unauthorized Error" });
+            if (err.response.status === 500)
+                return next({ name: "Server Error" });
         }
+
+        throw err;
     }
 });
 
