@@ -68,7 +68,7 @@ namespace backend.Repositories
 
         public async Task<bool> CheckHospitalId(string hospitalId)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.hospital_id, hospitalId);
+            var filter = Builders<User>.Filter.Eq(u => u.hospitalId, hospitalId);
             var user = await _user.Find(filter).ToListAsync();
             return user.Any();
         }
@@ -86,7 +86,7 @@ namespace backend.Repositories
                 .Set(u => u.email, user.email)
                 .Set(u => u.password, user.password)
                 .Set(u => u.isAdmin, user.isAdmin)
-                .Set(u => u.hospital_id, user.hospital_id);
+                .Set(u => u.hospitalId, user.hospitalId);
             var result = await _user.UpdateOneAsync(filter, update);
             return result.ModifiedCount;
         }
@@ -117,7 +117,7 @@ namespace backend.Repositories
             var hospital = _hospitalRepository.GetFirstHospital();
             var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
             {
-                hospital_id = hospital.Result._id
+                hospitalId = hospital.Result._id
             };
             _user.InsertOne(newUser);
         }
