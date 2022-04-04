@@ -12,6 +12,7 @@ namespace backend.Repositories
         // Read
         Task<Hospital> Get(string _id);
         Task<IEnumerable<Hospital>> Get();
+        Task<Hospital> GetFirstHospital();
         
         // Update
         Task<bool> Update(string _id, Hospital hospital);
@@ -19,6 +20,6 @@ namespace backend.Repositories
         // Delete
         Task<bool> Delete(string _id);
 
-        void AddDefaultData(IEnumerable<Hospital> listHospital);
+        void AddDefaultData();
     }
 }

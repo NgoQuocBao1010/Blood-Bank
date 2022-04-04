@@ -6,12 +6,13 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
@@ -19,21 +20,6 @@ namespace backend.Controllers
         public HospitalController(IHospitalRepository hospitalRepository)
         {
             _hospitalRepository = hospitalRepository;
-            AddDefaultData();
-        }
-
-        public void AddDefaultData()
-        {
-            var hospital = _hospitalRepository.Get();
-            if (hospital.Result.Any()) return;
-            var listHospital = new List<Hospital>
-            {
-                new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
-                new("Hoan My", "Can Tho", "9876543210"),
-                new("Benh Vien 121", "Can Tho", "0123456780"),
-            };
-
-            _hospitalRepository.AddDefaultData(listHospital);
         }
 
         [HttpPost]
@@ -46,9 +32,15 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
@@ -64,6 +56,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get();
+                if (hospital == null)
+                {
+                    throw new Exception();
+                }
+
                 return Ok(hospital);
             }
             catch (Exception e)
@@ -76,8 +73,15 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Hospital hospital)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Update(id, hospital);
                 return Ok(result);
             }
@@ -91,8 +95,15 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Delete(id);
                 return Ok(result);
             }

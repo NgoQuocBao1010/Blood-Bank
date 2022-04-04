@@ -7,7 +7,7 @@ import { useUserStore } from "./stores/user";
 
 const userStore = useUserStore();
 const route = useRoute();
-let layout = $ref("section");
+let layout = $ref(null);
 
 watch(
     () => route.meta?.layoutName,

@@ -12,7 +12,6 @@ namespace backend.Models
         public string password { get; set; }
         public bool isAdmin { get; set; }
         
-        [BsonRepresentation(BsonType.ObjectId)]
         public string hospital_id { get; set; }
 
         public User(string email, string password, bool isAdmin)

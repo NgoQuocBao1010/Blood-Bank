@@ -34,8 +34,6 @@ onBeforeMount(() => {
 
         return transaction;
     });
-
-    console.log(transactions);
 });
 
 // Filter configurations

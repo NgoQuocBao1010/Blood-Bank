@@ -11,7 +11,7 @@ const KEYS_TRANSFORM = {
 };
 
 export default {
-    transformObject(data) {
+    transformARowForExcel(data) {
         let transformData = {};
 
         for (let key in data) {
@@ -32,12 +32,12 @@ export default {
 
         return transformData;
     },
-    transformRowsBeforeExcel(data) {
-        const rows = data.map((row) => this.transformObject(row));
+    transformRowsForExcelDownload(data) {
+        const rows = data.map((row) => this.transformARowForExcel(row));
 
         return rows;
     },
-    reformObject(data) {
+    reformExcelRow(data) {
         let reformData = {
             transaction: {},
         };
@@ -67,8 +67,8 @@ export default {
 
         return reformData;
     },
-    reformAfterExcel(data) {
-        const rows = data.map((row) => this.reformObject(row));
+    reformAfterExcelImport(data) {
+        const rows = data.map((row) => this.reformExcelRow(row));
 
         return rows;
     },

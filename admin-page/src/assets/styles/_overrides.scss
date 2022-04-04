@@ -232,6 +232,11 @@
     border-color: var(--primary-color);
 }
 
+// Progress bra
+.p-progressbar .p-progressbar-value {
+    background-color: var(--primary-color);
+}
+
 // Layout Override
 .layout-sidebar {
     width: 250px;
@@ -260,6 +265,15 @@
 .app-router-link-icon {
     i {
         margin-right: 0.5rem;
+    }
+}
+
+.toast-container {
+    width: 100%;
+    padding-left: 1.2rem;
+
+    .toast-content {
+        padding-block: 2rem;
     }
 }
 

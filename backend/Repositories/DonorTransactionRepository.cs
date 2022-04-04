@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using MongoDB.Driver;
@@ -44,10 +46,18 @@ namespace backend.Repositories
             return donorTransaction;
         }
 
-        public async Task<IEnumerable<DonorTransaction>> GetPendingTransaction(string donorId)
+        public async Task<IEnumerable<DonorTransaction>> GetTransactionByDonorAndStatus(string donorId, int status)
         {
             var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.donorId, donorId)
-                         & Builders<DonorTransaction>.Filter.Eq(dt => dt.status, 0);
+                         & Builders<DonorTransaction>.Filter.Eq(dt => dt.status, status);
+            var transactions = await _donorTransaction.Find(filter).ToListAsync();
+
+            return transactions;
+        }
+        
+        public async Task<IEnumerable<DonorTransaction>> GetTransactionByStatus(int status)
+        {
+            var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.status, status);
             var transactions = await _donorTransaction.Find(filter).ToListAsync();
 
             return transactions;
@@ -114,6 +124,24 @@ namespace backend.Repositories
             var result = await _donorTransaction.DeleteOneAsync(filter);
 
             return result.DeletedCount == 1;
+        }
+        
+        public async Task<bool> CheckValidListParticipant(ListParticipants data, Event eventDonated)
+        {
+            foreach (var donor in data.listParticipants)
+            {
+                var listTransactionAttended = await GetTransactionByDonor(donor._id);
+                // check if the participant has attended this event => return error and stop to create
+                if (listTransactionAttended.Any(transaction => transaction.eventDonated._id == data.eventId))
+                {
+                    var result = donor.name + " has attended the " + eventDonated.name +
+                                 " event already!";
+                    Console.WriteLine(result);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
