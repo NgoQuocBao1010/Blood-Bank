@@ -42,10 +42,4 @@ main {
   min-height: 100vh;
   margin-top: 120px;
 }
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  background-color: var(--DARK_BLUE);
-}
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue";
+import { ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import Carousel from "primevue/carousel";
 import { useRouter } from "vue-router";

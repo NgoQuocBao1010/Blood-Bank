@@ -1,11 +1,6 @@
 <script setup>
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import Button from "primevue/button";
-import Dropdown from "primevue/dropdown";
-import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
-import DataView from "primevue/dataview";
-import Rating from "primevue/rating";
-import Dialog from "primevue/dialog";
 import RadioButton from "primevue/radiobutton";
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
@@ -25,7 +20,6 @@ import { useRoute } from "vue-router";
 
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import EventRepo from "../../api/EventRepo";
-import moment from "moment";
 import { determineStatus, formatDate } from "../../utils/index";
 import ProgressSpinner from "primevue/progressspinner";
 

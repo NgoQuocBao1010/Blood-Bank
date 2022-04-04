@@ -1,15 +1,9 @@
 <script setup>
-import { ref, onBeforeMount, reactive } from "vue";
+import { ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import Dropdown from "primevue/dropdown";
 import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
 import DataView from "primevue/dataview";
-import Rating from "primevue/rating";
-import Dialog from "primevue/dialog";
-import RadioButton from "primevue/radiobutton";
-import InputText from "primevue/inputtext";
-import Checkbox from "primevue/checkbox";
-import Calendar from "primevue/calendar";
 import { useRouter } from "vue-router";
 import { formatDate } from "../../utils/index";
 import { useEventStore } from "../../stores/event";
