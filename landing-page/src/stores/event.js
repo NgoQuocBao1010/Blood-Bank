@@ -17,19 +17,21 @@ export const useEventStore = defineStore("event", {
 
         event["startDate"] = new Date(parseInt(event["startDate"]));
         event["status"] = determineStatus(event);
+        event["bgImg"] =
+          "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp";
 
         return event;
       });
+    },
+    filter(value) {
+      const filterData = this.events.filter((row) => row.status === value);
+      this.events = filterData;
     },
   },
   getters: {
     activeEvents: (state) =>
       state.events.filter(
-        (event) => event.status === "ongoing" || event.status === "passed"
+        (event) => event.status === "ongoing" || event.status === "upcoming"
       ),
-    names: (state) => state.events?.map((event) => event.name),
-    getEventById: (state) => {
-      return (eventID) => state.events.find((event) => event._id === eventID);
-    },
   },
 });

@@ -1,61 +1,43 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import Button from "primevue/button";
 import Carousel from "primevue/carousel";
 import { useRouter } from "vue-router";
+import { useEventStore } from "../../stores/event";
+import ProgressSpinner from "primevue/progressspinner";
 
+const eventStore = useEventStore();
 const router = useRouter();
-const click = (eventId) => {
-  router.push({
-    path: `/donate/${eventId}`,
-  });
-};
 
 const events = ref(null);
+const today = new Date();
+const now = new Date(today).getTime();
 
-onMounted(() => {
-  events.value = [
-    {
-      id: 1,
-      title: "Event 1",
-      bgImg:
-        "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp",
-      time: "01/01/2022",
-    },
-    {
-      id: 2,
-      title: "Event 2",
-      bgImg:
-        "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/updated_NewYear2022.webp",
-      time: "15/03/2022",
-    },
-    {
-      id: 3,
-      title: "Event 3",
-      bgImg:
-        "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/ONE_NATION_2500_600.webp",
-      time: "18/04/2022",
-    },
-    {
-      id: 4,
-      title: "Event 4",
-      bgImg:
-        "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/Blood_EHealthID_2500_600.webp",
-      time: "18/04/2022",
-    },
-    {
-      id: 1,
-      title: "Event 1",
-      bgImg:
-        "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp",
-      time: "01/01/2022",
-    },
-  ];
+onBeforeMount(async () => {
+  if (!eventStore.events) {
+    await eventStore.setEvents();
+  }
+  events.value = eventStore.activeEvents;
 });
+
+const handleClick = (eventId) => {
+  router.push({
+    path: `/donate/${eventId}`,
+    query: { now: now },
+  });
+};
 </script>
 
 <template>
   <div class="card">
+    <template v-if="!events">
+      <div
+        class="flex align-items-center justify-content-center"
+        style="width 400px; height: 400px; font-size: 50px"
+      >
+        <ProgressSpinner strokeWidth="4" />
+      </div>
+    </template>
     <Carousel
       :value="events"
       :numVisible="1"
@@ -72,7 +54,9 @@ onMounted(() => {
           }"
         >
           <div class="product-item-content">
-            <Button @click="() => click(slotProps.data.id)">Donate Now</Button>
+            <Button @click="() => handleClick(slotProps.data._id)"
+              >Donate Now</Button
+            >
           </div>
         </div>
       </template>

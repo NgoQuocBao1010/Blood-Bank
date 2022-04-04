@@ -6,7 +6,7 @@ export default {
   getAll() {
     return Repository.get(`${resource}/`);
   },
-  getById(id) {
-    return Repository.get(`${resource}/${id}`);
+  getById(params) {
+    return Repository.get(`${resource}/${params.eventId}?now=${params.now}`);
   },
 };
