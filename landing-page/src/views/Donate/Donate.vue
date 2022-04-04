@@ -33,6 +33,7 @@ onBeforeMount(async () => {
 
 const cancelFilter = async () => {
   await eventStore.setEvents();
+  sortKey.value = "";
 };
 
 const onSortChange = (event) => {
