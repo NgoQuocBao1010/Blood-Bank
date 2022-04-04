@@ -180,7 +180,7 @@ const resetForm = () => {
               </h2>
               <div class="p-fluid">
                 <div class="field">
-                  <label for="fullname" class="text-800">Full name</label>
+                  <label for="fullname" class="text-800">Full name*:</label>
                   <InputText
                     id="fullname"
                     v-model="donateData.fullname"
@@ -197,7 +197,7 @@ const resetForm = () => {
 
                 <div class="field">
                   <label for="idCardNumber" class="text-800"
-                    >Identify Card Number</label
+                    >Identify Card Number*:</label
                   >
                   <InputText
                     id="idCardNumber"
@@ -214,44 +214,46 @@ const resetForm = () => {
                     >{{ v$.idCardNumber.$errors[0].$message }}</small
                   >
                 </div>
-
-                <div
-                  class="field flex"
-                  :class="{ 'p-invalid': submitted && !donateData.gender }"
-                >
-                  <div class="field-radiobutton mr-3 text-800">
-                    <RadioButton
-                      id="male"
-                      name="gender"
-                      value="Male"
-                      v-model="donateData.gender"
-                    />
-                    <label for="male">Male</label>
-                  </div>
-                  <div class="field-radiobutton mr-3 text-800">
-                    <RadioButton
-                      id="female"
-                      name="gender"
-                      value="Female"
-                      v-model="donateData.gender"
-                    />
-                    <label for="female">Female</label>
-                  </div>
-                  <div class="field-radiobutton mr-3 text-800">
-                    <RadioButton
-                      id="other"
-                      name="gender"
-                      value="other"
-                      v-model="donateData.gender"
-                    />
-                    <label for="other">Other</label>
+                <div class="field">
+                  <label for="idCardNumber" class="text-800">Gender*:</label>
+                  <div
+                    class="field flex"
+                    :class="{ 'p-invalid': submitted && !donateData.gender }"
+                  >
+                    <div class="field-radiobutton mr-3 text-800">
+                      <RadioButton
+                        id="male"
+                        name="gender"
+                        value="Male"
+                        v-model="donateData.gender"
+                      />
+                      <label for="male">Male</label>
+                    </div>
+                    <div class="field-radiobutton mr-3 text-800">
+                      <RadioButton
+                        id="female"
+                        name="gender"
+                        value="Female"
+                        v-model="donateData.gender"
+                      />
+                      <label for="female">Female</label>
+                    </div>
+                    <div class="field-radiobutton mr-3 text-800">
+                      <RadioButton
+                        id="other"
+                        name="gender"
+                        value="other"
+                        v-model="donateData.gender"
+                      />
+                      <label for="other">Other</label>
+                    </div>
                   </div>
                   <small class="p-error" v-if="v$.gender.$error && submitted">{{
                     v$.gender.$errors[0].$message
                   }}</small>
                 </div>
                 <div class="field">
-                  <label for="dob" class="text-800">Birthday</label>
+                  <label for="dob" class="text-800">Date of birth*</label>
                   <Calendar
                     id="dob"
                     v-model="donateData.dob"
@@ -265,7 +267,7 @@ const resetForm = () => {
                   }}</small>
                 </div>
                 <div class="field">
-                  <label for="phone" class="text-800">Phone</label>
+                  <label for="phone" class="text-800">Phone*:</label>
                   <InputText
                     id="phone"
                     v-model.trim="donateData.phone"
@@ -278,7 +280,7 @@ const resetForm = () => {
                   }}</small>
                 </div>
                 <div class="field">
-                  <label for="email" class="text-800">Email</label>
+                  <label for="email" class="text-800">Email*:</label>
                   <InputText
                     id="email"
                     v-model.trim="donateData.email"
@@ -291,7 +293,7 @@ const resetForm = () => {
                   }}</small>
                 </div>
                 <div class="field">
-                  <label for="address" class="text-800">Address</label>
+                  <label for="address" class="text-800">Address*:</label>
                   <InputText
                     id="fullname"
                     v-model.trim="donateData.address"
@@ -320,7 +322,7 @@ const resetForm = () => {
                 </div>
 
                 <div class="field">
-                  <label class="mb-3 text-800">Medical history</label>
+                  <label class="mb-2 text-800">Medical history</label>
                   <div class="formgrid grid">
                     <div class="field-radiobutton col-6 text-800">
                       <Checkbox
