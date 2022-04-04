@@ -214,6 +214,7 @@ router.beforeEach(async (to, from, next) => {
         }
         next();
     } catch (err) {
+        console.log(err);
         if (!err.response) return next({ name: "Server Error" });
         if (err.response) {
             if (err.response.status === 401)
@@ -228,7 +229,7 @@ router.beforeEach(async (to, from, next) => {
 
 // Descriminate between admin and hospital account
 router.beforeEach((to, from, next) => {
-    if (to.meta.isGlobal) return next();
+    if (to.meta.isGlobal || to.name === "Login") return next();
 
     if (useUserStore().isAdmin && to.meta.isHospital) {
         return next({ name: "Unauthorized Error" });
