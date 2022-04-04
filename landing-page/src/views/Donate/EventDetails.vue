@@ -112,7 +112,7 @@ const handleSubmitForm = async () => {
     if (eventData.value.status === "passed") {
       toast.add({
         severity: "error",
-        summary: "Form Error",
+        summary: "Event Error",
         detail: "This event is passed, please choose another event!",
         life: 3000,
       });
