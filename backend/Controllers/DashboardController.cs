@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace backend.Controllers
         private readonly IDonorRepository _donorRepository;
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IRequestRepository _requestRepository;
-        
+
         public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
             IDonorTransactionRepository donorTransactionRepository)
         {
@@ -55,6 +56,7 @@ namespace backend.Controllers
                             id.date);
                         break;
                 }
+
                 result.Add(recentActivity);
                 if (result.Count == 5)
                 {
@@ -66,25 +68,41 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("utilities")]
-        public async Task<IActionResult> GetUtilities()
+        [Route("dashboardInfo")]
+        public async Task<IActionResult> GetDashboardInfo()
         {
+            var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var result = await GetBloodReceiveLastQuarter(currentTime);
+
             var totalBloodReceive = await GetTotalBloodReceive();
-            return new JsonResult(totalBloodReceive);
+            return new JsonResult(result);
         }
-        
+
         public async Task<double> GetTotalBloodReceive()
         {
             var transactions = await _donorTransactionRepository.GetTransactionByStatus(1);
             double total = transactions.Sum(transaction => transaction.amount);
             return total;
         }
-        
-        public async Task<double> GetBloodReceiveLastQuarter()
+
+        public async Task<double> GetBloodReceiveLastQuarter(long currentTime)
         {
+            var currentDate = DateTimeOffset.FromUnixTimeMilliseconds(currentTime).DateTime;
+            DateTimeOffset lastQuarter = currentDate.AddMonths(-3);
+            var lastUnixQuarter = lastQuarter.ToUnixTimeMilliseconds();
+
             var transactions = await _donorTransactionRepository.GetTransactionByStatus(1);
-            double total = transactions.Sum(transaction => transaction.amount);
-            return total;
+            var bloodReceiveLastQuarter = transactions.Where(transaction => long.Parse(transaction.dateDonated) >= lastUnixQuarter)
+                .Aggregate<DonorTransaction, double>(0, (current, transaction) => current + transaction.amount);
+
+            var totalBloodReceive = await GetTotalBloodReceive();
+            if (Math.Abs(totalBloodReceive - bloodReceiveLastQuarter) == 0)
+            {
+                return 0;
+            }
+            var percent = totalBloodReceive / (totalBloodReceive - bloodReceiveLastQuarter);
+            
+            return totalBloodReceive - bloodReceiveLastQuarter;
         }
     }
 }
