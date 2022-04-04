@@ -1,7 +1,8 @@
 Reject Participants
-Event Detail New API
-User Auth
-User Create
+Hospital Pages ...
+Event Detail New API X
+User Auth X
+User Create X
 
 
 ///
