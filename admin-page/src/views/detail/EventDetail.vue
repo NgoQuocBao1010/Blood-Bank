@@ -11,52 +11,6 @@ const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
 });
 
-// *** Mock data ***
-// const donorsData = [
-//     {
-//         _id: "800000100001",
-//         name: "Quoc Bao 1",
-//         blood: {
-//             name: "O",
-//             type: "Negative",
-//         },
-//         transaction: {
-//             _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
-//             eventDonated: {
-//                 _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
-//                 name: "event",
-//             },
-//             blood: {
-//                 name: "O",
-//                 type: "Negative",
-//             },
-//             amount: 500,
-//             dateDonated: new Date("2022-09-13").getTime(),
-//         },
-//     },
-//     {
-//         _id: "800000000001",
-//         name: "Quoc Bao",
-//         blood: {
-//             name: "A",
-//             type: "Positive",
-//         },
-//         transaction: {
-//             _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
-//             eventDonated: {
-//                 _id: "de169f18-226d-48e0-9579-b18184e2c260",
-//                 name: "event1",
-//             },
-//             blood: {
-//                 name: "A",
-//                 type: "Positive",
-//             },
-//             amount: 420,
-//             dateDonated: new Date("2022-09-13").getTime(),
-//         },
-//     },
-// ];
-// *** END of mock data **
 const props = defineProps({
     _id: String,
 });
@@ -163,12 +117,14 @@ onBeforeMount(async () => {
                             </li>
 
                             <!-- Participants -->
-                            <li v-if="event.participants">
-                                <b>Participants: </b>
-                                <span class="info">
-                                    {{ event.participants }} successful donors
+                            <b>Participants: </b>
+                            <span class="info">
+                                {{ event.participants }}
+                                <span v-if="event.status === 'upcoming'">
+                                    participants *
                                 </span>
-                            </li>
+                                <span v-else> donors</span>
+                            </span>
                         </ul>
 
                         <Divider>
