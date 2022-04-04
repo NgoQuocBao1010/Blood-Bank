@@ -46,7 +46,7 @@ namespace backend
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IDonorTransactionRepository, DonorTransactionRepository>();
             services.AddTransient<IEventSubmissionRepository, EventSubmissionRepository>();
-            
+
             //JWT Authentication
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"]);
             services.AddAuthentication(x =>

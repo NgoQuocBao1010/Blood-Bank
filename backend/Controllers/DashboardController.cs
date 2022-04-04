@@ -9,13 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace backend.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Route("api")]
+    [Authorize(Roles = "admin")]
     public class DashboardController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IRequestRepository _requestRepository;
-
+        
         public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
             IDonorTransactionRepository donorTransactionRepository)
         {
@@ -25,7 +26,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("api/recentActivities")]
+        [Route("recentActivities")]
         public async Task<IActionResult> GetRecentActivities()
         {
             var result = new List<RecentActivities>();
@@ -45,7 +46,7 @@ namespace backend.Controllers
                 {
                     case "transaction":
                         var donor = await _donorRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "Blood Donation", donor.name,
+                        recentActivity = new RecentActivities(id._id, "Blood Receive", donor.name,
                             id.date);
                         break;
                     case "request":
@@ -62,6 +63,28 @@ namespace backend.Controllers
             }
 
             return new JsonResult(result);
+        }
+
+        [HttpGet]
+        [Route("utilities")]
+        public async Task<IActionResult> GetUtilities()
+        {
+            var totalBloodReceive = await GetTotalBloodReceive();
+            return new JsonResult(totalBloodReceive);
+        }
+        
+        public async Task<double> GetTotalBloodReceive()
+        {
+            var transactions = await _donorTransactionRepository.GetTransactionByStatus(1);
+            double total = transactions.Sum(transaction => transaction.amount);
+            return total;
+        }
+        
+        public async Task<double> GetBloodReceiveLastQuarter()
+        {
+            var transactions = await _donorTransactionRepository.GetTransactionByStatus(1);
+            double total = transactions.Sum(transaction => transaction.amount);
+            return total;
         }
     }
 }
