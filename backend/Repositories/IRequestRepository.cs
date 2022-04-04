@@ -23,5 +23,7 @@ namespace backend.Repositories
         
         void ApproveRequest(Request request);
         void RejectRequest(Request request);
+
+        Task<IEnumerable<Request>> GetRequestByStatus(int status);
     }
 }

@@ -115,5 +115,13 @@ namespace backend.Repositories
                 .Set(r => r.RejectReason, request.RejectReason);
             await _request.UpdateOneAsync(filter, update);
         }
+        
+        public async Task<IEnumerable<Request>> GetRequestByStatus(int status)
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, status);
+            var request = await _request.Find(filter).ToListAsync();
+
+            return request;
+        }
     }
 }
