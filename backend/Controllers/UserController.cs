@@ -62,7 +62,11 @@ namespace backend.Controllers
                 // Execute login.
                 var token = _userRepository.Login(existedUser);
 
-                return Ok(new {token});
+                return Ok(new
+                {
+                    token,
+                    user = existedUser
+                });
             }
             catch (Exception e)
             {
