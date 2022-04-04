@@ -98,9 +98,9 @@ const handleSubmitForm = async () => {
   v$.value.$validate();
   if (!v$.value.$error) {
     // Format data before submit
-    donateData.dob = Math.floor(new Date(donateData.dob) / 1000).toString();
+    donateData.dob = new Date(donateData.dob).getTime().toString();
     donateData.latestDonationDate = donateData.latestDonationDate
-      ? (Math.floor(new Date(donateData.latestDonationDate)) / 1000).toString()
+      ? new Date(donateData.latestDonationDate).getTime().toString()
       : "";
 
     const data = {
