@@ -7,4 +7,7 @@ export default {
     searchByObjectById(id) {
         return Repository.get(`search/${id}`);
     },
+    getRecentActivities() {
+        return Repository.get(`recentActivities`);
+    },
 };

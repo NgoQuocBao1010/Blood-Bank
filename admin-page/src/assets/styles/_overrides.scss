@@ -286,6 +286,14 @@
 }
 
 .app-router-link-icon {
+    &.btn-icon-only {
+        aspect-ratio: 1 / 1;
+
+        i {
+            margin: 0 !important;
+        }
+    }
+
     i {
         margin-right: 0.5rem;
     }
