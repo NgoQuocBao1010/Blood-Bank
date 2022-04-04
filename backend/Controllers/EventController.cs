@@ -58,7 +58,7 @@ namespace backend.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery] string? status)
+        public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery(Name = "now")] string? time)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var e = await _eventRepository.Get(id);
@@ -66,7 +66,8 @@ namespace backend.Controllers
             {
                 return NotFound("Cannot find any Event from this _id");
             }
-            if (status is "upcoming")
+
+            if (time != null && long.Parse(time) < long.Parse(e.startDate))
             {
                 var eventSubmission = await _eventSubmissionRepository.GetByEvent(id);
                 e.participants = eventSubmission.Count();
@@ -76,7 +77,8 @@ namespace backend.Controllers
                 var transactions = await _donorTransactionRepository.GetByEvent(id);
                 e.participants = transactions.Count();
             }
-            
+
+
             return new JsonResult(e);
         }
 

@@ -92,7 +92,6 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetInfo(string id)
         {
-            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var donor = await _donorRepository.Get(id);
             if (donor == null)
             {
@@ -112,7 +111,7 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, 0);
+            var listTransaction = await _donorTransactionRepository.GetTransactionByDonorAndStatus(donor._id, 0);
             foreach (var transaction in listTransaction)
             {
                 donor.transaction = transaction;
@@ -142,7 +141,7 @@ namespace backend.Controllers
             foreach (var donor in enumerable)
             {
                 var tempDonor = await _donorRepository.Get(donor._id);
-                var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, 0);
+                var listTransaction = await _donorTransactionRepository.GetTransactionByDonorAndStatus(donor._id, 0);
                 foreach (var transaction in listTransaction)
                 {
                     tempDonor.transaction = transaction;
@@ -196,7 +195,7 @@ namespace backend.Controllers
             foreach (var donor in listDonors)
             {
                 var tempDonor = await _donorRepository.Get(donor._id);
-                var listTransaction = await _donorTransactionRepository.GetTransactionByStatus(donor._id, -1);
+                var listTransaction = await _donorTransactionRepository.GetTransactionByDonorAndStatus(donor._id, -1);
                 foreach (var transaction in listTransaction)
                 {
                     tempDonor.transaction = transaction;
@@ -212,8 +211,6 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Donor donor)
         {
-            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
-
             var result = await _donorRepository.Update(id, donor);
             if (!result)
             {
@@ -225,7 +222,6 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var result = await _donorRepository.Delete(id);
             if (!result)
             {
