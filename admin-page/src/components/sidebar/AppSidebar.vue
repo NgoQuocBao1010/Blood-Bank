@@ -11,12 +11,12 @@ const adminMenu = [
             {
                 label: "Dashboard",
                 icon: "pi pi-fw pi-home",
-                to: "/",
+                to: userStore.defaultPage,
             },
             {
                 label: "Users",
                 icon: "fa-solid fa-user pi-fw",
-                to: userStore.defaultPage,
+                to: { name: "Users Management" },
             },
         ],
     },
