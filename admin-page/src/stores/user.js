@@ -10,7 +10,8 @@ export const useUserStore = defineStore("user", {
                 ? localStorage.getItem("userToken")
                 : null,
             email: null,
-            role: null,
+            isAdmin: null,
+            hospitalId: null,
             isLoggedIn: false,
         };
     },
@@ -19,14 +20,22 @@ export const useUserStore = defineStore("user", {
             this.token = authToken;
             localStorage.setItem("userToken", this.token);
         },
-        verifyToken() {
-            if (this.token) {
-                this.email = "admin@gmail.com";
-                this.isLoggedIn = true;
+        async verifyToken() {
+            try {
                 useLocalToken();
+                const { data, status } = await UserRepo.verifyToken();
+                console.log(data);
+                if (data && status === 200) {
+                    this.isLoggedIn = true;
+                    this.email = data.email;
+                    this.isAdmin = data.isAdmin;
+                    this.hospitalId = data.hospital_id;
+                }
+            } catch (e) {
+                console.log(e.response);
+                this.logout();
+                throw e;
             }
-
-            return this.token ? false : true;
         },
         async login(email, password) {
             const { data } = await UserRepo.getToken(email, password);

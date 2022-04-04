@@ -51,6 +51,7 @@ app.config.errorHandler = (err, instance, info) => {
     }
 
     if (err.response) {
+        console.log("FROM MAIN.JS", err.response);
         if (err.response.status === 500) router.push({ name: "Server Error" });
         else if (err.response.status === 401)
             router.push({ name: "Unauthorized Error" });

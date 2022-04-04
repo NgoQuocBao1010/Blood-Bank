@@ -201,34 +201,25 @@ const router = createRouter({
 });
 
 // Verify if user is logged in
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const user = useUserStore();
-    if (!user.isLoggedIn) user.verifyToken();
-
-    next();
-});
-
-// Force logout user when there is unauth action
-router.beforeEach((to, from, next) => {
-    if (to.name === "Unauthorized Error") useUserStore().logout();
-
-    next();
+    try {
+        if (!user.isLoggedIn && !to.meta.unguard) {
+            await user.verifyToken();
+        }
+        next();
+    } catch (err) {
+        if (err.response && err.response.status === 401) {
+            return next({ name: "Unauthorized Error" });
+        }
+    }
 });
 
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
-    if (to.name === "Login" && useUserStore().isLoggedIn) {
+    if (to.name === "Login" && useUserStore().token) {
         return next({ name: from.name ? from.name : "Dashboard" });
     }
-    next();
-});
-
-// Prevent unauth user to access to admin pages
-router.beforeEach((to, from, next) => {
-    if (!to.meta.unguard && !useUserStore().isLoggedIn) {
-        return next({ name: "Unauthorized Error" });
-    }
-
     next();
 });
 

@@ -1,25 +1,25 @@
-- [Search Keyword by _id](#search-keyword-by-_id)
-- [Donors API](#donors-api)
-- [DonorTransaction API](#donortransaction-api)
-- [Participants API](#participants-api)
-- [Events](#events)
-- [Blood](#blood)
-- [User](#user)
-- [Event Submission](#event-submission)
-- [Hospital](#hospital)
-- [Hospital Request](#hospital-request)
+-   [Search Keyword by \_id](#search-keyword-by-_id)
+-   [Donors API](#donors-api)
+-   [DonorTransaction API](#donortransaction-api)
+-   [Participants API](#participants-api)
+-   [Events](#events)
+-   [Blood](#blood)
+-   [User](#user)
+-   [Event Submission](#event-submission)
+-   [Hospital](#hospital)
+-   [Hospital Request](#hospital-request)
 
-## Search Keyword by _id
-1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{_id}
+## Search Keyword by \_id
+
+1. GET an object (Donor, DonorTransaction, Event) -> Endpoint: api/search/{\_id}
     ```
     return JSON
     ```
     if id is invalid, return 404 Not Found error
 
-
 ## Donors API
 
-1. GET list successful donors, expected JSON return:  -> Endpoint: api/Donor/success
+1. GET list successful donors, expected JSON return: -> Endpoint: api/Donor/success
 
     ```
     {
@@ -36,8 +36,8 @@
         }
     }
     ```
-    
-2. GET data of a donor, expected JSON return:  -> Endpoint: api/Donor/{_id} (id of a donor)
+
+2. GET data of a donor, expected JSON return: -> Endpoint: api/Donor/{\_id} (id of a donor)
 
     ```
     {
@@ -54,8 +54,8 @@
         }
     }
     ```
-    
-3. GET list failure donors, expected JSON return:  -> Endpoint: api/Donor/failure
+
+3. GET list failure donors, expected JSON return: -> Endpoint: api/Donor/failure
 
     ```
     [
@@ -90,10 +90,10 @@
         },
     ]
     ```
-    
+
 ## DonorTransaction API
 
-1. GET list donation of a donor, expected JSON return:  -> Endpoint: api/DonorTransaction/listDonation/{_id}  (id of donor)
+1. GET list donation of a donor, expected JSON return: -> Endpoint: api/DonorTransaction/listDonation/{\_id} (id of donor)
 
     ```
     {
@@ -113,7 +113,7 @@
 
 ## Participants API
 
-1. GET paticipants waiting for approved (Pending -> status: 0)     -> Endpoint: api/Donor
+1. GET paticipants waiting for approved (Pending -> status: 0) -> Endpoint: api/Donor
 
     ```
     [
@@ -174,8 +174,8 @@
         ]
     }
     ```
-    
 3. PUT participants waiting for approved -> Endpoint: api/DonorTransaction/approve
+
     ```
     [
         {
@@ -196,7 +196,6 @@
     ]
     ```
 
-
 ## Events
 
 1. GET events data -> Endpoint: api/Event
@@ -213,8 +212,7 @@
         detail
     }
     ```
-    
-2. GET an event data -> Endpoint: api/Event/{_id}
+2. GET an event data -> Endpoint: api/Event/{\_id}
     ```
     {
         _id,
@@ -229,10 +227,9 @@
         participants
     }
     ```
-    
-3. GET an event data with query parameter -> Endpoint: api/Event/{_id}/?status=upcoming
+3. GET an event data with query parameter -> Endpoint: api/Event/{\_id}/?status=upcoming
 
-- For checking the infomation of an upcoming Event 
+-   For checking the infomation of an upcoming Event
     ```
     {
         _id,
@@ -247,7 +244,7 @@
         participants
     }
     ```
-    
+
 4. POST events data -> Endpoint: api/Event
     ```
     {
@@ -261,15 +258,13 @@
         detail
     }
     ```
-    
-5. DELETE events data -> Endpoint: api/Event/{_id}
+5. DELETE events data -> Endpoint: api/Event/{\_id}
 
     ```
     Return true if delete success
     ```
 
-
-6. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{_id}  (id of Event)
+6. GET list participants of an Event -> Endpoint: api/Event/listParticipants/{\_id} (id of Event)
     ```
     [
         {
@@ -304,7 +299,6 @@
     ]
     ```
 
-    
 ## Blood
 
 1. GET blood data -> Endpoint: api/Blood
@@ -316,19 +310,36 @@
         quantity: int
     }
     ```
-    
+
 ## User
 
 1. POST user login -> Endpoint: api/user/login
+
     ```
     {
         "email": "string",
         "password": "string"
     }
     ```
+
     Return token when login success.
 
-2. GET all user -> Endpoint: api/user
+1. GET user from token -> Endpoint: api/user/verify:
+
+    ```
+
+    {
+        "_id": "string",
+        "email": "string",
+        "password": "string",
+        "isAdmin": boolean,
+        "hospital_id": "string"
+    }
+
+    ```
+
+1. GET all user -> Endpoint: api/user
+
     ```
     [
         {
@@ -341,7 +352,8 @@
     ]
     ```
 
-3. GET user by id -> Endpoint: api/user/{id}
+1. GET user by id -> Endpoint: api/user/{id}
+
     ```
     {
         "_id": "string",
@@ -352,7 +364,8 @@
     }
     ```
 
-4. POST create user -> Endpoint: api/user
+1. POST create user -> Endpoint: api/user
+
     ```
     {
         "email": "string",
@@ -362,14 +375,15 @@
     }
     ```
 
-5. DELETE user by id -> Endpoint: api/user/{id}
+1. DELETE user by id -> Endpoint: api/user/{id}
     ```
     Return true if delete success
-   ```
+    ```
 
 ## Event Submission
 
 1. GET all event submission -> Endpoint: api/eventSubmission
+
     ```
     [
         {
@@ -388,6 +402,7 @@
     ```
 
 2. GET event submission by id -> Endpoint: api/eventSubmission/{id}
+
     ```
     {
         "_id": "string",
@@ -425,6 +440,7 @@
 ## Hospital
 
 1. GET all hospital -> Endpoint: api/hospital
+
     ```
     [
         {
@@ -437,6 +453,7 @@
     ```
 
 2. GET hospital by id -> Endpoint: api/hospital/{id}
+
     ```
     {
         "_id": "string",
@@ -447,6 +464,7 @@
     ```
 
 3. POST create hospital -> Endpoint: api/hospital
+
     ```
     {
         "name": "string",
@@ -456,6 +474,7 @@
     ```
 
 4. PUT edit hospital -> Endpoint: api/hospital/{id}
+
     ```
     {
         "name": "string",
@@ -463,6 +482,7 @@
         "phone": "string"
     }
     ```
+
     Return **true** if update success.
 
 5. DELETE hospital by id -> Endpoint: api/hospital/{id}
@@ -473,6 +493,7 @@
 ## Hospital Request
 
 1. GET all hospital request -> Endpoint: api/request
+
     ```
     [
         {
@@ -492,6 +513,7 @@
     ```
 
 2. GET hospital by id -> Endpoint: api/request/{id}
+
     ```
     {
         "_id": "string",
@@ -509,6 +531,7 @@
     ```
 
 3. POST create request -> Endpoint: api/request
+
     ```
     {
         "_id": "string",
@@ -523,11 +546,13 @@
     ```
 
 4. DELETE request by id -> Endpoint: api/request/{id}
+
     ```
     Return true if delete success
     ```
 
 5. PUT approve request -> Endpoint: api/request/approve
+
     ```
     [
         {
@@ -535,6 +560,7 @@
         }
     ]
     ```
+
     Return status 200 if success. Error will return 400 bad request status.
 
 6. PUT reject request -> Endpoint: api/request/reject

@@ -40,8 +40,8 @@ namespace backend.Controllers
                 Console.WriteLine(e);
                 return e.Message switch
                 {
-                    "deleted" => BadRequest("User was deleted!"),
-                    _ => BadRequest("User ID error!")
+                    "deleted" => Unauthorized("User was deleted!"),
+                    _ => Unauthorized("User ID error!")
                 };
             }
         }
