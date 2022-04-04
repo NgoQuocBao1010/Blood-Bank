@@ -242,6 +242,29 @@
     width: 250px;
 }
 
+// Input Switch
+.p-inputswitch.p-focus {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.p-inputswitch.p-focus .p-inputswitch-slider {
+    background-color: rgba(var(--primary-color-rbg), 0.1);
+}
+
+.p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover
+    .p-inputswitch-slider {
+    background-color: var(--secondary-color);
+}
+
+.p-inputswitch.p-focus .p-inputswitch-slider {
+    box-shadow: none;
+}
+
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: var(--primary-color);
+}
+
 // ** My custom css
 .app-highlight {
     font-weight: bold;
