@@ -1,125 +1,201 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-        private readonly IConfiguration _configuration;
+        private readonly IHospitalRepository _hospitalRepository;
 
-        public UserController(IUserRepository userRepository, IConfiguration configuration)
+        public UserController(IUserRepository userRepository, IHospitalRepository hospitalRepository)
         {
             _userRepository = userRepository;
-            _configuration = configuration;
+            _hospitalRepository = hospitalRepository;
         }
-        
+
+        [HttpGet("verify")]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyToken()
+        {
+            try
+            {
+                var userId = User.Claims.First(c => c.Type == "UserID").Value;
+                var existUser = await _userRepository.Get(userId);
+                if (existUser == null) throw new Exception("deleted");
+
+                return Ok(existUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return e.Message switch
+                {
+                    "deleted" => Unauthorized("User was deleted!"),
+                    _ => Unauthorized("User ID error!")
+                };
+            }
+        }
 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(User user)
         {
-            var existedUser = await _userRepository.GetByEmail(user.email);
-
-            // Wrong email or password.
-            if (existedUser == null)
-                return BadRequest("Wrong email!");
-            if (!_userRepository.CheckUserPassword(existedUser, user.password))
-                return BadRequest("Wrong password!");
-
-            // Execute login.
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new("UserID", existedUser._id)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials =
-                    new SigningCredentials(
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(_configuration["ApplicationSettings:JWT_Secret"])),
-                        SecurityAlgorithms.HmacSha256Signature)
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
-            return Ok(new {token});
+                // Check wrong email or password.
+                var existedUser = await _userRepository.GetByEmail(user.email);
+                if (existedUser == null)
+                    return BadRequest("Wrong email!");
+                if (!_userRepository.CheckUserPassword(existedUser, user.password))
+                    return BadRequest("Wrong password!");
+
+                // Execute login.
+                var token = _userRepository.Login(existedUser);
+
+                return Ok(new {token});
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Login error!");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {
-            var exist = await _userRepository.CheckUserEmail(user.email);
-            var id = "";
-            if (!exist)
+            try
             {
-                if (user.isAdmin)
+                // Check exist user account.
+                var existUser = await _userRepository.CheckUserEmail(user.email);
+                if (existUser)
+                    return BadRequest("Email existed!");
+
+                // Set role for admin if success.
+                user.isAdmin = true;
+
+                // Check create admin account. If not check existed hospital account.
+                if (user.hospitalId != null)
                 {
-                    user.hospital_id = null;
+                    // Check exist hospital.
+                    var existHospital = await _hospitalRepository.Get(user.hospitalId);
+                    if (existHospital == null)
+                        return BadRequest("Invalid hospital ID!");
+
+                    // Check duplicate hospital user.
+                    var existHospitalUser = await _userRepository.CheckHospitalId(user.hospitalId);
+                    if (existHospitalUser)
+                        return BadRequest("Hospital account existed!");
+
+                    // Set role for hospital if success.
+                    user.isAdmin = false;
                 }
 
-                id = await _userRepository.Create(user);
-            }
-            else
-            {
-                id = "User Exists!";
-            }
+                // Generate password and create account if success.
+                user.password = _userRepository.GeneratePassword(8);
+                var newUser = await _userRepository.Create(user);
 
-            return new JsonResult(id);
+                return Ok(new
+                {
+                    newUser.email,
+                    newUser.password
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest("Create user error!");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var user = await _userRepository.Get(id);
-            if (user == null)
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+            try
             {
-                return NotFound();
-            }
+                var user = await _userRepository.Get(id);
+                if (user == null)
+                {
+                    throw new Exception();
+                }
 
-            return new JsonResult(user);
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest("User id error!");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var user = await _userRepository.Get();
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = await _userRepository.Get();
+                if (user == null)
+                {
+                    throw new Exception();
+                }
 
-            return new JsonResult(user);
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Get user error!");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, User user)
         {
-            var result = await _userRepository.Update(id, user);
-            return new JsonResult(result);
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+            try
+            {
+                var exist = await _userRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
+                var result = await _userRepository.Update(id, user);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest("User id error!");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await _userRepository.Delete(id);
-            return new JsonResult(result);
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+            try
+            {
+                var exist = await _userRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
+                var result = await _userRepository.Delete(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest("User id error!");
+            }
         }
     }
 }

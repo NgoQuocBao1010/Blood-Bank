@@ -51,16 +51,13 @@ app.config.errorHandler = (err, instance, info) => {
     }
 
     if (err.response) {
+        console.log("FROM MAIN.JS", err.response);
         if (err.response.status === 500) router.push({ name: "Server Error" });
-        else if (err.response.status === 405)
-            router.push({ name: "Server Error" });
+        else if (err.response.status === 401)
+            router.push({ name: "Unauthorized Error" });
         else if (err.response.status === 404)
             router.push({ name: "404 Error" });
         return;
     }
     throw err;
-
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ err", err);
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ info", info);
-    // console.log("🚀 ~ file: main.js ~ line 41 ~ instance", instance);
 };

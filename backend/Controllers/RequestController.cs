@@ -5,12 +5,13 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin, hospital")]
     public class RequestController : ControllerBase
     {
         private readonly IRequestRepository _requestRepository;
@@ -45,6 +46,7 @@ namespace backend.Controllers
                         -existRequest.Quantity);
                     _requestRepository.ApproveRequest(request);
                 }
+
                 return Ok("Approve request successfully!");
             }
             catch (Exception e)
@@ -71,6 +73,7 @@ namespace backend.Controllers
 
                     _requestRepository.RejectRequest(request);
                 }
+
                 return Ok("Reject request successfully!");
             }
             catch (Exception e)
@@ -103,6 +106,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var result = await _requestRepository.Get(id);
@@ -143,6 +147,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Request request)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _requestRepository.Get();
@@ -164,6 +169,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _requestRepository.Get();

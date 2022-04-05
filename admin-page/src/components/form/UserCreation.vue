@@ -3,7 +3,6 @@ import InputText from "primevue/inputtext";
 import RadioButton from "primevue/radiobutton";
 import Dropdown from "primevue/dropdown";
 import Divider from "primevue/divider";
-import Dialog from "primevue/dialog";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required, email } from "@vuelidate/validators";
@@ -15,10 +14,11 @@ import { watch } from "vue";
 
 const userStore = useUserStore();
 const toast = useToast();
+const emits = defineEmits(["onNewAccount"]);
 
 // Formdata and Validalation rules
 let formData = $ref({
-    newEmail: "",
+    email: "",
     isAdmin: true,
     hospitalId: "Fallback Value",
     verifyInfo: {
@@ -28,7 +28,7 @@ let formData = $ref({
 });
 const formRules = $computed(() => {
     return {
-        newEmail: {
+        email: {
             required: helpers.withMessage("This field is required", required),
             email: helpers.withMessage("Please provide a valid email", email),
         },
@@ -42,10 +42,6 @@ const formRules = $computed(() => {
         },
     };
 });
-const resultData = $ref({
-    show: false,
-    password: "GadCVV",
-});
 
 let hosiptals = $ref(null);
 watch(
@@ -54,7 +50,6 @@ watch(
         if (newValue) return;
         if (hosiptals) return;
 
-        console.log("Getting hospital");
         const { data } = await HospitalRepo.getAll();
         hosiptals = data;
         formData.hospitalId = hosiptals[0]._id;
@@ -62,6 +57,7 @@ watch(
 );
 
 const $v = $(useVuelidate(formRules, formData));
+let badRequestMsg = $ref("");
 let submitting = $ref(false);
 const submitData = async () => {
     // Form validation
@@ -87,6 +83,29 @@ const submitData = async () => {
         submitting = false;
         return;
     }
+
+    try {
+        let postData = null;
+        if (formData.isAdmin) postData = { email: formData.email };
+        else
+            postData = {
+                email: formData.email,
+                hospitalId: formData.hospitalId,
+            };
+
+        const { data, status } = await UserRepo.createAccount(postData);
+
+        if (data && status === 200) {
+            emits("onNewAccount", data);
+        }
+    } catch (e) {
+        if (e.response && e.response.status === 400) {
+            if (e.response.data === "Email existed!")
+                badRequestMsg = "Email is invalid! Please try another one!";
+        }
+    } finally {
+        submitting = false;
+    }
 };
 
 const verifyAccount = async (email, password) => {
@@ -108,15 +127,6 @@ const verifyAccount = async (email, password) => {
         throw e;
     }
 };
-
-const copy = (value) => {
-    navigator.clipboard.writeText(value);
-    toast.add({
-        severity: "info",
-        summary: "Copied to clipboard",
-        life: 3000,
-    });
-};
 </script>
 
 <template>
@@ -130,14 +140,17 @@ const copy = (value) => {
             <div class="field col-12 md:col-6">
                 <label for="new-account">New Account</label>
                 <InputText
-                    v-model="formData.newEmail"
+                    v-model="formData.email"
                     id="new-account"
                     placeholder="Enter the email for new account"
                     type="text"
-                    :class="{ 'p-invalid': $v.newEmail.$error }"
+                    :class="{ 'p-invalid': $v.email.$error || badRequestMsg }"
                 />
-                <span v-if="$v.newEmail.$error" class="app-form-error">
-                    {{ $v.newEmail.$errors[0].$message }}
+                <span v-if="$v.email.$error" class="app-form-error">
+                    {{ $v.email.$errors[0].$message }}
+                </span>
+                <span v-if="badRequestMsg" class="app-form-error">
+                    {{ badRequestMsg }}
                 </span>
             </div>
 
@@ -233,87 +246,7 @@ const copy = (value) => {
                 />
             </div>
         </div>
-
-        <!-- Pop up dialog to reveal information -->
-        <Dialog
-            header="New Account Has Been Created"
-            v-model:visible="resultData.show"
-            :style="{ width: '50vw' }"
-            :modal="true"
-        >
-            <p class="info">
-                <i class="fa-solid fa-envelope"></i>
-                {{ formData.newEmail }}
-
-                <button
-                    v-ripple
-                    class="p-ripple copy-btn"
-                    v-tooltip.top="'Copy email to clipboard'"
-                    @click="copy(formData.newEmail)"
-                >
-                    <i class="fa-solid fa-clone"></i>
-                </button>
-            </p>
-            <p class="info password">
-                <i class="fa-solid fa-lock"></i>
-                {{ resultData.password }}
-
-                <button
-                    v-ripple
-                    class="p-ripple copy-btn"
-                    v-tooltip.top="'Copy password to clipboard'"
-                    @click="copy(resultData.password)"
-                >
-                    <i class="fa-solid fa-clone"></i>
-                </button>
-            </p>
-
-            <template #footer>
-                <PrimeVueButton
-                    label="Close"
-                    icon="pi pi-times"
-                    @click="resultData.show = false"
-                />
-            </template>
-        </Dialog>
     </div>
 </template>
 
-<style lang="scss" scoped>
-.info {
-    margin-top: 1rem;
-    padding: 1rem;
-    color: #fff;
-    background: rgba(var(--primary-color-rbg), 0.8);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-
-    &.password {
-        background-color: rgb(124, 178, 196);
-    }
-
-    > i {
-        font-size: 1.2rem;
-        margin-right: 1rem;
-    }
-
-    .copy-btn {
-        margin-left: auto;
-        color: lightgray;
-        background: #fff;
-        border: none;
-        border-radius: 1000px;
-        aspect-ratio: 1 / 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        i {
-            font-size: 1.2rem;
-            padding: 0.3rem;
-        }
-    }
-}
-</style>
+<style lang="scss" scoped></style>

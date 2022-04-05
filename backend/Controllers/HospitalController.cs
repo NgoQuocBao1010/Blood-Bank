@@ -6,12 +6,13 @@ using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
@@ -20,7 +21,6 @@ namespace backend.Controllers
         {
             _hospitalRepository = hospitalRepository;
         }
-        
 
         [HttpPost]
         public async Task<IActionResult> Create(Hospital hospital)
@@ -32,6 +32,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
@@ -72,8 +73,15 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Hospital hospital)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Update(id, hospital);
                 return Ok(result);
             }
@@ -87,8 +95,15 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
+                var exist = await _hospitalRepository.Get(id);
+                if (exist == null)
+                {
+                    throw new Exception();
+                }
+
                 var result = await _hospitalRepository.Delete(id);
                 return Ok(result);
             }

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,14 +58,16 @@ namespace backend.Controllers
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery] string? status)
+        public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery(Name = "now")] string? time)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var e = await _eventRepository.Get(id);
             if (e == null)
             {
-                return BadRequest("Cannot find any Event from this _id");
+                return NotFound("Cannot find any Event from this _id");
             }
-            if (status is "upcoming")
+
+            if (time != null && long.Parse(time) < long.Parse(e.startDate))
             {
                 var eventSubmission = await _eventSubmissionRepository.GetByEvent(id);
                 e.participants = eventSubmission.Count();
@@ -74,7 +77,8 @@ namespace backend.Controllers
                 var transactions = await _donorTransactionRepository.GetByEvent(id);
                 e.participants = transactions.Count();
             }
-            
+
+
             return new JsonResult(e);
         }
 
@@ -82,6 +86,12 @@ namespace backend.Controllers
         [HttpGet("listParticipants/{id}")]
         public async Task<IActionResult> GetListParticipants(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+            var e = await _eventRepository.Get(id);
+            if (e == null)
+            {
+                return NotFound("Cannot find any Event from this _id");
+            }
             var result = new List<Donor>();
             var listDonor = await _donorRepository.Get();
             foreach (var donor in listDonor)
@@ -95,11 +105,6 @@ namespace backend.Controllers
                 result.Add(tempDonor);
             }
 
-            if (!result.Any())
-            {
-                return NotFound();
-            }
-
             var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
 
             return new JsonResult(sortResult);
@@ -108,6 +113,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Event e)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _eventRepository.Get(id);
@@ -124,11 +130,14 @@ namespace backend.Controllers
                 Console.WriteLine(exception);
                 return BadRequest("Event ID error");
             }
+
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
+
             try
             {
                 var exist = await _eventRepository.Get(id);

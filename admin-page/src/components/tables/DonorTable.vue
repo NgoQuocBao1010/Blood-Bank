@@ -27,6 +27,10 @@ const { donorsData, participants } = defineProps({
         type: Boolean,
         default: false,
     },
+    isReject: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 let donors = $ref(null);
@@ -60,6 +64,10 @@ const initFilter = () => {
         "transaction.amount": {
             value: null,
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
+        },
+        "transaction.rejectReason": {
+            value: null,
+            matchMode: FilterMatchMode.CONTAINS,
         },
     };
 };
@@ -96,8 +104,12 @@ const downloadExcel = () => {
         });
         return;
     }
-    const excelData = DonorsHelpers.transformRowsBeforeExcel(donorsData);
-    JSONtoExcel(excelData, "Pending_Donors");
+    const excelData = DonorsHelpers.transformRowsForExcelDownload(donorsData);
+
+    JSONtoExcel(
+        excelData,
+        participants ? "Pending_Donors" : "Event_Participants"
+    );
 };
 
 let newParticipants = $ref({
@@ -129,7 +141,7 @@ const importExcel = async () => {
 
     const excelData = await excelToJson(newParticipants.files);
     newParticipants.listParticipants =
-        DonorsHelpers.reformAfterExcel(excelData);
+        DonorsHelpers.reformAfterExcelImport(excelData);
     selectEventsDialog = false;
 
     const { data, status } = await DonorRepo.importParticipants(
@@ -220,6 +232,7 @@ const handleParticipants = async () => {
             'transaction.blood.name',
             'transaction.blood.type',
             'transaction.amount',
+            'transaction.rejectReason',
         ]"
     >
         <!-- Header of the table -->
@@ -312,6 +325,28 @@ const handleParticipants = async () => {
                     @keydown.enter="filterCallback()"
                     class="p-column-filter"
                     :placeholder="`Search by ID`"
+                    v-tooltip.top.focus="'Press enter key to filter'"
+                />
+            </template>
+        </PrimeVueColumn>
+
+        <!-- Reject Reason -->
+        <PrimeVueColumn
+            field="transaction.rejectReason"
+            header="Reject Reason"
+            style="min-width: 300px"
+            v-if="isReject"
+        >
+            <template #body="{ data }">
+                {{ data.transaction.rejectReason }}
+            </template>
+            <template #filter="{ filterModel, filterCallback }">
+                <InputText
+                    type="text"
+                    v-model="filterModel.value"
+                    @keydown.enter="filterCallback()"
+                    class="p-column-filter"
+                    :placeholder="`Search keyword`"
                     v-tooltip.top.focus="'Press enter key to filter'"
                 />
             </template>
@@ -473,6 +508,7 @@ const handleParticipants = async () => {
                 label="Reject"
                 class="p-button p-button-sm reject-btn"
                 @click="openConfirmDialog(false)"
+                v-if="!isReject"
             />
         </template>
     </PrimeVueTable>

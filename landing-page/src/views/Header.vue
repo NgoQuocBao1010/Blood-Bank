@@ -1,6 +1,5 @@
 <script setup>
 import TabMenu from "primevue/tabmenu";
-import { useRouter } from "vue-router";
 
 const items = [
   { label: "HOME", to: "/" },

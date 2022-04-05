@@ -1,18 +1,15 @@
 import Repository from "./Repository";
-import { useLocalToken } from "./helpers";
 
 const resource = "/Request";
 
 export default {
-  getAll() {
-    useLocalToken();
-    return Repository.get(`${resource}/`);
-  },
+    getAll() {
+        return Repository.get(`${resource}/`);
+    },
 
-  get(id) {
-    useLocalToken();
-    return Repository.get(`${resource}/${id}/`);
-  },
+    get(id) {
+        return Repository.get(`${resource}/${id}/`);
+    },
 
   post(params) {
     useLocalToken();

@@ -30,10 +30,8 @@ onBeforeMount(() => {
     transaction.dateDonated = new Date(parseInt(transaction.dateDonated));
     transaction.status = DonorTransactionHelper.determineStatus(transaction);
 
-    return transaction;
-  });
-
-  console.log(transactions);
+        return transaction;
+    });
 });
 
 // Filter configurations

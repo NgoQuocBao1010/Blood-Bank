@@ -2,14 +2,8 @@
 import Chart from "primevue/chart";
 import Menu from "primevue/menu";
 
+import RecentActivities from "../components/dashboard/Recent.vue";
 import { THEMES } from "../constants/index.js";
-
-// Activitiy data
-let activities = $ref([
-    { type: "Blood Donation", detail: "Bui Quoc Trong", date: "11-05-2021" },
-    { type: "Blood Donation", detail: "Quoc Bao", date: "10-10-2021" },
-    { type: "Blood Donated", detail: "Hospital Cho Ray", date: "01-01-2021" },
-]);
 
 // Chart data
 let data = $ref({
@@ -151,34 +145,7 @@ let menuItems = $ref([
         <!-- Recent Activities && Blood Type Storage -->
         <div class="col-12 xl:col-6">
             <!-- Activity table -->
-            <div class="card">
-                <h5>Recent Activites</h5>
-                <PrimeVueTable
-                    :value="activities"
-                    :rows="5"
-                    :paginator="true"
-                    responsiveLayout="scroll"
-                >
-                    <PrimeVueColumn field="type" header="Type"></PrimeVueColumn>
-                    <PrimeVueColumn
-                        field="detail"
-                        header="Detail"
-                        :sortable="true"
-                    ></PrimeVueColumn>
-                    <PrimeVueColumn field="date" header="Date" :sortable="true">
-                    </PrimeVueColumn>
-                    <PrimeVueColumn>
-                        <template #header> View </template>
-                        <template #body>
-                            <PrimeVueButton
-                                icon="pi pi-search"
-                                type="button"
-                                class="p-button-text"
-                            ></PrimeVueButton>
-                        </template>
-                    </PrimeVueColumn>
-                </PrimeVueTable>
-            </div>
+            <RecentActivities />
 
             <!-- Blood Type Storage -->
             <div class="card">

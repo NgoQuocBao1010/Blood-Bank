@@ -1,40 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class EventSubmissionController : ControllerBase
     {
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
+        private readonly IEventRepository _eventRepository;
 
-        public EventSubmissionController(IEventSubmissionRepository eventSubmissionRepository)
+        public EventSubmissionController(IEventSubmissionRepository eventSubmissionRepository,
+            IEventRepository eventRepository)
         {
             _eventSubmissionRepository = eventSubmissionRepository;
+            _eventRepository = eventRepository;
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create(EventSubmission eventSubmission)
         {
             try
             {
-                var existEventSubmission = await _eventSubmissionRepository.Get(eventSubmission.EventId);
+                var existEventSubmission = await _eventRepository.Get(eventSubmission.EventId);
                 if (existEventSubmission == null) throw new Exception();
 
                 var result = await _eventSubmissionRepository.Create(eventSubmission);
                 return Ok(new {id = result});
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event ID error!");
             }
         }
@@ -42,6 +44,7 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var result = await _eventSubmissionRepository.Get(id);
@@ -52,9 +55,8 @@ namespace backend.Controllers
 
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -72,9 +74,8 @@ namespace backend.Controllers
 
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -82,6 +83,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, EventSubmission eventSubmission)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _eventSubmissionRepository.Get();
@@ -89,13 +91,12 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                
+
                 var result = await _eventSubmissionRepository.Update(id, eventSubmission);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
@@ -103,6 +104,7 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             try
             {
                 var exist = await _eventSubmissionRepository.Get();
@@ -110,13 +112,12 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                
+
                 var result = await _eventSubmissionRepository.Delete(id);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Event Submission ID error!");
             }
         }
