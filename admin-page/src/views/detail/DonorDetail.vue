@@ -1,51 +1,27 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTransactionRepo from "../../api/DonorTransaction";
 import { formatDate } from "../../utils";
 
-// *** Mock data ***
-const transactionData = [
-    {
-        _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
-        _event: {
-            _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
-            name: "event",
-        },
-        amount: 500,
-        dateDonated: new Date("2021-09-13").getTime().toString(),
-    },
-    {
-        _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
-        _event: {
-            _id: "de169f18-226d-48e0-9579-b18184e2c260",
-            name: "event1",
-        },
-        amount: 420,
-        dateDonated: new Date("2021-09-13").getTime(),
-    },
-    {
-        _id: "6f05348f-5e55-408f-9c70-dddc105e8c7a",
-        _event: {
-            _id: "7cae7784-7523-47ae-b1a4-42308f8fb348",
-            name: "event",
-        },
-        amount: 421,
-        dateDonated: new Date("2021-09-13").getTime(),
-    },
-];
-// *** END of mock data **
 const props = defineProps({
     _id: String,
 });
 
+const route = useRoute();
 let donor = $ref(null);
 
 onBeforeMount(async () => {
     const { data } = await DonorRepo.getById(props._id);
     donor = data;
+
+    const { donation } = route.query;
+    if (donation) {
+        await getListTransaction();
+    }
 });
 
 let listDonation = $ref(null);

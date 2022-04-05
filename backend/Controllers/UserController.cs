@@ -40,8 +40,8 @@ namespace backend.Controllers
                 Console.WriteLine(e);
                 return e.Message switch
                 {
-                    "deleted" => BadRequest("User was deleted!"),
-                    _ => BadRequest("User ID error!")
+                    "deleted" => Unauthorized("User was deleted!"),
+                    _ => Unauthorized("User ID error!")
                 };
             }
         }
@@ -85,15 +85,15 @@ namespace backend.Controllers
                 user.isAdmin = true;
 
                 // Check create admin account. If not check existed hospital account.
-                if (user.hospital_id != null)
+                if (user.hospitalId != null)
                 {
                     // Check exist hospital.
-                    var existHospital = await _hospitalRepository.Get(user.hospital_id);
+                    var existHospital = await _hospitalRepository.Get(user.hospitalId);
                     if (existHospital == null)
                         return BadRequest("Invalid hospital ID!");
 
                     // Check duplicate hospital user.
-                    var existHospitalUser = await _userRepository.CheckHospitalId(user.hospital_id);
+                    var existHospitalUser = await _userRepository.CheckHospitalId(user.hospitalId);
                     if (existHospitalUser)
                         return BadRequest("Hospital account existed!");
 

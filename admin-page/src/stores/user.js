@@ -10,7 +10,8 @@ export const useUserStore = defineStore("user", {
                 ? localStorage.getItem("userToken")
                 : null,
             email: null,
-            role: null,
+            isAdmin: null,
+            hospitalId: null,
             isLoggedIn: false,
         };
     },
@@ -19,22 +20,31 @@ export const useUserStore = defineStore("user", {
             this.token = authToken;
             localStorage.setItem("userToken", this.token);
         },
-        verifyToken() {
-            if (this.token) {
-                this.email = "admin@gmail.com";
-                this.isLoggedIn = true;
+        setState(userInfo) {
+            this.isLoggedIn = true;
+            this.email = userInfo.email;
+            this.isAdmin = userInfo.isAdmin;
+            this.hospitalId = userInfo.hospitalId;
+        },
+        async verifyToken() {
+            try {
                 useLocalToken();
+                const { data, status } = await UserRepo.verifyToken();
+                if (data && status === 200) {
+                    this.setState(data);
+                }
+            } catch (e) {
+                console.log(e.response);
+                this.logout();
+                throw e;
             }
-
-            return this.token ? false : true;
         },
         async login(email, password) {
             const { data } = await UserRepo.getToken(email, password);
 
             const authToken = data.token;
             this.setToken(authToken);
-            this.email = email;
-            this.isLoggedIn = true;
+            await this.verifyToken();
 
             useLocalToken();
         },
@@ -42,5 +52,14 @@ export const useUserStore = defineStore("user", {
             localStorage.removeItem("userToken");
             this.$reset();
         },
+    },
+    getters: {
+        defaultPage: (state) =>
+            state.isAdmin
+                ? { name: "Dashboard" }
+                : {
+                      name: "Hospital Page",
+                      params: { _id: state.hospitalId },
+                  },
     },
 });

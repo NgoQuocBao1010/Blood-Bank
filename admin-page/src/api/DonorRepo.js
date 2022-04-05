@@ -9,6 +9,9 @@ export default {
     getSuccess() {
         return Repository.get(`${resource}/success`);
     },
+    getReject() {
+        return Repository.get(`${resource}/failure`);
+    },
     getById(id) {
         return Repository.get(`${resource}/${id}`);
     },
