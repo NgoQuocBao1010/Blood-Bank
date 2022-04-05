@@ -1,4 +1,4 @@
-import { formatDate, converToDate, getKeyByValue } from "..";
+import { formatDate } from "..";
 
 const KEYS_TRANSFORM = {
   hospitalName: "Hospital Name",
@@ -13,7 +13,7 @@ export default {
     for (let key in data) {
       if (KEYS_TRANSFORM[key])
         transformData[KEYS_TRANSFORM[key]] =
-          key !== "date" ? data[key] : formatDate(parseInt(data[key]) * 1000);
+          key !== "date" ? data[key] : formatDate(parseInt(data[key]));
     }
 
     if (data.blood.name) transformData["Blood Name"] = data.blood.name;
