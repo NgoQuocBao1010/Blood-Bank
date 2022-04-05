@@ -51,12 +51,12 @@ namespace backend.Controllers
                 {
                     case "transaction":
                         var donor = await _donorRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "Blood Receive", donor.name,
+                        recentActivity = new RecentActivities(id._id, "receive", donor.name,
                             id.date, id.transactionId);
                         break;
                     case "request":
                         var request = await _requestRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "Blood Donated", request.HospitalName,
+                        recentActivity = new RecentActivities(id._id, "donate", request.HospitalName,
                             id.date, null);
                         break;
                 }
