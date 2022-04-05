@@ -1,11 +1,6 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
+import { ref, reactive, onBeforeMount } from "vue";
 import Button from "primevue/button";
-import Dropdown from "primevue/dropdown";
-import DataViewLayoutOptions from "primevue/dataviewlayoutoptions";
-import DataView from "primevue/dataview";
-import Rating from "primevue/rating";
-import Dialog from "primevue/dialog";
 import RadioButton from "primevue/radiobutton";
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
@@ -21,19 +16,28 @@ import {
   numeric,
 } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
-import moment from "moment";
 import { useRoute } from "vue-router";
+
+import EventSubmissionRepo from "../../api/EventSubmissionRepo";
+import EventRepo from "../../api/EventRepo";
+import { determineStatus, formatDate } from "../../utils/index";
+import ProgressSpinner from "primevue/progressspinner";
 
 const route = useRoute();
 const eventId = route.params.eventId;
+const now = route.query.now;
 
-const donateDialog = ref(false);
 const submitted = ref(false);
 const toast = useToast();
+const today = new Date();
+
+let loadingData = ref(true);
+let eventData = ref(null);
 
 const donateData = reactive({
   eventId: "",
   fullname: "",
+  idCardNumber: "",
   dob: "",
   gender: "",
   phone: "",
@@ -48,6 +52,10 @@ const rules = {
     required,
     minLength: minLength(6),
     maxLength: maxLength(30),
+  },
+  idCardNumber: {
+    required,
+    numeric,
   },
   gender: { required },
   phone: {
@@ -64,39 +72,72 @@ const rules = {
 
 const v$ = useVuelidate(rules, donateData);
 
-const formatDate = (date) => {
-  return moment(date).format("DD/MM/YYYY");
-};
+onBeforeMount(async () => {
+  const data = await EventRepo.getById({ eventId: eventId, now: now });
+  let event = { ...data.data };
+  event["startDate"] = new Date(parseInt(event.startDate));
+  event["status"] = determineStatus(event);
+  event["bgImg"] =
+    "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp";
+  eventData.value = event;
+  event["participantsValue"] =
+    eventData.value.status === "upcoming"
+      ? "have registered to join this event"
+      : "donated for this event";
+  eventData.value = event;
+});
 
-const handleSubmitForm = () => {
+const handleSubmitForm = async () => {
   submitted.value = true;
   v$.value.$validate();
   if (!v$.value.$error) {
-    donateData.dob = formatDate(donateData.dob);
-    donateData.latestDonationDate = formatDate(donateData.latestDonationDate);
-    toast.add({
-      severity: "success",
-      summary: "Successful",
-      detail: "Your information is saved!!!",
-      life: 3000,
-    });
-    console.log("donateData :", {
+    // Format data before submit
+    donateData.dob = new Date(donateData.dob).getTime().toString();
+    donateData.latestDonationDate = donateData.latestDonationDate
+      ? new Date(donateData.latestDonationDate).getTime().toString()
+      : "";
+
+    const data = {
       eventId: eventId,
       fullname: donateData.fullname,
+      idCardNumber: donateData.idCardNumber,
       gender: donateData.gender,
       dob: donateData.dob,
       email: donateData.email,
       phone: donateData.phone,
       address: donateData.address,
-      lastestDonationDate: donateData.latestDonationDate,
-      medicalHistory: donateData.medicalHistory,
-    });
-    resetForm();
+      latestDonationDate: donateData.latestDonationDate,
+    };
+
+    try {
+      await EventSubmissionRepo.post(data);
+      toast.add({
+        severity: "success",
+        summary: "Successful",
+        detail: "Your information is saved!!!",
+        life: 3000,
+      });
+
+      resetForm();
+    } catch (error) {
+      if (error.response.status == 400) {
+        toast.add({
+          severity: "error",
+          summary: "Form Error",
+          detail: error.response.title,
+          life: 3000,
+        });
+      } else {
+        throw error;
+      }
+    }
   }
 };
 
+// Reset form after submit
 const resetForm = () => {
   donateData.fullname = "";
+  donateData.idCardNumber = "";
   donateData.gender = "";
   donateData.dob = "";
   donateData.phone = "";
@@ -110,230 +151,325 @@ const resetForm = () => {
 
 <template>
   <div class="event-detail-container">
-    <Toast position="top-right" class="pt-8" />
-    <div class="col-12">
-      <div class="card">
-        <div class="form-donation flex justify-content-center">
-          <div class="card py-4 px-4">
-            <h2 class="text-center" style="color: var(--DARK_BLUE)">
-              Donation Form
-            </h2>
-            <div class="p-fluid">
-              <div class="field">
-                <label for="fullname">Full name</label>
-                <InputText
-                  id="fullname"
-                  v-model="donateData.fullname"
-                  required="true"
-                  autofocus
-                  :class="{ 'p-invalid': submitted && !donateData.fullname }"
-                />
-                <small class="p-error" v-if="v$.fullname.$error && submitted">{{
-                  v$.fullname.$errors[0].$message
-                }}</small>
-              </div>
-
-              <div
-                class="field flex"
-                :class="{ 'p-invalid': submitted && !donateData.gender }"
-              >
-                <div class="field-radiobutton mr-3">
-                  <RadioButton
-                    id="male"
-                    name="gender"
-                    value="Male"
-                    v-model="donateData.gender"
-                  />
-                  <label for="male">Male</label>
-                </div>
-                <div class="field-radiobutton mr-3">
-                  <RadioButton
-                    id="female"
-                    name="gender"
-                    value="Female"
-                    v-model="donateData.gender"
-                  />
-                  <label for="female">Female</label>
-                </div>
-                <div class="field-radiobutton mr-3">
-                  <RadioButton
-                    id="other"
-                    name="gender"
-                    value="other"
-                    v-model="donateData.gender"
-                  />
-                  <label for="other">Other</label>
-                </div>
-                <small class="p-error" v-if="v$.gender.$error && submitted">{{
-                  v$.gender.$errors[0].$message
-                }}</small>
-              </div>
-              <div class="field">
-                <label for="dob">Birthday</label>
-                <Calendar
-                  id="dob"
-                  v-model="donateData.dob"
-                  :showIcon="true"
-                  dateFormat="dd/mm/yy"
-                  :baseZIndex="1000000"
-                  :class="{ 'p-invalid': submitted && !donateData.dob }"
-                />
-                <small class="p-error" v-if="v$.dob.$error && submitted">{{
-                  v$.dob.$errors[0].$message
-                }}</small>
-              </div>
-              <div class="field">
-                <label for="phone">Phone</label>
-                <InputText
-                  id="phone"
-                  v-model.trim="donateData.phone"
-                  required="true"
-                  autofocus
-                  :class="{ 'p-invalid': submitted && !donateData.phone }"
-                />
-                <small class="p-error" v-if="v$.phone.$error && submitted">{{
-                  v$.phone.$errors[0].$message
-                }}</small>
-              </div>
-              <div class="field">
-                <label for="email">Email</label>
-                <InputText
-                  id="email"
-                  v-model.trim="donateData.email"
-                  required="true"
-                  autofocus
-                  :class="{ 'p-invalid': submitted && !donateData.email }"
-                />
-                <small class="p-error" v-if="v$.email.$error && submitted">{{
-                  v$.email.$errors[0].$message
-                }}</small>
-              </div>
-              <div class="field">
-                <label for="address">Address</label>
-                <InputText
-                  id="fullname"
-                  v-model.trim="donateData.address"
-                  required="true"
-                  autofocus
-                  :class="{ 'p-invalid': submitted && !donateData.address }"
-                />
-                <small class="p-error" v-if="v$.address.$error && submitted">{{
-                  v$.address.$errors[0].$message
-                }}</small>
-              </div>
-
-              <div class="field">
-                <label for="lastestDoantionDate">Lastest donate</label>
-                <Calendar
-                  id="lastestDoantionDate"
-                  v-model="donateData.latestDonationDate"
-                  :showIcon="true"
-                  :baseZIndex="1000000"
-                  dateFormat="dd/mm/yy"
+    <template v-if="!eventData">
+      <div
+        class="flex align-items-center justify-content-center"
+        style="width 400px; height: 400px; font-size: 50px"
+      >
+        <ProgressSpinner strokeWidth="4" />
+      </div>
+    </template>
+    <template v-if="eventData">
+      <Toast position="top-right" class="pt-8" />
+      <div class="col-12">
+        <div class="card">
+          <div class="form-donation flex justify-content-center">
+            <div>
+              <div class="mb-4">
+                <img
+                  :src="eventData.bgImg"
+                  alt=""
+                  class="card"
+                  style="width: 450px"
                 />
               </div>
 
-              <div class="field">
-                <label class="mb-3">Medical history</label>
-                <div class="formgrid grid">
-                  <div class="field-radiobutton col-6">
-                    <Checkbox
-                      id="high_blood"
-                      name="medicalHistory"
-                      value="high_blood"
-                      v-model="donateData.medicalHistory"
+              <!-- Form submission -->
+              <template v-if="eventData.status !== 'passed'">
+                <div class="card py-4 px-4 mb-4">
+                  <h2 class="text-center" style="color: var(--DARK_BLUE)">
+                    Donation Form
+                  </h2>
+                  <div class="p-fluid">
+                    <div class="field">
+                      <label for="fullname" class="text-800">Full name*:</label>
+                      <InputText
+                        id="fullname"
+                        v-model="donateData.fullname"
+                        required="true"
+                        autofocus
+                        :class="{
+                          'p-invalid': submitted && !donateData.fullname,
+                        }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.fullname.$error && submitted"
+                        >{{ v$.fullname.$errors[0].$message }}</small
+                      >
+                    </div>
+
+                    <div class="field">
+                      <label for="idCardNumber" class="text-800"
+                        >Identify Card Number*:</label
+                      >
+                      <InputText
+                        id="idCardNumber"
+                        v-model="donateData.idCardNumber"
+                        required="true"
+                        autofocus
+                        :class="{
+                          'p-invalid': submitted && !donateData.idCardNumber,
+                        }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.idCardNumber.$error && submitted"
+                        >{{ v$.idCardNumber.$errors[0].$message }}</small
+                      >
+                    </div>
+                    <div class="field">
+                      <label for="idCardNumber" class="text-800"
+                        >Gender*:</label
+                      >
+                      <div
+                        class="field flex"
+                        :class="{
+                          'p-invalid': submitted && !donateData.gender,
+                        }"
+                      >
+                        <div class="field-radiobutton mr-3 text-800">
+                          <RadioButton
+                            id="male"
+                            name="gender"
+                            value="Male"
+                            v-model="donateData.gender"
+                          />
+                          <label for="male">Male</label>
+                        </div>
+                        <div class="field-radiobutton mr-3 text-800">
+                          <RadioButton
+                            id="female"
+                            name="gender"
+                            value="Female"
+                            v-model="donateData.gender"
+                          />
+                          <label for="female">Female</label>
+                        </div>
+                        <div class="field-radiobutton mr-3 text-800">
+                          <RadioButton
+                            id="other"
+                            name="gender"
+                            value="other"
+                            v-model="donateData.gender"
+                          />
+                          <label for="other">Other</label>
+                        </div>
+                      </div>
+                      <small
+                        class="p-error"
+                        v-if="v$.gender.$error && submitted"
+                        >{{ v$.gender.$errors[0].$message }}</small
+                      >
+                    </div>
+                    <div class="field">
+                      <label for="dob" class="text-800">Date of birth*</label>
+                      <Calendar
+                        id="dob"
+                        v-model="donateData.dob"
+                        :showIcon="true"
+                        dateFormat="dd/mm/yy"
+                        :baseZIndex="1000000"
+                        :class="{ 'p-invalid': submitted && !donateData.dob }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.dob.$error && submitted"
+                        >{{ v$.dob.$errors[0].$message }}</small
+                      >
+                    </div>
+                    <div class="field">
+                      <label for="phone" class="text-800">Phone*:</label>
+                      <InputText
+                        id="phone"
+                        v-model.trim="donateData.phone"
+                        required="true"
+                        autofocus
+                        :class="{ 'p-invalid': submitted && !donateData.phone }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.phone.$error && submitted"
+                        >{{ v$.phone.$errors[0].$message }}</small
+                      >
+                    </div>
+                    <div class="field">
+                      <label for="email" class="text-800">Email*:</label>
+                      <InputText
+                        id="email"
+                        v-model.trim="donateData.email"
+                        required="true"
+                        autofocus
+                        :class="{ 'p-invalid': submitted && !donateData.email }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.email.$error && submitted"
+                        >{{ v$.email.$errors[0].$message }}</small
+                      >
+                    </div>
+                    <div class="field">
+                      <label for="address" class="text-800">Address*:</label>
+                      <InputText
+                        id="fullname"
+                        v-model.trim="donateData.address"
+                        required="true"
+                        autofocus
+                        :class="{
+                          'p-invalid': submitted && !donateData.address,
+                        }"
+                      />
+                      <small
+                        class="p-error"
+                        v-if="v$.address.$error && submitted"
+                        >{{ v$.address.$errors[0].$message }}</small
+                      >
+                    </div>
+
+                    <div class="field">
+                      <label for="lastestDoantionDate" class="text-800"
+                        >Lastest donate</label
+                      >
+                      <Calendar
+                        id="lastestDoantionDate"
+                        v-model="donateData.latestDonationDate"
+                        :showIcon="true"
+                        :baseZIndex="1000000"
+                        dateFormat="dd/mm/yy"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label class="mb-2 text-800">Medical history</label>
+                      <div class="formgrid grid">
+                        <div class="field-radiobutton col-6 text-800">
+                          <Checkbox
+                            id="high_blood"
+                            name="medicalHistory"
+                            value="high_blood"
+                            v-model="donateData.medicalHistory"
+                          />
+                          <label for="category1">High blood pressure</label>
+                        </div>
+                        <div class="field-radiobutton col-6 text-800">
+                          <Checkbox
+                            id="heart_disease"
+                            name="medicalHistory"
+                            value="heart_disease"
+                            v-model="donateData.medicalHistory"
+                          />
+                          <label for="category2">Heart disease</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      label="Submit"
+                      class="p-button-text w-full"
+                      @click="handleSubmitForm"
                     />
-                    <label for="category1">High blood pressure</label>
-                  </div>
-                  <div class="field-radiobutton col-6">
-                    <Checkbox
-                      id="heart_disease"
-                      name="medicalHistory"
-                      value="heart_disease"
-                      v-model="donateData.medicalHistory"
-                    />
-                    <label for="category2">Heart disease</label>
                   </div>
                 </div>
-              </div>
-
-              <Button
-                type="submit"
-                label="Submit"
-                class="p-button-text w-full"
-                @click="handleSubmitForm"
-              />
+              </template>
             </div>
-          </div>
 
-          <div class="col-2">
-            <Divider layout="vertical">
-              <b>to</b>
-            </Divider>
-          </div>
-          <div class="col-5 align-items-center justify-content-center">
-            <h2 style="color: var(--PRIMARY_COLOR)">Event TITLE</h2>
-            <br />
-            <Divider layout="horizontal" align="left">
-              <span
-                class="p-tag flex justify-content-center align-items-center"
-              >
-                <i class="pi pi-search mr-2"></i>
-                Description</span
-              >
-            </Divider>
-            <p class="line-height-3 m-0">
-              Event description: Sed ut perspiciatis unde omnis iste natus error
-              sit voluptatem accusantium doloremque laudantium, totam rem
-              aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-              architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam
-              voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed
-              quia consequuntur magni dolores eos qui ratione voluptatem sequi
-              nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-              modi.
-            </p>
+            <div class="col-2">
+              <Divider layout="vertical">
+                <b>to</b>
+              </Divider>
+            </div>
 
-            <Divider layout="horizontal" align="left">
-              <span
-                class="p-tag flex justify-content-center align-items-center"
-              >
-                <i class="pi pi-calendar-times mr-2"></i>
-                Time</span
-              >
-            </Divider>
+            <!-- Event Information -->
+            <div class="col-5 align-items-center justify-content-center">
+              <!-- Event Title -->
+              <h2 style="color: var(--PRIMARY_COLOR)">
+                {{ eventData.name }}
+              </h2>
+              <br />
 
-            <p class="line-height-3 m-0">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui
-              blanditiis praesentium voluptatum deleniti atque corrupti quos
-              dolores et quas molestias excepturi sint occaecati cupiditate non
-              provident, similique sunt in culpa qui officia deserunt mollitia
-              animi, id est laborum et dolorum fuga. Et harum quidem rerum
-              facilis est et expedita distinctio. Nam libero tempore, cum soluta
-              nobis est eligendi optio cumque nihil impedit quo minus.
-            </p>
+              <!-- Event Status -->
+              <Divider layout="horizontal" align="left">
+                <span
+                  class="p-tag flex justify-content-center align-items-center"
+                >
+                  <i class="pi pi-circle-fill mr-2"></i>
+                  Status</span
+                >
+              </Divider>
+              <p class="line-height-3 m-0 text-800">
+                <span
+                  :class="
+                    'event-badge status-' + eventData.status.toLowerCase()
+                  "
+                  >{{ eventData.status }}</span
+                >
+              </p>
 
-            <Divider layout="horizontal" align="left">
-              <span
-                class="p-tag flex justify-content-center align-items-center"
-              >
-                <i class="pi pi-map-marker mr-2"></i>
-                Location</span
-              >
-            </Divider>
+              <!-- Event Details -->
+              <Divider layout="horizontal" align="left">
+                <span
+                  class="p-tag flex justify-content-center align-items-center"
+                >
+                  <i class="pi pi-search mr-2"></i>
+                  Details</span
+                >
+              </Divider>
+              <p class="line-height-3 m-0 text-800">
+                {{ eventData.detail }}
+              </p>
 
-            <p class="line-height-3 m-0">
-              Temporibus autem quibusdam et aut officiis debitis aut rerum
-              necessitatibus saepe eveniet ut et voluptates repudiandae sint et
-              molestiae non recusandae. Itaque earum rerum hic tenetur a
-              sapiente delectus, ut aut reiciendis voluptatibus maiores alias
-              consequatur aut perferendis doloribus asperiores repellat. Donec
-              vel volutpat ipsum. Integer nunc magna, posuere ut tincidunt eget,
-              egestas vitae sapien. Morbi dapibus luctus odio.
-            </p>
+              <!-- Event Time -->
+              <Divider layout="horizontal" align="left">
+                <span
+                  class="p-tag flex justify-content-center align-items-center"
+                >
+                  <i class="pi pi-calendar-times mr-2"></i>
+                  Time</span
+                >
+              </Divider>
+
+              <p class="line-height-3 m-0 text-800">
+                <span>Start Date: {{ formatDate(eventData.startDate) }}</span>
+                <br />
+                <span>Duration: {{ eventData.duration }} days</span>
+              </p>
+
+              <!-- Event Location -->
+              <Divider layout="horizontal" align="left">
+                <span
+                  class="p-tag flex justify-content-center align-items-center"
+                >
+                  <i class="pi pi-map-marker mr-2"></i>
+                  Location</span
+                >
+              </Divider>
+
+              <p class="line-height-3 m-0 text-800">
+                <span>Address: Cafe Station</span>
+                <br />
+                <span>City: Can Tho</span>
+              </p>
+
+              <!-- Event Participants -->
+              <Divider layout="horizontal" align="left">
+                <span
+                  class="p-tag flex justify-content-center align-items-center"
+                >
+                  <i class="pi pi-users mr-2"></i>
+                  Participants</span
+                >
+              </Divider>
+              <p class="line-height-3 m-0 text-800">
+                <span>{{
+                  `${eventData.participants} people ${eventData.participantsValue}`
+                }}</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 

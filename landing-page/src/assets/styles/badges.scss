@@ -1,6 +1,4 @@
-.customer-badge,
-.product-badge,
-.order-badge {
+.event-badge {
   border-radius: var(--border-radius);
   padding: 0.25em 0.5rem;
   text-transform: uppercase;
@@ -9,87 +7,18 @@
   letter-spacing: 0.3px;
 }
 
-.customer-badge {
-  &.status-qualified {
+.event-badge {
+  &.status-passed {
+    background: lightgray;
+  }
+
+  &.status-ongoing {
     background: #c8e6c9;
     color: #256029;
   }
 
-  &.status-unqualified {
-    background: #ffcdd2;
-    color: #c63737;
-  }
-
-  &.status-negotiation {
+  &.status-upcoming {
     background: #feedaf;
     color: #8a5340;
-  }
-
-  &.status-new {
-    background: #b3e5fc;
-    color: #23547b;
-  }
-
-  &.status-renewal {
-    background: #eccfff;
-    color: #694382;
-  }
-
-  &.status-proposal {
-    background: #ffd8b2;
-    color: #805b36;
-  }
-}
-
-.product-badge {
-  border-radius: var(--border-radius);
-  padding: 0.25em 0.5rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-
-  &.status-instock {
-    background: #c8e6c9;
-    color: #256029;
-  }
-
-  &.status-outofstock {
-    background: #ffcdd2;
-    color: #c63737;
-  }
-
-  &.status-lowstock {
-    background: #feedaf;
-    color: #8a5340;
-  }
-}
-
-.order-badge {
-  border-radius: var(--border-radius);
-  padding: 0.25em 0.5rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-
-  &.order-delivered {
-    background: #c8e6c9;
-    color: #256029;
-  }
-
-  &.order-cancelled {
-    background: #ffcdd2;
-    color: #c63737;
-  }
-
-  &.order-pending {
-    background: #feedaf;
-    color: #8a5340;
-  }
-
-  &.order-returned {
-    background: #eccfff;
-    color: #694382;
   }
 }
