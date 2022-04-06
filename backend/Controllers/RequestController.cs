@@ -91,9 +91,22 @@ namespace backend.Controllers
         {
             try
             {
-                var hospital = _hospitalRepository.Get(request.HospitalId);
-                request.HospitalName = hospital.Result.Name;
+                // Check valid hospital ID.
+                var hospital = await _hospitalRepository.Get(request.HospitalId);
+                if (hospital == null) throw new Exception();
+
+                // Get hospital name for request.
+                request.HospitalName = hospital.Name;
                 var result = await _requestRepository.Create(request);
+
+                // Push request to hospital history.
+                var newRequest = await _requestRepository.Get(result);
+                var requestHistory = hospital.RequestHistory ?? new List<Request>();
+                requestHistory.Add(newRequest);
+                hospital.RequestHistory = requestHistory;
+
+                await _hospitalRepository.Update(request.HospitalId, hospital);
+
                 return Ok(new {id = result});
             }
             catch (Exception e)

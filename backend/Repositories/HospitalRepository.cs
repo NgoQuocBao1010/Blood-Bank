@@ -63,17 +63,18 @@ namespace backend.Repositories
         }
         
 
-        public async Task<bool> Update(string _id, Hospital hospital)
+        public async Task<long> Update(string _id, Hospital hospital)
         {
             var filter = Builders<Hospital>.Filter.Eq(b => b._id, _id);
             var update = Builders<Hospital>.Update
                 .Set(h => h.Name, hospital.Name)
                 .Set(h => h.Address, hospital.Address)
-                .Set(h => h.Phone, hospital.Phone);
+                .Set(h => h.Phone, hospital.Phone)
+                .Set(h => h.RequestHistory, hospital.RequestHistory);
 
             var result = await _hospital.UpdateOneAsync(filter, update);
             
-            return result.ModifiedCount == 1;
+            return result.ModifiedCount;
         }
 
         public async Task<bool> Delete(string _id)
