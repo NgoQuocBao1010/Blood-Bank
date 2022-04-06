@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -77,6 +78,29 @@ namespace backend.Controllers
             catch (Exception)
             {
                 return BadRequest("Event Submission ID error!");
+            }
+        }
+        
+        [HttpGet("event/{id}")]
+        public async Task<IActionResult> GetByEvent(string id)
+        {
+            try
+            {
+                // Check valid event.
+                var existEvent = await _eventRepository.Get(id);
+                if (existEvent == null)
+                    return BadRequest("Event ID error!");
+                
+                // Check existing submission for event.
+                var result = await _eventSubmissionRepository.GetByEvent(id);
+                if (!result.Any())
+                    return NotFound("There aren't any submissions for this event!");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Event ID error!");
             }
         }
 

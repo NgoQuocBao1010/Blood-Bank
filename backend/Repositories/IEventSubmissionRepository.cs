@@ -12,7 +12,7 @@ namespace backend.Repositories
         // Read
         Task<EventSubmission> Get(string _id);
         Task<IEnumerable<EventSubmission>> Get();
-        Task<IEnumerable<EventSubmission>> GetByEvent(string eventId);
+        Task<List<EventSubmission>> GetByEvent(string eventId);
         
         // Update
         Task<bool> Update(string _id, EventSubmission eventSubmission);

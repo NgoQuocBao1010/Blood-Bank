@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -7,10 +8,12 @@ namespace backend.Models
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
-        
+
         public string Name { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
+
+        public List<Request> RequestHistory { get; set; }
 
         public Hospital(string name, string address, string phone)
         {

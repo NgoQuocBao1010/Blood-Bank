@@ -23,6 +23,10 @@ watch(
                 if (oldLayout) {
                     return;
                 } else {
+                    // Verify if token found but user has not logged in
+                    if (userStore.token && !userStore.isLoggedIn)
+                        await userStore.verifyToken();
+
                     layoutName = userStore.isLoggedIn
                         ? "LayoutDefault"
                         : "LayoutUnauth";

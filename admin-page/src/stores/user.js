@@ -42,9 +42,9 @@ export const useUserStore = defineStore("user", {
         async login(email, password) {
             const { data } = await UserRepo.getToken(email, password);
 
-            const authToken = data.token;
-            this.setToken(authToken);
-            await this.verifyToken();
+            const { token, user } = data;
+            this.setToken(token);
+            this.setState(user);
 
             useLocalToken();
         },

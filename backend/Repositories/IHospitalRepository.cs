@@ -15,7 +15,7 @@ namespace backend.Repositories
         Task<Hospital> GetFirstHospital();
         
         // Update
-        Task<bool> Update(string _id, Hospital hospital);
+        Task<long> Update(string _id, Hospital hospital);
         
         // Delete
         Task<bool> Delete(string _id);
