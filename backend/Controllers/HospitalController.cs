@@ -12,17 +12,20 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin, hospital")]
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
+        private readonly IRequestRepository _requestRepository;
 
-        public HospitalController(IHospitalRepository hospitalRepository)
+        public HospitalController(IHospitalRepository hospitalRepository, IRequestRepository requestRepository)
         {
             _hospitalRepository = hospitalRepository;
+            _requestRepository = requestRepository;
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create(Hospital hospital)
         {
             var result = await _hospitalRepository.Create(hospital);
@@ -43,19 +46,24 @@ namespace backend.Controllers
 
                 return Ok(hospital);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Hospital ID error!");
             }
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Get()
         {
             try
             {
                 var hospital = await _hospitalRepository.Get();
+                foreach (var oneHospital in hospital)
+                {
+                    oneHospital.RequestHistory = (List<Request>) await _requestRepository.GetRequestByHospitalId(oneHospital._id);
+                }
+                
                 if (hospital == null)
                 {
                     throw new Exception();
@@ -63,9 +71,8 @@ namespace backend.Controllers
 
                 return Ok(hospital);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Hospital ID error!");
             }
         }
@@ -85,14 +92,14 @@ namespace backend.Controllers
                 var result = await _hospitalRepository.Update(id, hospital);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Hospital ID error!");
             }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
@@ -107,9 +114,8 @@ namespace backend.Controllers
                 var result = await _hospitalRepository.Delete(id);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
                 return BadRequest("Hospital ID error!");
             }
         }
