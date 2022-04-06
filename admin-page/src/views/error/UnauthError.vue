@@ -1,11 +1,6 @@
 <script setup>
-import { onBeforeMount } from "vue";
 import { useUserStore } from "../../stores/user";
 const userStore = useUserStore();
-
-onBeforeMount(async () => {
-    if (userStore.token) await userStore.verifyToken();
-});
 </script>
 
 <template>

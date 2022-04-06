@@ -93,11 +93,11 @@ namespace backend.Repositories
             return request;
         }
         
-        public async Task<IEnumerable<EventSubmission>> GetByEvent(string eventId)
+        public Task<List<EventSubmission>> GetByEvent(string eventId)
         {
             var filter = Builders<EventSubmission>.Filter.Eq(es => es.EventId, eventId);
-            var request = await _eventSubmission.Find(filter).ToListAsync();
-            return request;
+            var eventSubmission = _eventSubmission.Find(filter).ToListAsync();
+            return eventSubmission;
         }
 
         public async Task<bool> Update(string _id, EventSubmission eventSubmission)

@@ -18,7 +18,7 @@ namespace backend.Repositories
             _hospital = collection;
             AddDefaultData();
         }
-        
+
         public void AddDefaultData()
         {
             var hospital = Get();
@@ -29,7 +29,7 @@ namespace backend.Repositories
                 new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
                 new("121", "Can Tho", "0123456780"),
             };
-            
+
             _hospital.InsertMany(listHospital);
         }
 
@@ -47,10 +47,10 @@ namespace backend.Repositories
 
             return hospital;
         }
-        
+
         public Task<Hospital> GetFirstHospital()
         {
-            var hospital =  _hospital.Find(_ => true).FirstOrDefaultAsync();
+            var hospital = _hospital.Find(_ => true).FirstOrDefaultAsync();
 
             return hospital;
         }
@@ -58,22 +58,23 @@ namespace backend.Repositories
         public async Task<IEnumerable<Hospital>> Get()
         {
             var hospital = await _hospital.Find(_ => true).ToListAsync();
-
+            
             return hospital;
         }
-        
 
-        public async Task<bool> Update(string _id, Hospital hospital)
+
+        public async Task<long> Update(string _id, Hospital hospital)
         {
             var filter = Builders<Hospital>.Filter.Eq(b => b._id, _id);
             var update = Builders<Hospital>.Update
                 .Set(h => h.Name, hospital.Name)
                 .Set(h => h.Address, hospital.Address)
-                .Set(h => h.Phone, hospital.Phone);
+                .Set(h => h.Phone, hospital.Phone)
+                .Set(h => h.RequestHistory, hospital.RequestHistory);
 
             var result = await _hospital.UpdateOneAsync(filter, update);
-            
-            return result.ModifiedCount == 1;
+
+            return result.ModifiedCount;
         }
 
         public async Task<bool> Delete(string _id)
@@ -83,6 +84,5 @@ namespace backend.Repositories
 
             return result.DeletedCount == 1;
         }
-        
     }
 }
