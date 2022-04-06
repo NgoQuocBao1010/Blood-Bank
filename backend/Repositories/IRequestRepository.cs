@@ -12,6 +12,7 @@ namespace backend.Repositories
         // Read
         Task<Request> Get(string _id);
         Task<IEnumerable<Request>> Get();
+        Task<IEnumerable<Request>> GetRequestByHospitalId(string hospitalId);
         
         // Update
         Task<bool> Update(string _id, Request request);

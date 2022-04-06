@@ -40,6 +40,13 @@ namespace backend.Repositories
             return request;
         }
 
+        public async Task<IEnumerable<Request>> GetRequestByHospitalId(string hospitalId)
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.HospitalId, hospitalId);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
         public async Task<bool> Update(string _id, Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, _id);
