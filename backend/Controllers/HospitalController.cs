@@ -16,10 +16,12 @@ namespace backend.Controllers
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalRepository _hospitalRepository;
+        private readonly IRequestRepository _requestRepository;
 
-        public HospitalController(IHospitalRepository hospitalRepository)
+        public HospitalController(IHospitalRepository hospitalRepository, IRequestRepository requestRepository)
         {
             _hospitalRepository = hospitalRepository;
+            _requestRepository = requestRepository;
         }
 
         [HttpPost]
@@ -57,6 +59,11 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get();
+                foreach (var oneHospital in hospital)
+                {
+                    oneHospital.RequestHistory = (List<Request>) await _requestRepository.GetRequestByHospitalId(oneHospital._id);
+                }
+                
                 if (hospital == null)
                 {
                     throw new Exception();

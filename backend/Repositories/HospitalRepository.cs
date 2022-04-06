@@ -18,7 +18,7 @@ namespace backend.Repositories
             _hospital = collection;
             AddDefaultData();
         }
-        
+
         public void AddDefaultData()
         {
             var hospital = Get();
@@ -29,7 +29,7 @@ namespace backend.Repositories
                 new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
                 new("Benh Vien 121", "Can Tho", "0123456780"),
             };
-            
+
             _hospital.InsertMany(listHospital);
         }
 
@@ -47,10 +47,10 @@ namespace backend.Repositories
 
             return hospital;
         }
-        
+
         public Task<Hospital> GetFirstHospital()
         {
-            var hospital =  _hospital.Find(_ => true).FirstOrDefaultAsync();
+            var hospital = _hospital.Find(_ => true).FirstOrDefaultAsync();
 
             return hospital;
         }
@@ -58,10 +58,10 @@ namespace backend.Repositories
         public async Task<IEnumerable<Hospital>> Get()
         {
             var hospital = await _hospital.Find(_ => true).ToListAsync();
-
+            
             return hospital;
         }
-        
+
 
         public async Task<long> Update(string _id, Hospital hospital)
         {
@@ -73,7 +73,7 @@ namespace backend.Repositories
                 .Set(h => h.RequestHistory, hospital.RequestHistory);
 
             var result = await _hospital.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount;
         }
 
@@ -84,6 +84,5 @@ namespace backend.Repositories
 
             return result.DeletedCount == 1;
         }
-        
     }
 }
