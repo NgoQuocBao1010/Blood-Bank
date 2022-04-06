@@ -47,6 +47,27 @@ namespace backend.Repositories
             return request;
         }
 
+        public async Task<IEnumerable<Request>> GetPendingRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, 0);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetApprovedRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, 1);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetRejectedRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, -1);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
         public async Task<bool> Update(string _id, Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, _id);

@@ -157,6 +157,66 @@ namespace backend.Controllers
             }
         }
 
+        [HttpGet("pendingRequest")]
+        public async Task<IActionResult> GetPendingRequest()
+        {
+            try
+            {
+                var result = await _requestRepository.GetPendingRequest();
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Get request error!");
+            }
+        }
+
+        [HttpGet("approvedRequest")]
+        public async Task<IActionResult> GetApprovedRequest()
+        {
+            try
+            {
+                var result = await _requestRepository.GetApprovedRequest();
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Get request error!");
+            }
+        }
+
+        [HttpGet("rejectedRequest")]
+        public async Task<IActionResult> GetRejectedRequest()
+        {
+            try
+            {
+                var result = await _requestRepository.GetRejectedRequest();
+                if (result == null)
+                {
+                    throw new Exception();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest("Get request error!");
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, Request request)
         {
