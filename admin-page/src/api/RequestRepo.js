@@ -3,13 +3,23 @@ import Repository from "./Repository";
 const resource = "/Request";
 
 export default {
-    getAll() {
-        return Repository.get(`${resource}/`);
-    },
+  getAll() {
+    return Repository.get(`${resource}/`);
+  },
 
-    get(id) {
-        return Repository.get(`${resource}/${id}/`);
-    },
+  get(id) {
+    return Repository.get(`${resource}/${id}/`);
+  },
+
+  getPending() {
+    return Repository.get(`${resource}/pendingRequest`);
+  },
+  getApproved() {
+    return Repository.get(`${resource}/approvedRequest`);
+  },
+  getRejected() {
+    return Repository.get(`${resource}/rejectedRequest`);
+  },
 
   post(params) {
     useLocalToken();
