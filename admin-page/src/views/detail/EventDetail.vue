@@ -12,27 +12,26 @@ const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
 });
 
+const AsyncEventSubmissonTable = defineAsyncComponent({
+    loader: () => import("../../components/tables/EventSubmissionTable.vue"),
+});
+
 const props = defineProps({
     _id: String,
 });
 
 let event = $ref();
+let isUpcomingEvent = $ref(false);
 let catchedData = $ref({});
 
 let showDonorTable = $ref(false);
 let donorsData = $ref(null);
 const getParticipants = async () => {
-    const { data } = await EventRepo.getParticipants(props._id);
-    console.log(data);
+    const { data } = !isUpcomingEvent
+        ? await EventRepo.getParticipants(props._id)
+        : await EventSubmissionRepo.getByEventId(props._id);
     donorsData = data ? data : [];
     showDonorTable = true;
-
-    if (event["status"] === "upcoming") {
-        const { data: testing } = await EventSubmissionRepo.getByEventId(
-            props._id
-        );
-        console.log(testing, data);
-    }
 };
 
 // Naviagtion settings
@@ -49,6 +48,8 @@ onBeforeMount(async () => {
     event = { ...data };
     event["startDate"] = new Date(parseInt(event["startDate"]));
     event["status"] = EventHelper.determineStatus(event);
+
+    isUpcomingEvent = event["status"] === "upcoming";
 
     items = [{ label: event ? `${event.name} event` : "Unknown event" }];
 });
@@ -176,14 +177,31 @@ onBeforeMount(async () => {
                     v-if="!showDonorTable"
                 >
                     <PrimeVueButton
-                        label="Show Event Participants"
+                        :label="
+                            !isUpcomingEvent
+                                ? 'Show Event Participants'
+                                : 'Show Event Registers'
+                        "
                         @click="getParticipants"
                     />
                 </div>
 
                 <template v-else>
-                    <h2>Events Participants</h2>
-                    <AsyncDonorTable :donorsData="donorsData" />
+                    <h2>
+                        {{
+                            !isUpcomingEvent
+                                ? "Event Participants"
+                                : "Event Registers"
+                        }}
+                    </h2>
+                    <Component
+                        :is="
+                            !isUpcomingEvent
+                                ? AsyncDonorTable
+                                : AsyncEventSubmissonTable
+                        "
+                        :donorsData="donorsData"
+                    />
                 </template>
             </div>
         </div>
