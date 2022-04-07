@@ -1,5 +1,5 @@
 <script setup>
-import { markRaw, watch } from "vue";
+import { defineAsyncComponent, markRaw, watch, provide } from "vue";
 import { useRoute } from "vue-router";
 import Toast from "primevue/toast";
 
@@ -47,6 +47,22 @@ watch(
     },
     { immediate: true }
 );
+
+const AsyncErrorDialog = defineAsyncComponent({
+    loader: () => import("primevue/dialog"),
+});
+let dialogProps = $ref({
+    title: null,
+    message: null,
+});
+let isShowErroDialog = $ref(null);
+const showErrorDialog = (title, message) => {
+    dialogProps = { title, message };
+    isShowErroDialog = true;
+};
+const closeErrorDialog = () => (isShowErroDialog = false);
+
+provide("errorDialog", { showErrorDialog, closeErrorDialog });
 </script>
 
 <template>
@@ -54,7 +70,47 @@ watch(
         <router-view />
     </component>
 
+    <!-- Error Dialog -->
+    <template v-if="isShowErroDialog">
+        <AsyncErrorDialog
+            :header="dialogProps.title"
+            v-model:visible="isShowErroDialog"
+            :style="{ width: '50vw' }"
+            :modal="true"
+        >
+            <div class="error-dialog__body">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p>{{ dialogProps.message }}</p>
+            </div>
+        </AsyncErrorDialog>
+    </template>
+
+    <!-- Toast notification -->
     <Toast position="bottom-right" />
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.error-dialog {
+    &__header {
+        text-align: center;
+    }
+
+    &__body {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        i {
+            font-size: 2rem;
+            color: red;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+    }
+}
+</style>
