@@ -13,6 +13,7 @@ onBeforeMount(async () => {
     const { data, status } = await AppRepo.getRecentActivities();
 
     activities = JSON.parse(JSON.stringify(data));
+    console.log(activities);
     fetchingData = false;
 });
 </script>
@@ -26,15 +27,28 @@ onBeforeMount(async () => {
             :rows="5"
             responsiveLayout="scroll"
         >
-            <!-- Type -->
-            <PrimeVueColumn field="type" header="Type"></PrimeVueColumn>
-
             <!-- Detail -->
-            <PrimeVueColumn
-                field="detail"
-                header="Detail"
-                :sortable="true"
-            ></PrimeVueColumn>
+            <PrimeVueColumn field="detail" header="Detail"></PrimeVueColumn>
+
+            <!-- Type -->
+            <PrimeVueColumn field="type" header="amount">
+                <template #body="{ data }">
+                    <span class="flex flex-center">
+                        <i
+                            class="fa-solid fa-circle-plus icon-type"
+                            v-if="data.type === 'Receive'"
+                            style="color: lightgreen"
+                        ></i>
+                        <i
+                            class="fa-solid fa-circle-minus icon-type"
+                            v-else
+                            style="color: lightcoral"
+                        ></i>
+                        <!-- Mock data -->
+                        200ml
+                    </span>
+                </template>
+            </PrimeVueColumn>
 
             <!-- Date -->
             <PrimeVueColumn field="date">
@@ -55,7 +69,10 @@ onBeforeMount(async () => {
                         }"
                         class="p-button p-button-sm app-router-link-icon btn-icon-only"
                     >
-                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <i
+                            class="fa-solid fa-magnifying-glass"
+                            style="font-size: 0.7rem"
+                        ></i>
                     </router-link>
                 </template>
             </PrimeVueColumn>
@@ -63,4 +80,9 @@ onBeforeMount(async () => {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.icon-type {
+    font-size: 1.5rem;
+    margin-right: 0.4em;
+}
+</style>

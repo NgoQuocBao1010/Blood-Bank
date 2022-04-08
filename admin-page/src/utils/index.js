@@ -26,7 +26,7 @@ const timeDiffernet = (date) => {
         timeUnit = values > 1 ? "minutes" : "minute";
     }
 
-    return `${values} ${timeUnit} ago`;
+    return values > 0 ? `${values} ${timeUnit} ago` : "Just Now";
 };
 
 const formatDate = (date) => {
