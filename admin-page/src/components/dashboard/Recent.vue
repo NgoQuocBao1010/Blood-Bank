@@ -2,7 +2,7 @@
 import { onBeforeMount } from "vue";
 
 import AppRepo from "../../api/AppRepo";
-import { formatDate } from "../../utils";
+import { timeDiffernet } from "../../utils";
 
 // Activitiy data
 let activities = $ref([]);
@@ -37,9 +37,9 @@ onBeforeMount(async () => {
             ></PrimeVueColumn>
 
             <!-- Date -->
-            <PrimeVueColumn field="date" header="Date" :sortable="true">
+            <PrimeVueColumn field="date">
                 <template #body="{ data }">
-                    {{ formatDate(parseInt(data.date)) }}
+                    {{ timeDiffernet(parseInt(data.date)) }}
                 </template>
             </PrimeVueColumn>
 
