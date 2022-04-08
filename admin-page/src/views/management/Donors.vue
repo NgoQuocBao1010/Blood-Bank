@@ -37,7 +37,7 @@ const onRowClick = (payload) => {
 onBeforeMount(async () => {
     initFilter();
 
-    const { data } = await DonorRepos.getSuccess();
+    const { data } = await DonorRepos.getDonors();
     donors = data;
     fetchingDonors = false;
 });

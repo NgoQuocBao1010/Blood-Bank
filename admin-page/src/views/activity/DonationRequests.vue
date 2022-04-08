@@ -9,14 +9,9 @@ let donorsData = $ref(null);
 let fetchingDonors = $ref(false);
 const fetchData = (type) => {
     return {
-        pending: DonorRepo.getAll(),
-        rejected: DonorRepo.getReject(),
-        // Mockdata
-        approved: new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve({ data: [], status: 200 });
-            }, 3000);
-        }),
+        pending: DonorRepo.getAllDonations(),
+        rejected: DonorRepo.getRejectDonations(),
+        approved: DonorRepo.getSuccessDonations(),
     }[type];
 };
 
