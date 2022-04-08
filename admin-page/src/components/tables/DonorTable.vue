@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, nextTick } from "vue";
+import { inject, onBeforeMount, nextTick } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
@@ -37,6 +37,7 @@ let donors = $ref(null);
 let selectedParticipants = $ref([]);
 const eventStore = useEventStore();
 const emits = defineEmits(["updateParticipants"]);
+const { showErrorDialog } = inject("errorDialog");
 
 // Filter configurations
 let filters = $ref(null);
@@ -123,6 +124,7 @@ const onSelectExcel = async (event) => {
     newParticipants.files = event.files[0];
     selectEventsDialog = true;
 
+    // Rerender PrimeVue FileUpload Components to remove file name
     isRerender = true;
     await nextTick();
     isRerender = false;
@@ -144,21 +146,33 @@ const importExcel = async () => {
         DonorsHelpers.reformAfterExcelImport(excelData);
     selectEventsDialog = false;
 
-    const { data, status } = await DonorRepo.importParticipants(
-        newParticipants
-    );
+    try {
+        const { data, status } = await DonorRepo.importParticipants(
+            newParticipants
+        );
 
-    if (data && status === 200) {
-        toast.add({
-            severity: "success",
-            summary: "New Participants",
-            detail: `New Participants for ${
-                eventStore.getEventById(newParticipants.eventId)?.name
-            } has been added`,
-            life: 3000,
-        });
+        if (data && status === 200) {
+            toast.add({
+                severity: "success",
+                summary: "New Participants",
+                detail: `New Participants for ${
+                    eventStore.getEventById(newParticipants.eventId)?.name
+                } has been added`,
+                life: 3000,
+            });
 
-        emits("updateParticipants");
+            emits("updateParticipants");
+        }
+    } catch (e) {
+        if (e.response && e.response.status === 400) {
+            showErrorDialog(
+                "Excel has invalid data",
+                "There are some participants may already record their data on this event. Please check your data again."
+            );
+            return;
+        }
+
+        throw e;
     }
 };
 
@@ -171,6 +185,7 @@ const openConfirmDialog = (approve = true) => {
     showConfirmDialog = true;
 };
 const handleParticipants = async () => {
+    // Show error if there is no rejected reason on rejected
     if (!isApprove && !rejectReason) {
         toast.add({
             severity: "error",
@@ -182,6 +197,7 @@ const handleParticipants = async () => {
         return;
     }
 
+    // Transform data for API calls
     const participants = JSON.parse(JSON.stringify(selectedParticipants)).map(
         (row) => {
             let transformData = {};
@@ -280,7 +296,7 @@ const handleParticipants = async () => {
 
         <!-- Empty data fallback -->
         <template #empty>
-            <h4 style="text-align: center">No donor found.</h4>
+            <h4 style="text-align: center">No participants found.</h4>
         </template>
 
         <!-- Columns -->
