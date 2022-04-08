@@ -296,7 +296,7 @@ const handleParticipants = async () => {
 
         <!-- Empty data fallback -->
         <template #empty>
-            <h4 style="text-align: center">No donor found.</h4>
+            <h4 style="text-align: center">No participants found.</h4>
         </template>
 
         <!-- Columns -->
