@@ -213,6 +213,11 @@ router.beforeEach(async (to, from, next) => {
         if (!user.isLoggedIn && !to.meta.unguard) {
             await user.verifyToken();
         }
+
+        if (user.token && to.name === "Login") {
+            await user.verifyToken();
+        }
+
         next();
     } catch (err) {
         console.log(err);
@@ -246,9 +251,7 @@ router.beforeEach((to, from, next) => {
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
     if (to.name === "Login" && useUserStore().token) {
-        return next({
-            name: from.name ? from.name : useUserStore().defaultPage,
-        });
+        return next(useUserStore().defaultPage);
     }
     next();
 });
