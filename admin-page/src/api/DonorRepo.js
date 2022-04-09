@@ -3,11 +3,17 @@ import Repository from "./Repository";
 const resource = "/donor";
 
 export default {
-    getAll() {
+    getDonors() {
+        return Repository.get(`${resource}/info`);
+    },
+    getAllDonations() {
         return Repository.get(`${resource}/`);
     },
-    getSuccess() {
+    getSuccessDonations() {
         return Repository.get(`${resource}/success`);
+    },
+    getRejectDonations() {
+        return Repository.get(`${resource}/failure`);
     },
     getById(id) {
         return Repository.get(`${resource}/${id}`);

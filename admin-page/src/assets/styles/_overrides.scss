@@ -242,6 +242,29 @@
     width: 250px;
 }
 
+// Input Switch
+.p-inputswitch.p-focus {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.p-inputswitch.p-focus .p-inputswitch-slider {
+    background-color: rgba(var(--primary-color-rbg), 0.1);
+}
+
+.p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover
+    .p-inputswitch-slider {
+    background-color: var(--secondary-color);
+}
+
+.p-inputswitch.p-focus .p-inputswitch-slider {
+    box-shadow: none;
+}
+
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: var(--primary-color);
+}
+
 // ** My custom css
 .app-highlight {
     font-weight: bold;
@@ -263,6 +286,14 @@
 }
 
 .app-router-link-icon {
+    &.btn-icon-only {
+        aspect-ratio: 1 / 1;
+
+        i {
+            margin: 0 !important;
+        }
+    }
+
     i {
         margin-right: 0.5rem;
     }
@@ -332,6 +363,17 @@ body::-webkit-scrollbar,
 .reason-tooltip .p-tooltip-text {
     color: rgb(255, 255, 255);
     width: max-content;
+}
+
+// Datatable row
+.active-user {
+    background: rgba(var(--primary-color-rbg), 0.2) !important;
+}
+
+#donor-table {
+    .p-datatable-header {
+        border: none !important;
+    }
 }
 
 @media (min-width: 992px) {

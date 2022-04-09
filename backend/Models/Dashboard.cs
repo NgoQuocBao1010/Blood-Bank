@@ -6,13 +6,15 @@ namespace backend.Models
         public string date { get; set; }
         public string type { get; set; }
         public string transactionId { get; set; }
-
-        public Id(string id, string date, string type, string transactionId)
+        public int amount { get; set; }
+        
+        public Id(string id, string date, string type,string transactionId, int amount)
         {
             _id = id;
             this.date = date;
             this.type = type;
             this.transactionId = transactionId;
+            this.amount = amount;
         }
     }
     
@@ -24,14 +26,17 @@ namespace backend.Models
         public string detail { get; set; }
         public string date { get; set; }
         public string transactionId { get; set; }
+        public int amount { get; set; }
 
-        public RecentActivities(string id, string type, string detail, string date, string transactionId)
+
+        public RecentActivities(string id, string type, string detail, string date, string transactionId, int amount)
         {
             _id = id;
             this.type = type;
             this.detail = detail;
             this.date = date;
             this.transactionId = transactionId;
+            this.amount = amount;
         }
     }
 

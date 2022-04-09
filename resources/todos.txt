@@ -1,21 +1,13 @@
-Event create, Event edit form   X
+Reject Participants
+Hospital Pages ...
+Event Detail New API X
+User Auth X
+User Create X
 
-
-Hospital Blood request (approve, reject)
-Hospitals management
-
-Hospital Blood request history
-Hospital request form
-
-Hospital detail
-
-
-User Creation
-
-Search bar (Server, Clients)
 
 ///
 Blood Edit
 Donor Information edit
 
 Show rejected donors
+Confirm Password Dialog

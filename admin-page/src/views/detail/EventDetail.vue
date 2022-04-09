@@ -5,69 +5,31 @@ import Divider from "primevue/divider";
 
 import EventRepo from "../../api/EventRepo";
 import EventHelper from "../../utils/helpers/Event";
+import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import { formatDate } from "../../utils";
 
 const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
 });
 
-// *** Mock data ***
-// const donorsData = [
-//     {
-//         _id: "800000100001",
-//         name: "Quoc Bao 1",
-//         blood: {
-//             name: "O",
-//             type: "Negative",
-//         },
-//         transaction: {
-//             _id: "911fdf65-2913-4705-8df1-7cba4a0a9355",
-//             eventDonated: {
-//                 _id: "1440f35b-0db5-484b-9370-872cb3c7f519",
-//                 name: "event",
-//             },
-//             blood: {
-//                 name: "O",
-//                 type: "Negative",
-//             },
-//             amount: 500,
-//             dateDonated: new Date("2022-09-13").getTime(),
-//         },
-//     },
-//     {
-//         _id: "800000000001",
-//         name: "Quoc Bao",
-//         blood: {
-//             name: "A",
-//             type: "Positive",
-//         },
-//         transaction: {
-//             _id: "6f769818-5060-435e-835b-ab7ab3cfdaec",
-//             eventDonated: {
-//                 _id: "de169f18-226d-48e0-9579-b18184e2c260",
-//                 name: "event1",
-//             },
-//             blood: {
-//                 name: "A",
-//                 type: "Positive",
-//             },
-//             amount: 420,
-//             dateDonated: new Date("2022-09-13").getTime(),
-//         },
-//     },
-// ];
-// *** END of mock data **
+const AsyncEventSubmissonTable = defineAsyncComponent({
+    loader: () => import("../../components/tables/EventSubmissionTable.vue"),
+});
+
 const props = defineProps({
     _id: String,
 });
 
 let event = $ref();
+let isUpcomingEvent = $ref(false);
 let catchedData = $ref({});
 
 let showDonorTable = $ref(false);
 let donorsData = $ref(null);
 const getParticipants = async () => {
-    const { data } = await EventRepo.getParticipants(props._id);
+    const { data } = !isUpcomingEvent
+        ? await EventRepo.getParticipants(props._id)
+        : await EventSubmissionRepo.getByEventId(props._id);
     donorsData = data ? data : [];
     showDonorTable = true;
 };
@@ -86,6 +48,8 @@ onBeforeMount(async () => {
     event = { ...data };
     event["startDate"] = new Date(parseInt(event["startDate"]));
     event["status"] = EventHelper.determineStatus(event);
+
+    isUpcomingEvent = event["status"] === "upcoming";
 
     items = [{ label: event ? `${event.name} event` : "Unknown event" }];
 });
@@ -163,12 +127,14 @@ onBeforeMount(async () => {
                             </li>
 
                             <!-- Participants -->
-                            <li v-if="event.participants">
-                                <b>Participants: </b>
-                                <span class="info">
-                                    {{ event.participants }} successful donors
+                            <b>Participants: </b>
+                            <span class="info">
+                                {{ event.participants }}
+                                <span v-if="event.status === 'upcoming'">
+                                    participants *
                                 </span>
-                            </li>
+                                <span v-else> donors</span>
+                            </span>
                         </ul>
 
                         <Divider>
@@ -211,14 +177,31 @@ onBeforeMount(async () => {
                     v-if="!showDonorTable"
                 >
                     <PrimeVueButton
-                        label="Show Event Participants"
+                        :label="
+                            !isUpcomingEvent
+                                ? 'Show Event Participants'
+                                : 'Show Event Registers'
+                        "
                         @click="getParticipants"
                     />
                 </div>
 
                 <template v-else>
-                    <h2>Events Participants</h2>
-                    <AsyncDonorTable :donorsData="donorsData" />
+                    <h2>
+                        {{
+                            !isUpcomingEvent
+                                ? "Event Participants"
+                                : "Event Registers"
+                        }}
+                    </h2>
+                    <Component
+                        :is="
+                            !isUpcomingEvent
+                                ? AsyncDonorTable
+                                : AsyncEventSubmissonTable
+                        "
+                        :donorsData="donorsData"
+                    />
                 </template>
             </div>
         </div>

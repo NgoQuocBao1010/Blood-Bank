@@ -141,6 +141,7 @@ const router = createRouter({
             component: () => import("./views/About.vue"),
             meta: {
                 layoutName: "LayoutDefault",
+                isGlobal: true,
             },
         },
         // Login Page
@@ -161,6 +162,7 @@ const router = createRouter({
             meta: {
                 layoutName: "LayoutUnauth",
                 unguard: true,
+                isGlobal: true,
             },
         },
         {
@@ -170,6 +172,7 @@ const router = createRouter({
             meta: {
                 layoutName: "__dynamic",
                 unguard: true,
+                isGlobal: true,
             },
         },
         {
@@ -179,6 +182,7 @@ const router = createRouter({
             meta: {
                 layoutName: "__dynamic",
                 unguard: true,
+                isGlobal: true,
             },
         },
         // Hospital request page
@@ -188,6 +192,7 @@ const router = createRouter({
             component: () => import("./views/HospitalRequest.vue"),
             meta: {
                 layoutName: "LayoutDefault",
+                isHospital: true,
             },
         },
     ],
@@ -201,34 +206,50 @@ const router = createRouter({
 });
 
 // Verify if user is logged in
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const user = useUserStore();
-    if (!user.isLoggedIn) user.verifyToken();
+    try {
+        // User has not logged in and try to navigate to page that need to be guard
+        if (!user.isLoggedIn && !to.meta.unguard) {
+            await user.verifyToken();
+        }
+        next();
+    } catch (err) {
+        console.log(err);
+        if (!err.response) return next({ name: "Server Error" });
+        if (err.response) {
+            if (err.response.status === 401)
+                return next({ name: "Unauthorized Error" });
+            if (err.response.status === 500)
+                return next({ name: "Server Error" });
+        }
 
-    next();
+        throw err;
+    }
 });
 
-// Force logout user when there is unauth action
+// Descriminate between admin and hospital account
 router.beforeEach((to, from, next) => {
-    if (to.name === "Unauthorized Error") useUserStore().logout();
+    if (to.meta.isGlobal || to.name === "Login") return next();
+
+    if (useUserStore().isAdmin && to.meta.isHospital) {
+        return next({ name: "Unauthorized Error" });
+    }
+
+    if (!useUserStore().isAdmin && !to.meta.isHospital) {
+        return next({ name: "Unauthorized Error" });
+    }
 
     next();
 });
 
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
-    if (to.name === "Login" && useUserStore().isLoggedIn) {
-        return next({ name: from.name ? from.name : "Dashboard" });
+    if (to.name === "Login" && useUserStore().token) {
+        return next({
+            name: from.name ? from.name : useUserStore().defaultPage,
+        });
     }
-    next();
-});
-
-// Prevent unauth user to access to admin pages
-router.beforeEach((to, from, next) => {
-    if (!to.meta.unguard && !useUserStore().isLoggedIn) {
-        return next({ name: "Unauthorized Error" });
-    }
-
     next();
 });
 

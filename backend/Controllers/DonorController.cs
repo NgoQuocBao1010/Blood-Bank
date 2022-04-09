@@ -154,8 +154,8 @@ namespace backend.Controllers
             return new JsonResult(sortResult);
         }
 
-        [HttpGet("success")]
-        public async Task<IActionResult> GetDonorsSuccess()
+        [HttpGet("info")]
+        public async Task<IActionResult> GetDonorsInfo()
         {
             var listDonorId = new List<string>();
             var transactions = await _donorTransactionRepository.Get();
@@ -174,6 +174,38 @@ namespace backend.Controllers
             }
 
             return new JsonResult(donors);
+        }
+        
+        [HttpGet("success")]
+        public async Task<IActionResult> GetDonorsSuccess()
+        {
+            var result = new List<Donor>();
+            var donors = await _donorRepository.Get();
+            if (donors == null)
+            {
+                return NotFound();
+            }
+
+            var listDonors = donors.ToList();
+            if (!listDonors.Any())
+            {
+                return new JsonResult(donors);
+            }
+
+            foreach (var donor in listDonors)
+            {
+                var tempDonor = await _donorRepository.Get(donor._id);
+                var listTransaction = await _donorTransactionRepository.GetTransactionByDonorAndStatus(donor._id, 1);
+                foreach (var transaction in listTransaction)
+                {
+                    tempDonor.transaction = transaction;
+                    result.Add(tempDonor);
+                    tempDonor = await _donorRepository.Get(donor._id);
+                }
+            }
+
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+            return new JsonResult(sortResult);
         }
         
         [HttpGet("failure")]

@@ -1,11 +1,14 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -32,8 +35,16 @@ namespace backend.Controllers
         
 
         [HttpPost]
-        public async Task<IActionResult> Create(Event e)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm]Event e)
         {
+            if (e.image.Length > 0)
+            {
+                await using var ms = new MemoryStream();
+                await e.image.CopyToAsync(ms);
+                var fileBytes = ms.ToArray();
+                e.binaryImage = Convert.ToBase64String(fileBytes);
+            }
             var id = await _eventRepository.Create(e);
             if (id == null)
             {
@@ -51,14 +62,14 @@ namespace backend.Controllers
             {
                 return NotFound();
             }
-            
+
             return new JsonResult(listEvents);
         }
         
 
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetNumberOfParticipants(string id, [FromQuery(Name = "now")] string? time)
+        public async Task<IActionResult> GetNumberOfParticipants(string id)
         {
             if (!ObjectId.TryParse(id, out _)) return NotFound("Invalid ID");
             var e = await _eventRepository.Get(id);
@@ -67,7 +78,9 @@ namespace backend.Controllers
                 return NotFound("Cannot find any Event from this _id");
             }
 
-            if (time != null && long.Parse(time) < long.Parse(e.startDate))
+            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+            if (time < long.Parse(e.startDate))
             {
                 var eventSubmission = await _eventSubmissionRepository.GetByEvent(id);
                 e.participants = eventSubmission.Count();

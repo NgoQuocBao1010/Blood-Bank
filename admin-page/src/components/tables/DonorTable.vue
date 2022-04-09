@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, nextTick } from "vue";
+import { inject, onBeforeMount, nextTick } from "vue";
 import FileUpload from "primevue/fileupload";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
@@ -27,12 +27,21 @@ const { donorsData, participants } = defineProps({
         type: Boolean,
         default: false,
     },
+    isRejectParticipant: {
+        type: Boolean,
+        default: false,
+    },
+    isApproveParticipant: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 let donors = $ref(null);
 let selectedParticipants = $ref([]);
 const eventStore = useEventStore();
 const emits = defineEmits(["updateParticipants"]);
+const { showErrorDialog } = inject("errorDialog");
 
 // Filter configurations
 let filters = $ref(null);
@@ -60,6 +69,10 @@ const initFilter = () => {
         "transaction.amount": {
             value: null,
             matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
+        },
+        "transaction.rejectReason": {
+            value: null,
+            matchMode: FilterMatchMode.CONTAINS,
         },
     };
 };
@@ -115,6 +128,7 @@ const onSelectExcel = async (event) => {
     newParticipants.files = event.files[0];
     selectEventsDialog = true;
 
+    // Rerender PrimeVue FileUpload Components to remove file name
     isRerender = true;
     await nextTick();
     isRerender = false;
@@ -136,21 +150,33 @@ const importExcel = async () => {
         DonorsHelpers.reformAfterExcelImport(excelData);
     selectEventsDialog = false;
 
-    const { data, status } = await DonorRepo.importParticipants(
-        newParticipants
-    );
+    try {
+        const { data, status } = await DonorRepo.importParticipants(
+            newParticipants
+        );
 
-    if (data && status === 200) {
-        toast.add({
-            severity: "success",
-            summary: "New Participants",
-            detail: `New Participants for ${
-                eventStore.getEventById(newParticipants.eventId)?.name
-            } has been added`,
-            life: 3000,
-        });
+        if (data && status === 200) {
+            toast.add({
+                severity: "success",
+                summary: "New Participants",
+                detail: `New Participants for ${
+                    eventStore.getEventById(newParticipants.eventId)?.name
+                } has been added`,
+                life: 3000,
+            });
 
-        emits("updateParticipants");
+            emits("updateParticipants");
+        }
+    } catch (e) {
+        if (e.response && e.response.status === 400) {
+            showErrorDialog(
+                "Excel has invalid data",
+                "There are some participants may already record their data on this event. Please check your data again."
+            );
+            return;
+        }
+
+        throw e;
     }
 };
 
@@ -163,6 +189,7 @@ const openConfirmDialog = (approve = true) => {
     showConfirmDialog = true;
 };
 const handleParticipants = async () => {
+    // Show error if there is no rejected reason on rejected
     if (!isApprove && !rejectReason) {
         toast.add({
             severity: "error",
@@ -174,6 +201,7 @@ const handleParticipants = async () => {
         return;
     }
 
+    // Transform data for API calls
     const participants = JSON.parse(JSON.stringify(selectedParticipants)).map(
         (row) => {
             let transformData = {};
@@ -190,12 +218,18 @@ const handleParticipants = async () => {
         : await DonorTransactionRepo.rejectParticipants(participants);
 
     if (data && status === 200) {
+        const action = isApprove ? "approved" : "rejected";
+        const toastType = isApprove ? "success" : "warn";
+
         toast.add({
-            severity: "success",
-            summary: isApprove
-                ? "Participants Approved"
-                : "Participants Rejected",
-            life: 2000,
+            severity: toastType,
+            summary: isApprove ? "Approved" : "Rejected",
+            detail: `${selectedParticipants.length} ${
+                selectedParticipants.length > 1
+                    ? "participants are"
+                    : "participant is"
+            } ${action}`,
+            life: 3000,
         });
         emits("updateParticipants");
     }
@@ -224,6 +258,7 @@ const handleParticipants = async () => {
             'transaction.blood.name',
             'transaction.blood.type',
             'transaction.amount',
+            'transaction.rejectReason',
         ]"
     >
         <!-- Header of the table -->
@@ -271,7 +306,7 @@ const handleParticipants = async () => {
 
         <!-- Empty data fallback -->
         <template #empty>
-            <h4 style="text-align: center">No donor found.</h4>
+            <h4 style="text-align: center">No participants found.</h4>
         </template>
 
         <!-- Columns -->
@@ -316,6 +351,28 @@ const handleParticipants = async () => {
                     @keydown.enter="filterCallback()"
                     class="p-column-filter"
                     :placeholder="`Search by ID`"
+                    v-tooltip.top.focus="'Press enter key to filter'"
+                />
+            </template>
+        </PrimeVueColumn>
+
+        <!-- Reject Reason -->
+        <PrimeVueColumn
+            field="transaction.rejectReason"
+            header="Reject Reason"
+            style="min-width: 300px"
+            v-if="isRejectParticipant"
+        >
+            <template #body="{ data }">
+                {{ data.transaction.rejectReason }}
+            </template>
+            <template #filter="{ filterModel, filterCallback }">
+                <InputText
+                    type="text"
+                    v-model="filterModel.value"
+                    @keydown.enter="filterCallback()"
+                    class="p-column-filter"
+                    :placeholder="`Search keyword`"
                     v-tooltip.top.focus="'Press enter key to filter'"
                 />
             </template>
@@ -469,6 +526,7 @@ const handleParticipants = async () => {
                 label="Approve"
                 class="p-button p-button-sm mr-2 approve-btn"
                 @click="openConfirmDialog"
+                v-if="!isApproveParticipant"
             />
 
             <PrimeVueButton
@@ -477,6 +535,7 @@ const handleParticipants = async () => {
                 label="Reject"
                 class="p-button p-button-sm reject-btn"
                 @click="openConfirmDialog(false)"
+                v-if="!isRejectParticipant"
             />
         </template>
     </PrimeVueTable>

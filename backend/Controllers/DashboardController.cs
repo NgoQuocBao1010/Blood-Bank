@@ -36,11 +36,10 @@ namespace backend.Controllers
             var result = new List<RecentActivities>();
             var listApprovedTransactions = await _donorTransactionRepository.GetTransactionByStatus(1);
             var listId = listApprovedTransactions
-                .Select(transaction =>
-                    new Id(transaction.donorId, transaction.dateDonated, "transaction", transaction._id)).ToList();
+                .Select(transaction => new Id(transaction.donorId, transaction.updateStatusAt, "transaction", transaction._id, transaction.amount)).ToList();
 
             var listApprovedRequest = await _requestRepository.GetRequestByStatus(1);
-            listId.AddRange(listApprovedRequest.Select(request => new Id(request._id, request.Date, "request", null)));
+            listId.AddRange(listApprovedRequest.Select(request => new Id(request._id, request.updateStatusAt, "request", null, request.Quantity)));
 
             listId = new List<Id>(listId.OrderByDescending(id => long.Parse(id.date)));
 
@@ -51,13 +50,13 @@ namespace backend.Controllers
                 {
                     case "transaction":
                         var donor = await _donorRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "receive", donor.name,
-                            id.date, id.transactionId);
+                        recentActivity = new RecentActivities(id._id, "Receive", donor.name,
+                            id.date, id.transactionId, id.amount);
                         break;
                     case "request":
                         var request = await _requestRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "donate", request.HospitalName,
-                            id.date, null);
+                        recentActivity = new RecentActivities(id._id, "Donate", request.HospitalName,
+                            id.date, id.transactionId, id.amount);
                         break;
                 }
 

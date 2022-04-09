@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
@@ -37,6 +38,34 @@ namespace backend.Repositories
         public async Task<IEnumerable<Request>> Get()
         {
             var request = await _request.Find(_ => true).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetRequestByHospitalId(string hospitalId)
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.HospitalId, hospitalId);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetPendingRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, 0);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetApprovedRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, 1);
+            var request = await _request.Find(filter).ToListAsync();
+            return request;
+        }
+
+        public async Task<IEnumerable<Request>> GetRejectedRequest()
+        {
+            var filter = Builders<Request>.Filter.Eq(r => r.Status, -1);
+            var request = await _request.Find(filter).ToListAsync();
             return request;
         }
 
@@ -104,14 +133,20 @@ namespace backend.Repositories
         public async void ApproveRequest(Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
-            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = 1);
+            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var update = Builders<Request>.Update
+                .Set(r => r.Status, request.Status = 1)
+                .Set(r => r.updateStatusAt, time.ToString());
             await _request.UpdateOneAsync(filter, update);
         }
 
         public async void RejectRequest(Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
-            var update = Builders<Request>.Update.Set(r => r.Status, request.Status = -1)
+            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var update = Builders<Request>.Update
+                .Set(r => r.Status, request.Status = -1)
+                .Set(r => r.updateStatusAt, time.ToString())
                 .Set(r => r.RejectReason, request.RejectReason);
             await _request.UpdateOneAsync(filter, update);
         }
