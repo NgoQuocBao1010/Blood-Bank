@@ -7,9 +7,7 @@ export default {
         return Repository.get(`${resource}/`);
     },
     getById(eventId) {
-        return Repository.get(
-            `${resource}/${eventId}/?now=${new Date().getTime().toString()}`
-        );
+        return Repository.get(`${resource}/${eventId}`);
     },
     getParticipants(eventId) {
         return Repository.get(`${resource}/listParticipants/${eventId}`);

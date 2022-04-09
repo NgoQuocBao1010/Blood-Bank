@@ -41,7 +41,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "973468800",
-                    "1640390400"),
+                    "1640390400000"),
                 new(eventId,
                     "093212345678",
                     "Ngô Hồng Quốc Bảo",
@@ -50,7 +50,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "971136000",
-                    "1640390400"),
+                    "1640390400000"),
                 new(eventId,
                     "093223456789",
                     "Bùi Quốc Trọng",
@@ -59,7 +59,7 @@ namespace backend.Repositories
                     "Hồ Chí Minh",
                     "male",
                     "958003200",
-                    "1640390400"),
+                    "1640390400000"),
                 new(eventId,
                     "0932345678912",
                     "Lê Chánh Nhựt",
@@ -68,7 +68,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "949881600",
-                    "1640390400")
+                    "1640390400000")
             };
             
             _eventSubmission.InsertMany(listEventSubmission);

@@ -1,4 +1,5 @@
 <script setup>
+import { inject, watch } from "vue";
 import InputText from "primevue/inputtext";
 import RadioButton from "primevue/radiobutton";
 import Dropdown from "primevue/dropdown";
@@ -10,11 +11,11 @@ import { helpers, required, email } from "@vuelidate/validators";
 import { useUserStore } from "../../stores/user";
 import UserRepo from "../../api/UserRepo";
 import HospitalRepo from "../../api/HospitalRepo";
-import { watch } from "vue";
 
 const userStore = useUserStore();
 const toast = useToast();
 const emits = defineEmits(["onNewAccount"]);
+const { showErrorDialog } = inject("errorDialog");
 
 // Formdata and Validalation rules
 let formData = $ref({
@@ -85,6 +86,7 @@ const submitData = async () => {
     }
 
     try {
+        // Reform data for API call
         let postData = null;
         if (formData.isAdmin) postData = { email: formData.email };
         else
@@ -92,7 +94,6 @@ const submitData = async () => {
                 email: formData.email,
                 hospitalId: formData.hospitalId,
             };
-
         const { data, status } = await UserRepo.createAccount(postData);
 
         if (data && status === 200) {
@@ -102,6 +103,13 @@ const submitData = async () => {
         if (e.response && e.response.status === 400) {
             if (e.response.data === "Email existed!")
                 badRequestMsg = "Email is invalid! Please try another one!";
+
+            if (e.response.data === "Hospital account existed!") {
+                showErrorDialog(
+                    "Hospital has existing account",
+                    "Every hospital should only has one account. Please cancel the current operation or choose another hospital."
+                );
+            }
         }
     } finally {
         submitting = false;
