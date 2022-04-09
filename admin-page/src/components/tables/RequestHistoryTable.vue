@@ -23,7 +23,7 @@ import Dialog from "primevue/dialog";
 const route = useRoute();
 const hospital_id = route.params._id;
 
-const { requestHistory, isActivity, showSelection } = defineProps({
+const { requestHistory, isActivity } = defineProps({
   requestHistory: {
     type: Array,
     required: true,
@@ -33,8 +33,11 @@ const { requestHistory, isActivity, showSelection } = defineProps({
     type: Boolean,
     default: false,
   },
-
-  showSelection: {
+  isRejectParticipant: {
+    type: Boolean,
+    default: false,
+  },
+  isApproveParticipant: {
     type: Boolean,
     default: false,
   },
@@ -66,6 +69,10 @@ const initFilter = () => {
     quantity: {
       value: null,
       matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO,
+    },
+    rejectReason: {
+      value: null,
+      matchMode: FilterMatchMode.CONTAINS,
     },
     status: { value: null, matchMode: FilterMatchMode.IN },
   };
@@ -147,17 +154,33 @@ const handleRequests = async () => {
     return transformData;
   });
 
-  const { data, status } = isApprove
-    ? await RequestRepo.approveRequests(requests)
-    : await RequestRepo.rejectRequests(requests);
+  try {
+    const { data, status } = isApprove
+      ? await RequestRepo.approveRequests(requests)
+      : await RequestRepo.rejectRequests(requests);
 
-  if (data && status === 200) {
-    toast.add({
-      severity: "success",
-      summary: isApprove ? "requests Approved" : "requests Rejected",
-      life: 2000,
-    });
-    emits("updateRequests");
+    if (data && status === 200) {
+      toast.add({
+        severity: "success",
+        summary: isApprove ? "requests Approved" : "requests Rejected",
+        life: 2000,
+      });
+      emits("updateRequests");
+    }
+  } catch (e) {
+    if (e.response && e.response.status === 400) {
+      toast.add({
+        severity: "error",
+        summary: e.response.data,
+        detail:
+          "The storage does not have enough blood to approve this request. Please decrease the quantity!",
+        life: 10000,
+      });
+      showConfirmDialog = false;
+      return;
+    } else {
+      throw e;
+    }
   }
 };
 </script>
@@ -183,6 +206,7 @@ const handleRequests = async () => {
         'blood.name',
         'blood.type',
         'quantity',
+        'rejectReason',
       ]"
     >
       <!-- Header of the table -->
@@ -227,7 +251,6 @@ const handleRequests = async () => {
       <PrimeVueColumn
         selectionMode="multiple"
         headerStyle="width: 2rem"
-        v-if="showSelection"
       ></PrimeVueColumn>
 
       <!-- Hospital name -->
@@ -353,6 +376,28 @@ const handleRequests = async () => {
         </template>
       </PrimeVueColumn>
 
+      <!-- Reject Reason -->
+      <PrimeVueColumn
+        field="rejectReason"
+        header="Reject Reason"
+        style="min-width: 300px"
+        v-if="isRejectParticipant"
+      >
+        <template #body="{ data }">
+          {{ data.rejectReason }}
+        </template>
+        <template #filter="{ filterModel, filterCallback }">
+          <InputText
+            type="text"
+            v-model="filterModel.value"
+            @keydown.enter="filterCallback()"
+            class="p-column-filter"
+            :placeholder="`Search keyword`"
+            v-tooltip.top.focus="'Press enter key to filter'"
+          />
+        </template>
+      </PrimeVueColumn>
+
       <!-- Status -->
       <PrimeVueColumn
         field="status"
@@ -400,6 +445,7 @@ const handleRequests = async () => {
           label="Approve"
           class="p-button p-button-sm mr-2 approve-btn"
           @click="openConfirmDialog"
+          v-if="!isApproveParticipant"
         />
 
         <PrimeVueButton
@@ -408,6 +454,7 @@ const handleRequests = async () => {
           label="Reject"
           class="p-button p-button-sm reject-btn"
           @click="openConfirmDialog(false)"
+          v-if="!isRejectParticipant"
         />
       </template>
     </PrimeVueTable>
