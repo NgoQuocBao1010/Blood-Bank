@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, defineAsyncComponent } from "vue";
+import { onBeforeMount, defineAsyncComponent, nextTick } from "vue";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
 import RequestRepo from "../api/RequestRepo";
@@ -9,6 +9,7 @@ import { useToast } from "primevue/usetoast";
 import { required, numeric } from "@vuelidate/validators";
 import { BLOOD_TYPES } from "../constants";
 import HospitalRepo from "../api/HospitalRepo";
+import ProgressBar from "primevue/progressbar";
 
 const AsyncRequestHistory = defineAsyncComponent({
   loader: () => import("../components/tables/RequestHistoryTable.vue"),
@@ -59,10 +60,23 @@ const resetForm = () => {
     (formData.date = today.getTime());
 };
 
-onBeforeMount(async () => {
+const updateRequests = async () => {
+  requestHistory = null;
   const { data } = await HospitalRepo.get(hospital_id);
   hospitalName = data.name;
   requestHistory = data.requestHistory;
+};
+
+// Rerender Form
+let isRerender = $ref(false);
+const forceReRenderForm = async () => {
+  isRerender = true;
+  await nextTick();
+  isRerender = false;
+};
+
+onBeforeMount(async () => {
+  await updateRequests();
 });
 
 const submitData = async () => {
@@ -102,6 +116,8 @@ const submitData = async () => {
       detail: "Your request is created",
       life: 3000,
     });
+    await updateRequests();
+    await forceReRenderForm();
   } catch (e) {
     if (e.response) {
       const { status } = e.response;
@@ -202,6 +218,7 @@ const submitData = async () => {
           </div>
         </div>
       </div>
+
       <!-- Request History -->
       <div class="card">
         <div class="flex-center" style="width: 100%" v-if="!showRequestHistory">
@@ -215,8 +232,21 @@ const submitData = async () => {
           <h2>Request History</h2>
           <AsyncRequestHistory
             :requestHistory="requestHistory"
-            :v-if="requestHistory"
+            v-if="requestHistory"
           />
+
+          <!-- Progress bar -->
+          <div
+            class="flex flex-center"
+            style="flex-direction: column; margin-block: 3rem"
+            v-else
+          >
+            <h5>Loading ...</h5>
+            <ProgressBar
+              mode="indeterminate"
+              style="height: 0.5em; width: 100%"
+            />
+          </div>
         </template>
       </div>
     </div>
