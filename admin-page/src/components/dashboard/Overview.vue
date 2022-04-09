@@ -1,6 +1,4 @@
 <script setup>
-import { onBeforeMount } from "vue";
-
 const apiCall = () => {
     return new Promise((resolve, reject) => {
         setTimeout(() => resolve({ name: "Quoc Bao" }), 2000);
@@ -102,4 +100,8 @@ let data = $ref(await apiCall());
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.text-decreased {
+    color: var(--primary-color) !important;
+}
+</style>

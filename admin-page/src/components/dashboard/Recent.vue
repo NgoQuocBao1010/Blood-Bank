@@ -33,7 +33,7 @@ onBeforeMount(async () => {
             <!-- Type -->
             <PrimeVueColumn field="type" header="Amount">
                 <template #body="{ data }">
-                    <span class="flex flex-center">
+                    <span class="flex" style="align-items: center">
                         <i
                             class="fa-solid fa-circle-plus icon-type"
                             v-if="data.type === 'Receive'"

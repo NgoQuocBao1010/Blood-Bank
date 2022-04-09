@@ -318,8 +318,5 @@ let menuItems = $ref([
             font-size: 0.9rem;
         }
     }
-    .text-decreased {
-        color: var(--primary-color) !important;
-    }
 }
 </style>
