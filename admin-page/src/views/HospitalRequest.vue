@@ -45,7 +45,7 @@ const toast = useToast();
 let hospitalName = $ref("");
 let errorMessage = $ref(null);
 let submitting = $ref(false);
-let requestHistory = $ref(null);
+let requestHistory = $ref([]);
 let showRequestHistory = $ref(false);
 
 // Reset form after submit
@@ -60,13 +60,9 @@ const resetForm = () => {
 };
 
 onBeforeMount(async () => {
-  const data = await HospitalRepo.get(hospital_id);
-  hospitalName = data.data.name;
-  const requestData = await RequestRepo.getAll();
-
-  if (requestData.data && requestData.data.length !== 0) {
-    requestHistory = requestData.data;
-  }
+  const { data } = await HospitalRepo.get(hospital_id);
+  hospitalName = data.name;
+  requestHistory = data.requestHistory;
 });
 
 const submitData = async () => {
@@ -217,7 +213,10 @@ const submitData = async () => {
 
         <template v-else>
           <h2>Request History</h2>
-          <AsyncRequestHistory :requestHistory="requestHistory" />
+          <AsyncRequestHistory
+            :requestHistory="requestHistory"
+            :v-if="requestHistory"
+          />
         </template>
       </div>
     </div>

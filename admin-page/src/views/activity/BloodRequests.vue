@@ -3,6 +3,7 @@ import { onBeforeMount } from "vue";
 import RequestHistoryTable from "../../components/tables/RequestHistoryTable.vue";
 import RequestRepo from "../../api/RequestRepo";
 import Dropdown from "primevue/dropdown";
+import ProgressBar from "primevue/progressbar";
 
 let requestHistory = $ref(null);
 let showSelection = $ref(true);
@@ -35,8 +36,14 @@ const onSortChange = async (event) => {
   }
 };
 
+const updateRequests = async () => {
+  requestHistory = null;
+  const { data } = await RequestRepo.getPending();
+  requestHistory = data;
+};
+
 onBeforeMount(async () => {
-  await onSortChange();
+  await updateRequests();
 });
 </script>
 
@@ -63,9 +70,23 @@ onBeforeMount(async () => {
         <RequestHistoryTable
           v-if="requestHistory"
           :requestHistory="requestHistory"
-          :isAcitivy="true"
+          :isActivity="true"
           :showSelection="showSelection"
+          @updateRequests="updateRequests"
         />
+
+        <!-- Progress bar -->
+        <div
+          class="flex flex-center"
+          style="flex-direction: column; margin-block: 3rem"
+          v-else
+        >
+          <h5>Loading ...</h5>
+          <ProgressBar
+            mode="indeterminate"
+            style="height: 0.5em; width: 100%"
+          />
+        </div>
       </div>
     </div>
   </div>

@@ -22,7 +22,6 @@ export default {
   },
 
   post(params) {
-    useLocalToken();
     return Repository.post(`${resource}/`, {
       quantity: params.quantity,
       blood: {

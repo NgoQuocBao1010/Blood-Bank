@@ -25,6 +25,7 @@ let items = $ref(null);
 
 onBeforeMount(async () => {
   const hospitalData = await HospitalRepo.get(_id);
+  console.log(hospitalData);
   hospital = hospitalData.data;
   requestHistory = hospital.requestHistory;
 

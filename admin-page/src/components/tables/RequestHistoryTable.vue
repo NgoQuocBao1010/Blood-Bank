@@ -23,13 +23,13 @@ import Dialog from "primevue/dialog";
 const route = useRoute();
 const hospital_id = route.params._id;
 
-const { requestHistory, isAcitivy, showSelection } = defineProps({
+const { requestHistory, isActivity, showSelection } = defineProps({
   requestHistory: {
     type: Array,
     required: true,
   },
 
-  isAcitivy: {
+  isActivity: {
     type: Boolean,
     default: false,
   },
@@ -43,6 +43,7 @@ const { requestHistory, isAcitivy, showSelection } = defineProps({
 let requests = $ref(null);
 let selectedRequests = $ref([]);
 // let fetchingData = $ref(true);
+const emits = defineEmits(["updateRequests"]);
 
 // Filter configurations
 let filters = $ref(null);
@@ -79,7 +80,7 @@ onBeforeMount(() => {
   let requestData;
 
   //   Check if not in activity, show only request hitory belong to  hospital
-  if (isAcitivy === false) {
+  if (isActivity === false) {
     if (requestHistory && requestHistory.length != 0) {
       requestData = requestHistory.filter(
         (request) => request.hospitalId === hospital_id
@@ -156,6 +157,7 @@ const handleRequests = async () => {
       summary: isApprove ? "requests Approved" : "requests Rejected",
       life: 2000,
     });
+    emits("updateRequests");
   }
 };
 </script>
@@ -233,7 +235,7 @@ const handleRequests = async () => {
         field="hospitalName"
         header="Hospital Name"
         style="min-width: 250px; max-width: 12rem"
-        v-if="isAcitivy"
+        v-if="isActivity"
       >
         <template #body="{ data }">
           {{ data && data.hospitalName }}
@@ -356,6 +358,7 @@ const handleRequests = async () => {
         field="status"
         header="Status"
         style="max-width: 14rem !important"
+        v-if="!isActivity"
       >
         <template #body="{ data }">
           <span
