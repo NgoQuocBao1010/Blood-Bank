@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Password from "primevue/password";
@@ -74,9 +74,6 @@ const handleOnSubmit = () => {
                 ></Checkbox>
                 <label for="rememberme1">Remember me</label>
               </div>
-              <a class="font-medium no-underline ml-2 text-right cursor-pointer"
-                >Forgot password?</a
-              >
             </div>
             <Button
               label="Sign In"

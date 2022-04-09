@@ -126,7 +126,16 @@ const logout = () => {
         </ul>
 
         <OverlayPanel ref="accountBtn" id="account_panel">
-            <p class="app-highlight">{{ userStore.email || "Guest" }}</p>
+            <p class="app-highlight">
+                <template v-if="userStore.isLoggedIn">
+                    <i
+                        v-if="userStore.isAdmin"
+                        class="fa-solid fa-user-lock"
+                    ></i>
+                    <i v-else class="fa-solid fa-user-nurse"></i>
+                </template>
+                {{ userStore.email || "Guest" }}
+            </p>
             <p v-if="userStore.isLoggedIn">
                 <PrimeVueButton
                     icon="fa-solid fa-arrow-right-from-bracket"
@@ -160,6 +169,13 @@ const logout = () => {
         font-size: 1rem;
         text-align: center;
         width: 20em !important;
+    }
+
+    .app-highlight {
+        i {
+            font-size: 1.2rem;
+            padding: 10px;
+        }
     }
 }
 </style>

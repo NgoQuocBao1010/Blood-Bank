@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Text.Json.Serialization;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace backend.Models
@@ -28,14 +29,14 @@ namespace backend.Models
         public int Status { get; set; }
         public string RejectReason { get; set; }
 
-        public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int Status, string rejectReason)
+        public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int status, string rejectReason)
         {
             Date = date;
             Quantity = quantity;
             Blood = blood;
             HospitalId = hospitalId;
             HospitalName = hospitalName;
-            this.Status = Status;
+            Status = status;
             RejectReason = rejectReason;
         }
     }

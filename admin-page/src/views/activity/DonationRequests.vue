@@ -1,6 +1,7 @@
 <script setup>
+import InputSwitch from "primevue/inputswitch";
 import ProgressBar from "primevue/progressbar";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, watch } from "vue";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
@@ -8,11 +9,23 @@ import DonorTable from "../../components/tables/DonorTable.vue";
 let donorsData = $ref(null);
 let fetchingDonors = $ref(false);
 
-const updateParticipants = async () => {
+let isRejectParticipants = $ref(false);
+watch(
+    () => isRejectParticipants,
+    async () => {
+        await updateParticipants(false);
+    }
+);
+
+const updateParticipants = async (reset = true) => {
+    if (reset) isRejectParticipants = false;
+
     fetchingDonors = true;
     try {
         donorsData = null;
-        const { data } = await DonorRepo.getAll();
+        const { data } = isRejectParticipants
+            ? await DonorRepo.getReject()
+            : await DonorRepo.getAll();
         donorsData = data;
     } catch (e) {
         throw e;
@@ -31,13 +44,22 @@ onBeforeMount(async () => {
         <div class="col-12">
             <div class="card">
                 <!-- Page headers -->
-                <h2>Donation Requests Monitor</h2>
+                <div class="flex header">
+                    <h2>Donation Requests Monitor</h2>
+
+                    <div class="switch">
+                        <p>Pending Donors</p>
+                        <InputSwitch v-model="isRejectParticipants" />
+                        <p>Rejected Donors</p>
+                    </div>
+                </div>
 
                 <!-- Donors table -->
                 <DonorTable
                     v-if="donorsData"
                     :donorsData="donorsData"
                     :participants="true"
+                    :isReject="isRejectParticipants"
                     @updateParticipants="updateParticipants"
                 />
 
@@ -58,4 +80,15 @@ onBeforeMount(async () => {
     </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.header {
+    align-items: center;
+    justify-content: space-between;
+
+    .switch {
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+    }
+}
+</style>
