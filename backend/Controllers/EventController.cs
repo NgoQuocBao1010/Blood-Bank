@@ -1,11 +1,14 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 
@@ -32,8 +35,16 @@ namespace backend.Controllers
         
 
         [HttpPost]
-        public async Task<IActionResult> Create(Event e)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm]Event e)
         {
+            if (e.image.Length > 0)
+            {
+                await using var ms = new MemoryStream();
+                await e.image.CopyToAsync(ms);
+                var fileBytes = ms.ToArray();
+                e.binaryImage = Convert.ToBase64String(fileBytes);
+            }
             var id = await _eventRepository.Create(e);
             if (id == null)
             {
@@ -51,7 +62,7 @@ namespace backend.Controllers
             {
                 return NotFound();
             }
-            
+
             return new JsonResult(listEvents);
         }
         

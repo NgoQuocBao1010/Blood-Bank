@@ -27,7 +27,7 @@ namespace backend.Repositories
             {
                 new("Hoan My", "Can Tho", "9876543210"),
                 new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
-                new("Benh Vien 121", "Can Tho", "0123456780"),
+                new("121", "Can Tho", "0123456780"),
             };
 
             _hospital.InsertMany(listHospital);
