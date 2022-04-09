@@ -1,31 +1,34 @@
 <script setup>
-import InputSwitch from "primevue/inputswitch";
-import ProgressBar from "primevue/progressbar";
 import { onBeforeMount, watch } from "vue";
+import ProgressBar from "primevue/progressbar";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
 
 let donorsData = $ref(null);
 let fetchingDonors = $ref(false);
+const fetchData = (type) => {
+    return {
+        pending: DonorRepo.getAllDonations(),
+        rejected: DonorRepo.getRejectDonations(),
+        approved: DonorRepo.getSuccessDonations(),
+    }[type];
+};
 
-let isRejectParticipants = $ref(false);
+const tabs = ["approved", "rejected", "pending"];
+let donorType = $ref("pending");
 watch(
-    () => isRejectParticipants,
+    () => donorType,
     async () => {
-        await updateParticipants(false);
+        await fetchParticipants();
     }
 );
 
-const updateParticipants = async (reset = true) => {
-    if (reset) isRejectParticipants = false;
-
+const fetchParticipants = async () => {
     fetchingDonors = true;
     try {
         donorsData = null;
-        const { data } = isRejectParticipants
-            ? await DonorRepo.getReject()
-            : await DonorRepo.getAll();
+        const { data } = await fetchData(donorType);
         donorsData = data;
     } catch (e) {
         throw e;
@@ -34,8 +37,13 @@ const updateParticipants = async (reset = true) => {
     }
 };
 
+const updateParticipants = async () => {
+    donorType = "pending";
+    await fetchParticipants();
+};
+
 onBeforeMount(async () => {
-    await updateParticipants();
+    await fetchParticipants();
 });
 </script>
 
@@ -46,27 +54,40 @@ onBeforeMount(async () => {
                 <!-- Page headers -->
                 <div class="flex header">
                     <h2>Donation Requests Monitor</h2>
-
-                    <div class="switch">
-                        <p>Pending Donors</p>
-                        <InputSwitch v-model="isRejectParticipants" />
-                        <p>Rejected Donors</p>
-                    </div>
                 </div>
 
-                <!-- Donors table -->
-                <DonorTable
-                    v-if="donorsData"
-                    :donorsData="donorsData"
-                    :participants="true"
-                    :isReject="isRejectParticipants"
-                    @updateParticipants="updateParticipants"
-                />
+                <!-- Donor Type Selections -->
+                <ul class="tab-wrapper">
+                    <li
+                        v-for="tab in tabs"
+                        v-ripple
+                        class="p-ripple tab"
+                        :class="{ active: tab === donorType }"
+                        @click="donorType = tab"
+                    >
+                        <p class="content">{{ tab }}</p>
+                    </li>
+                </ul>
+
+                <!-- Donor Table -->
+                <div id="donor-table" v-if="donorsData">
+                    <DonorTable
+                        :donorsData="donorsData"
+                        :participants="true"
+                        :isRejectParticipant="donorType === 'rejected'"
+                        :isApproveParticipant="donorType === 'approved'"
+                        @updateParticipants="updateParticipants"
+                    />
+                </div>
 
                 <!-- Progress bar -->
                 <div
                     class="flex flex-center"
-                    style="flex-direction: column; margin-block: 3rem"
+                    style="
+                        flex-direction: column;
+                        padding: 3rem 1rem;
+                        background-color: #f8f9fa;
+                    "
                     v-else
                 >
                     <h5>Loading ...</h5>
@@ -81,14 +102,37 @@ onBeforeMount(async () => {
 </template>
 
 <style lang="scss" scoped>
-.header {
-    align-items: center;
-    justify-content: space-between;
+.tab-wrapper {
+    padding-top: 1rem;
+    margin: 0;
+    border-top: 1px solid rgb(236, 236, 236);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.2rem;
+    .tab {
+        padding: 0.75rem 2rem;
+        cursor: pointer;
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
+        text-transform: capitalize;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        color: lightgray;
+        position: relative;
 
-    .switch {
-        display: flex;
-        justify-content: center;
-        gap: 1em;
+        &:hover {
+            background-color: #f8f9fa;
+        }
+
+        &.active {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .content {
+            margin: 0;
+            padding: 0;
+        }
     }
 }
 </style>

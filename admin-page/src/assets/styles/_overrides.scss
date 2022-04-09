@@ -370,6 +370,12 @@ body::-webkit-scrollbar,
     background: rgba(var(--primary-color-rbg), 0.2) !important;
 }
 
+#donor-table {
+    .p-datatable-header {
+        border: none !important;
+    }
+}
+
 @media (min-width: 992px) {
     .layout-wrapper {
         &.layout-static {

@@ -27,6 +27,7 @@ namespace backend.Models
         public string HospitalId { get; set; }
         public string HospitalName { get; set; }
         public int Status { get; set; }
+        public string updateStatusAt { get; set; }
         public string RejectReason { get; set; }
 
         public Request(string date, int quantity, RequestBlood blood, string hospitalId, string hospitalName, int status, string rejectReason)
