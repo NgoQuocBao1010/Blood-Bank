@@ -16,7 +16,7 @@ const timeDiffernet = (date) => {
     const minutes = Math.floor(now.diff(date1) / 60000);
 
     if (minutes >= 60 * 24) {
-        values = Math.floor((minutes / 60) * 24);
+        values = Math.floor(minutes / (60 * 24));
         timeUnit = values > 1 ? "days" : "day";
     } else if (minutes >= 60) {
         values = Math.floor(minutes / 60);

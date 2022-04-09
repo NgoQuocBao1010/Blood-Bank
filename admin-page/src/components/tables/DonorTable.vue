@@ -27,7 +27,11 @@ const { donorsData, participants } = defineProps({
         type: Boolean,
         default: false,
     },
-    isReject: {
+    isRejectParticipant: {
+        type: Boolean,
+        default: false,
+    },
+    isApproveParticipant: {
         type: Boolean,
         default: false,
     },
@@ -214,12 +218,18 @@ const handleParticipants = async () => {
         : await DonorTransactionRepo.rejectParticipants(participants);
 
     if (data && status === 200) {
+        const action = isApprove ? "approved" : "rejected";
+        const toastType = isApprove ? "success" : "warn";
+
         toast.add({
-            severity: "success",
-            summary: isApprove
-                ? "Participants Approved"
-                : "Participants Rejected",
-            life: 2000,
+            severity: toastType,
+            summary: isApprove ? "Approved" : "Rejected",
+            detail: `${selectedParticipants.length} ${
+                selectedParticipants.length > 1
+                    ? "participants are"
+                    : "participant is"
+            } ${action}`,
+            life: 3000,
         });
         emits("updateParticipants");
     }
@@ -351,7 +361,7 @@ const handleParticipants = async () => {
             field="transaction.rejectReason"
             header="Reject Reason"
             style="min-width: 300px"
-            v-if="isReject"
+            v-if="isRejectParticipant"
         >
             <template #body="{ data }">
                 {{ data.transaction.rejectReason }}
@@ -516,6 +526,7 @@ const handleParticipants = async () => {
                 label="Approve"
                 class="p-button p-button-sm mr-2 approve-btn"
                 @click="openConfirmDialog"
+                v-if="!isApproveParticipant"
             />
 
             <PrimeVueButton
@@ -524,7 +535,7 @@ const handleParticipants = async () => {
                 label="Reject"
                 class="p-button p-button-sm reject-btn"
                 @click="openConfirmDialog(false)"
-                v-if="!isReject"
+                v-if="!isRejectParticipant"
             />
         </template>
     </PrimeVueTable>

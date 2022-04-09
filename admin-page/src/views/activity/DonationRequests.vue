@@ -74,7 +74,8 @@ onBeforeMount(async () => {
                     <DonorTable
                         :donorsData="donorsData"
                         :participants="true"
-                        :isReject="donorType === 'rejected'"
+                        :isRejectParticipant="donorType === 'rejected'"
+                        :isApproveParticipant="donorType === 'approved'"
                         @updateParticipants="updateParticipants"
                     />
                 </div>
@@ -116,6 +117,7 @@ onBeforeMount(async () => {
         text-transform: capitalize;
         font-weight: 700;
         transition: all 0.3s ease;
+        color: lightgray;
         position: relative;
 
         &:hover {
