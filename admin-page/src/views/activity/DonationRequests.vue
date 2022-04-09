@@ -6,7 +6,6 @@ import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
 
 let donorsData = $ref(null);
-let fetchingDonors = $ref(false);
 const fetchData = (type) => {
     return {
         pending: DonorRepo.getAllDonations(),
@@ -25,15 +24,12 @@ watch(
 );
 
 const fetchParticipants = async () => {
-    fetchingDonors = true;
     try {
         donorsData = null;
         const { data } = await fetchData(donorType);
         donorsData = data;
     } catch (e) {
         throw e;
-    } finally {
-        fetchingDonors = false;
     }
 };
 

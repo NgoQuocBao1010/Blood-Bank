@@ -31,7 +31,7 @@ onBeforeMount(async () => {
             <PrimeVueColumn field="detail" header="Detail"></PrimeVueColumn>
 
             <!-- Type -->
-            <PrimeVueColumn field="type" header="amount">
+            <PrimeVueColumn field="type" header="Amount">
                 <template #body="{ data }">
                     <span class="flex flex-center">
                         <i
