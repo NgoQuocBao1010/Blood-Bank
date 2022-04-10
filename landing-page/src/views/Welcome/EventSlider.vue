@@ -11,7 +11,6 @@ const router = useRouter();
 
 const events = ref(null);
 const today = new Date();
-const now = new Date(today).getTime();
 
 onBeforeMount(async () => {
   if (!eventStore.events) {
@@ -23,7 +22,6 @@ onBeforeMount(async () => {
 const handleClick = (eventId) => {
   router.push({
     path: `/donate/${eventId}`,
-    query: { now: now },
   });
 };
 </script>
