@@ -162,7 +162,7 @@ namespace backend.Repositories
             if (user.Result.Any()) return;
 
             var defaultData = new DefaultData();
-            var data = defaultData.ReadJson("default_data.json");
+            var data = DefaultData.ReadJson("default_data.json");
             
             var hospital = _hospitalRepository.Get();
             for (var i = 0; i < data.Result.Users.Count; i++)

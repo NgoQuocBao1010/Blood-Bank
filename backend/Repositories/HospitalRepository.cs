@@ -24,15 +24,7 @@ namespace backend.Repositories
         {
             var hospital = Get();
             if (hospital.Result.Any()) return;
-            // var listHospital = new List<Hospital>
-            // {
-            //     new("Hoan My", "Can Tho", "9876543210"),
-            //     new("Da Khoa Trung Uong", "Can Tho", "0123456789"),
-            //     new("121", "Can Tho", "0123456780"),
-            // };
-            // var defaultData = userRepository.ReadJson("default_data.json");
-            var defaultData = new DefaultData();
-            var data = defaultData.ReadJson("default_data.json");
+            var data = DefaultData.ReadJson("default_data.json");
 
             _hospital.InsertMany(data.Result.Hospitals);
         }
