@@ -14,6 +14,7 @@ import { required } from "@vuelidate/validators";
 
 import { useEventStore } from "../../stores/event";
 import EventRepo from "../../api/EventRepo";
+import { fileToBase64 } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
 
 const router = useRouter();
@@ -45,7 +46,7 @@ let formData = $ref({
     startDate: new Date(),
     duration: 1,
     detail: "",
-    image: null,
+    binaryImage: null,
 });
 const formRules = $computed(() => {
     return {
@@ -59,12 +60,11 @@ const formRules = $computed(() => {
     };
 });
 
-const onImageUpload = (e) => {
+const onImageUpload = async (e) => {
     const files = e.target.files || e.dataTransfer.files;
     if (!files.length) return;
 
-    formData.image = files[0];
-    console.log(formData.image);
+    formData.binaryImage = await fileToBase64(files[0]);
 };
 
 onBeforeMount(async () => {
@@ -115,37 +115,28 @@ const submitData = async () => {
     formData.startDate = formData.startDate.getTime().toString();
 
     try {
-        if (isEditPage) {
-            const { data, status } = await EventRepo.edit(_id, formData);
+        const { data, status } = isEditPage
+            ? await EventRepo.edit(_id, formData)
+            : await EventRepo.create(formData);
 
-            if (data && status === 200) {
-                await useEventStore().setEvents();
-                toast.add({
-                    severity: "success",
-                    summary: "Successful",
-                    detail: "Event is edited",
-                    life: 3000,
-                });
+        if (data && status === 200) {
+            await useEventStore().setEvents();
+            toast.add({
+                severity: "success",
+                summary: "Successful",
+                detail: isEditPage
+                    ? "Event is successfully edited"
+                    : "New event was successfully created",
+                life: 3000,
+            });
 
-                router.push({ name: "Event Detail", params: { _id } });
-            }
-        } else {
-            const { data, status } = await EventRepo.create(formData);
-
-            if (data && status === 200) {
-                await useEventStore().setEvents();
-                toast.add({
-                    severity: "success",
-                    summary: "Successful",
-                    detail: "New event is created",
-                    life: 3000,
-                });
-
-                router.push({ name: "Events Management" });
-            }
+            const redirectRoute = isEditPage
+                ? { name: "Event Detail", params: { _id } }
+                : { name: "Events Management" };
+            router.push(redirectRoute);
         }
     } catch (e) {
-        console.log(e);
+        console.log("Error", e);
         throw e;
     } finally {
         loading = false;

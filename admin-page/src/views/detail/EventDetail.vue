@@ -70,10 +70,7 @@ onBeforeMount(async () => {
                 <div class="card flex">
                     <!-- Left content -->
                     <div class="card__content flex-center">
-                        <img
-                            src="../../assets/images/event.png"
-                            alt="Event Image"
-                        />
+                        <img :src="event.binaryImage" alt="Event Image" />
                     </div>
 
                     <!-- Right content -->
