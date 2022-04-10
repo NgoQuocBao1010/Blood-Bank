@@ -123,7 +123,7 @@ const downloadExcel = () => {
     return;
   }
 
-  JSONtoExcel(excelData, "Pending_Requests");
+  JSONtoExcel(excelData, "Blood_Requests");
 };
 
 // Approve reject
