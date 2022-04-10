@@ -7,6 +7,7 @@ import EventRepo from "../../api/EventRepo";
 import EventHelper from "../../utils/helpers/Event";
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import { formatDate } from "../../utils";
+import { DEFAULT_EVENT_COVER } from "../../constants";
 
 const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
@@ -70,7 +71,10 @@ onBeforeMount(async () => {
                 <div class="card flex">
                     <!-- Left content -->
                     <div class="card__content flex-center">
-                        <img :src="event.binaryImage" alt="Event Image" />
+                        <img
+                            :src="event.binaryImage || DEFAULT_EVENT_COVER"
+                            alt="Event Image"
+                        />
                     </div>
 
                     <!-- Right content -->
@@ -211,6 +215,7 @@ onBeforeMount(async () => {
     &__content {
         flex: 1 1 50%;
         padding: 1rem;
+        padding-top: 4rem;
         position: relative;
 
         img {
@@ -239,8 +244,8 @@ onBeforeMount(async () => {
 
         .edit-btn {
             position: absolute;
-            top: -1rem;
-            right: -1rem;
+            top: 0;
+            right: 0;
         }
     }
 }
