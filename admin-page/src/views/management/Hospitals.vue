@@ -1,10 +1,13 @@
 <script setup>
 import { onBeforeMount } from "vue";
 import { useRouter, RouterLink } from "vue-router";
-import InputText from "primevue/inputtext";
+import { useToast } from "primevue/usetoast";
+import { JSONtoExcel } from "../../utils/excel";
 import { FilterMatchMode } from "primevue/api";
 
+import InputText from "primevue/inputtext";
 import HospitalRepo from "../../api/HospitalRepo";
+import HospitalsHelpers from "../../utils/helpers/Hospitals";
 
 const router = useRouter();
 
@@ -29,10 +32,6 @@ onBeforeMount(async () => {
   const data = await HospitalRepo.getAll();
   fetchingData = false;
   hospitals = data.data;
-
-  // console.log("hospital data: ", hospitals);
-
-  initFilters();
   hospitals && hospitals.length !== 0 && initFilters();
 });
 
@@ -40,6 +39,23 @@ const onRowClick = (payload) => {
   // Go to event detail when click a row in the table
   const { _id: hospitalId } = payload.data;
   router.push({ name: "Hospital Detail", params: { _id: hospitalId } });
+};
+
+// Excel export
+const toast = useToast();
+const downloadExcel = () => {
+  let excelData = HospitalsHelpers.transformRowsBeforeExcel(hospitals);
+
+  if (hospitals.length === 0) {
+    toast.add({
+      severity: "error",
+      summary: "No information",
+      detail: "There is no hospitals data found",
+      life: 3000,
+    });
+    return;
+  }
+  JSONtoExcel(excelData, "Hospitals_List");
 };
 </script>
 
@@ -86,6 +102,14 @@ const onRowClick = (payload) => {
                   label="Clear"
                   class="p-button-outlined mb-2 mr-2"
                   @click="clearFilter"
+                />
+
+                <PrimeVueButton
+                  type="button"
+                  icon="pi pi-file-excel"
+                  label="Export to Excel"
+                  class="p-button-outlined mb-2 mr-2"
+                  @click="downloadExcel"
                 />
 
                 <RouterLink
