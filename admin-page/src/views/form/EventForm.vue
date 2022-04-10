@@ -45,7 +45,7 @@ let formData = $ref({
     startDate: new Date(),
     duration: 1,
     detail: "",
-    posterImg: null,
+    image: null,
 });
 const formRules = $computed(() => {
     return {
@@ -58,6 +58,14 @@ const formRules = $computed(() => {
         detail: { required },
     };
 });
+
+const onImageUpload = (e) => {
+    const files = e.target.files || e.dataTransfer.files;
+    if (!files.length) return;
+
+    formData.image = files[0];
+    console.log(formData.image);
+};
 
 onBeforeMount(async () => {
     // Check if this is a Event Edit page
@@ -106,36 +114,41 @@ const submitData = async () => {
     loading = true;
     formData.startDate = formData.startDate.getTime().toString();
 
-    if (isEditPage) {
-        const { data, status } = await EventRepo.edit(_id, formData);
+    try {
+        if (isEditPage) {
+            const { data, status } = await EventRepo.edit(_id, formData);
 
-        if (data && status === 200) {
-            loading = false;
-            await useEventStore().setEvents();
-            toast.add({
-                severity: "success",
-                summary: "Successful",
-                detail: "Event is edited",
-                life: 3000,
-            });
+            if (data && status === 200) {
+                await useEventStore().setEvents();
+                toast.add({
+                    severity: "success",
+                    summary: "Successful",
+                    detail: "Event is edited",
+                    life: 3000,
+                });
 
-            router.push({ name: "Event Detail", params: { _id } });
+                router.push({ name: "Event Detail", params: { _id } });
+            }
+        } else {
+            const { data, status } = await EventRepo.create(formData);
+
+            if (data && status === 200) {
+                await useEventStore().setEvents();
+                toast.add({
+                    severity: "success",
+                    summary: "Successful",
+                    detail: "New event is created",
+                    life: 3000,
+                });
+
+                router.push({ name: "Events Management" });
+            }
         }
-    } else {
-        const { data, status } = await EventRepo.create(formData);
-
-        if (data && status === 200) {
-            loading = false;
-            await useEventStore().setEvents();
-            toast.add({
-                severity: "success",
-                summary: "Successful",
-                detail: "New event is created",
-                life: 3000,
-            });
-
-            router.push({ name: "Events Management" });
-        }
+    } catch (e) {
+        console.log(e);
+        throw e;
+    } finally {
+        loading = false;
     }
 };
 
@@ -185,6 +198,7 @@ const fixingVuevalidateBugs = (data) => {
                 style="margin-bottom: 1rem; border-radius: 15px"
             />
 
+            <div class="col-8"></div>
             <div class="card">
                 <h3 class="title" v-if="isEditPage">
                     {{ formData?.name }} Event
@@ -194,7 +208,10 @@ const fixingVuevalidateBugs = (data) => {
                 </h3>
 
                 <!-- Form -->
-                <div class="p-fluid formgrid grid">
+                <div
+                    class="p-fluid formgrid col-10 grid"
+                    style="margin: 0 auto"
+                >
                     <!-- Event Name -->
                     <div class="field col-12">
                         <label for="event-name">Event Name</label>
@@ -288,11 +305,11 @@ const fixingVuevalidateBugs = (data) => {
 
                     <!-- Event Poster -->
                     <div class="field col-12">
-                        <label for="poster">Event poster (.png, .jpg)</label>
+                        <label for="poster">Event poster (* image file)</label>
                         <InputText
                             id="poster"
                             type="file"
-                            v-model="formData.posterImg"
+                            @change="onImageUpload"
                             accept="image/png, image/gif, image/jpeg"
                         />
                     </div>
