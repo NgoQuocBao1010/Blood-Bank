@@ -152,7 +152,8 @@ namespace backend.Controllers
                 }
 
                 var result = await _eventRepository.Delete(id);
-                return Ok(result);
+                if (!result) return BadRequest("Delete Event Failed");
+                return Ok("Delete Event Successfully");
             }
             catch (Exception e)
             {

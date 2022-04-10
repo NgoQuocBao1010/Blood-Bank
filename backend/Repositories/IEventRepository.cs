@@ -16,7 +16,7 @@ namespace backend.Repositories
         Task<IEnumerable<Event>> Get();
         
         // Update
-        Task<long> Update(string _id, Event e);
+        Task<Event> Update(string _id, Event e);
         
         // Update Number of Participants
         Task<bool> UpdateParticipant(string _id, int numOfParticipants);
