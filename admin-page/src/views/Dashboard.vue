@@ -6,6 +6,7 @@ import Overview from "../components/dashboard/Overview.vue";
 import OverviewSkeleton from "../components/dashboard/OverviewSkeleton.vue";
 import RecentActivities from "../components/dashboard/Recent.vue";
 import BloodStorage from "../components/dashboard/BloodStorage.vue";
+import BloodStorageSkeleton from "../components/dashboard/BloodStorageSkeleton.vue";
 import { THEMES } from "../constants/index.js";
 
 // Chart data
@@ -73,7 +74,7 @@ let menuItems = $ref([
                     <BloodStorage />
                 </template>
                 <template #fallback>
-                    <p>Loading ...</p>
+                    <BloodStorageSkeleton />
                 </template>
             </Suspense>
         </div>
