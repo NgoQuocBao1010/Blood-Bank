@@ -250,6 +250,7 @@ const handleRequests = async () => {
       <!-- Selection column -->
       <PrimeVueColumn
         selectionMode="multiple"
+        v-if="isActivity"
         headerStyle="width: 2rem"
       ></PrimeVueColumn>
 
