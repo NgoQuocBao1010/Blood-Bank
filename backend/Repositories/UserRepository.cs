@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.IO;
 using MongoDB.Driver;
+using Newtonsoft.Json;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
+
 
 namespace backend.Repositories
 {
@@ -79,6 +85,13 @@ namespace backend.Repositories
             return user;
         }
 
+        public async Task<DefaultData> ReadJson(string filePath)
+        {
+            var jsonText = await File.ReadAllTextAsync(filePath);
+            var json = JsonConvert.DeserializeObject<DefaultData>(jsonText);
+            return json;
+        }
+        
         public async Task<long> Update(string _id, User user)
         {
             var filter = Builders<User>.Filter.Eq(u => u._id, _id);

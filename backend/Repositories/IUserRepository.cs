@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Repositories
 {
@@ -15,6 +17,8 @@ namespace backend.Repositories
         Task<bool> CheckUserEmail(string email);
         Task<bool> CheckHospitalId(string hospitalId);
         Task<IEnumerable<User>> Get();
+
+        Task<DefaultData> ReadJson(string filePath);
 
         // Update
         Task<long> Update(string _id, User user);

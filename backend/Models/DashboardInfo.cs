@@ -103,4 +103,6 @@ namespace backend.Models
             this.events = events;
         }
     }
+    
+    
 }
