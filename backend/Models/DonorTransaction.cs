@@ -26,6 +26,7 @@ namespace backend.Models
         public string dateDonated { get; set; }
         public int amount { get; set; }
         public int status { get; set; }
+        public string updateStatusAt { get; set; }
         public string rejectReason { get; set; }
         public string donorId { get; set; }
     }
