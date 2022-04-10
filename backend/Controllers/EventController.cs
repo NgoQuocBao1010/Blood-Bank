@@ -35,16 +35,8 @@ namespace backend.Controllers
         
 
         [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm]Event e)
+        public async Task<IActionResult> Create(Event e)
         {
-            if (e.image.Length > 0)
-            {
-                await using var ms = new MemoryStream();
-                await e.image.CopyToAsync(ms);
-                var fileBytes = ms.ToArray();
-                e.binaryImage = Convert.ToBase64String(fileBytes);
-            }
             var id = await _eventRepository.Create(e);
             if (id == null)
             {
@@ -160,7 +152,8 @@ namespace backend.Controllers
                 }
 
                 var result = await _eventRepository.Delete(id);
-                return Ok(result);
+                if (!result) return BadRequest("Delete Event Failed");
+                return Ok("Delete Event Successfully");
             }
             catch (Exception e)
             {

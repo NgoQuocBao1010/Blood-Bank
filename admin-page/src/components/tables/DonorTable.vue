@@ -18,24 +18,25 @@ import { JSONtoExcel, excelToJson } from "../../utils/excel";
 import DonorRepo from "../../api/DonorRepo";
 import DonorTransactionRepo from "../../api/DonorTransaction";
 
-const { donorsData, participants } = defineProps({
-    donorsData: {
-        type: Array,
-        required: true,
-    },
-    participants: {
-        type: Boolean,
-        default: false,
-    },
-    isRejectParticipant: {
-        type: Boolean,
-        default: false,
-    },
-    isApproveParticipant: {
-        type: Boolean,
-        default: false,
-    },
-});
+const { donorsData, participants, isApproveParticipant, isRejectParticipant } =
+    defineProps({
+        donorsData: {
+            type: Array,
+            required: true,
+        },
+        participants: {
+            type: Boolean,
+            default: false,
+        },
+        isRejectParticipant: {
+            type: Boolean,
+            default: false,
+        },
+        isApproveParticipant: {
+            type: Boolean,
+            default: false,
+        },
+    });
 
 let donors = $ref(null);
 let selectedParticipants = $ref([]);
@@ -111,10 +112,16 @@ const downloadExcel = () => {
     }
     const excelData = DonorsHelpers.transformRowsForExcelDownload(donorsData);
 
-    JSONtoExcel(
-        excelData,
-        participants ? "Pending_Donors" : "Event_Participants"
-    );
+    let fileName = "";
+    if (isApproveParticipant) {
+        fileName = "Approved_Donors";
+    } else if (isRejectParticipant) {
+        fileName = "Rejected_Donors";
+    } else {
+        fileName = "Pending_Donors";
+    }
+
+    JSONtoExcel(excelData, participants ? fileName : "Event_Participants");
 };
 
 let newParticipants = $ref({

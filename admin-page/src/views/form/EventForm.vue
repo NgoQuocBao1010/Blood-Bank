@@ -14,6 +14,7 @@ import { required } from "@vuelidate/validators";
 
 import { useEventStore } from "../../stores/event";
 import EventRepo from "../../api/EventRepo";
+import { fileToBase64 } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
 
 const router = useRouter();
@@ -26,6 +27,8 @@ const { _id, eventData } = defineProps({
     _id: String,
     eventData: String,
 });
+
+let eventCoverImg = null;
 
 // Breadcums
 // Naviagtion settings
@@ -45,7 +48,7 @@ let formData = $ref({
     startDate: new Date(),
     duration: 1,
     detail: "",
-    posterImg: null,
+    binaryImage: null,
 });
 const formRules = $computed(() => {
     return {
@@ -58,6 +61,18 @@ const formRules = $computed(() => {
         detail: { required },
     };
 });
+
+const onImageUpload = async (e) => {
+    const files = e.target.files || e.dataTransfer.files;
+    if (!files.length) return;
+
+    formData.binaryImage = await fileToBase64(files[0]);
+};
+
+const removeUploadImage = () => {
+    formData.binaryImage = eventCoverImg;
+    document.getElementById("preview").value = "";
+};
 
 onBeforeMount(async () => {
     // Check if this is a Event Edit page
@@ -106,36 +121,32 @@ const submitData = async () => {
     loading = true;
     formData.startDate = formData.startDate.getTime().toString();
 
-    if (isEditPage) {
-        const { data, status } = await EventRepo.edit(_id, formData);
+    try {
+        const { data, status } = isEditPage
+            ? await EventRepo.edit(_id, formData)
+            : await EventRepo.create(formData);
 
         if (data && status === 200) {
-            loading = false;
             await useEventStore().setEvents();
             toast.add({
                 severity: "success",
                 summary: "Successful",
-                detail: "Event is edited",
+                detail: isEditPage
+                    ? "Event is successfully edited"
+                    : "New event was successfully created",
                 life: 3000,
             });
 
-            router.push({ name: "Event Detail", params: { _id } });
+            const redirectRoute = isEditPage
+                ? { name: "Event Detail", params: { _id } }
+                : { name: "Events Management" };
+            router.push(redirectRoute);
         }
-    } else {
-        const { data, status } = await EventRepo.create(formData);
-
-        if (data && status === 200) {
-            loading = false;
-            await useEventStore().setEvents();
-            toast.add({
-                severity: "success",
-                summary: "Successful",
-                detail: "New event is created",
-                life: 3000,
-            });
-
-            router.push({ name: "Events Management" });
-        }
+    } catch (e) {
+        console.log("Error", e);
+        throw e;
+    } finally {
+        loading = false;
     }
 };
 
@@ -172,6 +183,8 @@ const fixingVuevalidateBugs = (data) => {
     formData.location.address = data.location.address;
     formData.duration = data.duration;
     formData.startDate = new Date(parseInt(data.startDate));
+    formData.binaryImage = data.binaryImage;
+    eventCoverImg = data.binaryImage;
 };
 </script>
 
@@ -185,6 +198,7 @@ const fixingVuevalidateBugs = (data) => {
                 style="margin-bottom: 1rem; border-radius: 15px"
             />
 
+            <div class="col-8"></div>
             <div class="card">
                 <h3 class="title" v-if="isEditPage">
                     {{ formData?.name }} Event
@@ -194,7 +208,10 @@ const fixingVuevalidateBugs = (data) => {
                 </h3>
 
                 <!-- Form -->
-                <div class="p-fluid formgrid grid">
+                <div
+                    class="p-fluid formgrid col-10 grid"
+                    style="margin: 0 auto"
+                >
                     <!-- Event Name -->
                     <div class="field col-12">
                         <label for="event-name">Event Name</label>
@@ -287,14 +304,41 @@ const fixingVuevalidateBugs = (data) => {
                     </div>
 
                     <!-- Event Poster -->
-                    <div class="field col-12">
-                        <label for="poster">Event poster (.png, .jpg)</label>
+                    <div class="field col-12 md:col-6">
+                        <label for="poster">Event poster (* image file)</label>
                         <InputText
-                            id="poster"
+                            id="preview"
                             type="file"
-                            v-model="formData.posterImg"
+                            @change="onImageUpload"
                             accept="image/png, image/gif, image/jpeg"
                         />
+                    </div>
+
+                    <!-- Preview image -->
+                    <div class="field col-12 md:col-6">
+                        <label>Preview of Event Cover Image</label>
+                        <div class="image-wrapper flex flex-center">
+                            <template v-if="formData.binaryImage">
+                                <img
+                                    :src="formData.binaryImage"
+                                    class="image-preview"
+                                    alt="Preview Image"
+                                />
+                                <PrimeVueButton
+                                    icon="pi pi-times"
+                                    class="p-button-rounded p-button-sm p-button-danger p-button-outlined remove-btn"
+                                    @click="removeUploadImage"
+                                    v-tooltip.top="'Remove this image'"
+                                    v-if="
+                                        formData.binaryImage !== eventCoverImg
+                                    "
+                                />
+                            </template>
+
+                            <div class="empty-image flex flex-center" v-else>
+                                <p>👈 Upload A Photo</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Submiitting button -->
@@ -359,6 +403,38 @@ const fixingVuevalidateBugs = (data) => {
     text-align: center;
     margin-bottom: 2rem;
 }
+
+.image-wrapper {
+    padding: 2rem 0.5rem !important;
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    position: relative;
+
+    .image-preview {
+        width: 80%;
+        border-radius: 15px;
+    }
+
+    .empty-image {
+        width: 60%;
+        aspect-ratio: 1 / 1;
+        border-radius: 15px;
+        border: 2px dashed lightgray;
+
+        p {
+            font-weight: 700;
+            color: lightgray;
+        }
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: calc(2rem);
+        right: 5px;
+        background-color: #fff;
+    }
+}
+
 .delete-btn,
 .submit-btn {
     margin-top: 3em;

@@ -54,12 +54,13 @@ export const useUserStore = defineStore("user", {
         },
     },
     getters: {
-        defaultPage: (state) =>
-            state.isAdmin
+        defaultPage: (state) => {
+            return state.isAdmin
                 ? { name: "Dashboard" }
                 : {
                       name: "Hospital Page",
                       params: { _id: state.hospitalId },
-                  },
+                  };
+        },
     },
 });

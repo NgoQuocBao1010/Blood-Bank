@@ -7,6 +7,7 @@ import EventRepo from "../../api/EventRepo";
 import EventHelper from "../../utils/helpers/Event";
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import { formatDate } from "../../utils";
+import { DEFAULT_EVENT_COVER } from "../../constants";
 
 const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
@@ -71,7 +72,7 @@ onBeforeMount(async () => {
                     <!-- Left content -->
                     <div class="card__content flex-center">
                         <img
-                            src="../../assets/images/event.png"
+                            :src="event.binaryImage || DEFAULT_EVENT_COVER"
                             alt="Event Image"
                         />
                     </div>
@@ -167,43 +168,43 @@ onBeforeMount(async () => {
                         </RouterLink>
                     </div>
                 </div>
-            </template>
 
-            <!-- Event participants -->
-            <div class="card">
-                <div
-                    class="flex-center"
-                    style="width: 100%"
-                    v-if="!showDonorTable"
-                >
-                    <PrimeVueButton
-                        :label="
-                            !isUpcomingEvent
-                                ? 'Show Event Participants'
-                                : 'Show Event Registers'
-                        "
-                        @click="getParticipants"
-                    />
+                <!-- Event participants -->
+                <div class="card">
+                    <div
+                        class="flex-center"
+                        style="width: 100%"
+                        v-if="!showDonorTable"
+                    >
+                        <PrimeVueButton
+                            :label="
+                                !isUpcomingEvent
+                                    ? 'Show Event Participants'
+                                    : 'Show Event Registers'
+                            "
+                            @click="getParticipants"
+                        />
+                    </div>
+
+                    <template v-else>
+                        <h2>
+                            {{
+                                !isUpcomingEvent
+                                    ? "Event Participants"
+                                    : "Event Registers"
+                            }}
+                        </h2>
+                        <Component
+                            :is="
+                                !isUpcomingEvent
+                                    ? AsyncDonorTable
+                                    : AsyncEventSubmissonTable
+                            "
+                            :donorsData="donorsData"
+                        />
+                    </template>
                 </div>
-
-                <template v-else>
-                    <h2>
-                        {{
-                            !isUpcomingEvent
-                                ? "Event Participants"
-                                : "Event Registers"
-                        }}
-                    </h2>
-                    <Component
-                        :is="
-                            !isUpcomingEvent
-                                ? AsyncDonorTable
-                                : AsyncEventSubmissonTable
-                        "
-                        :donorsData="donorsData"
-                    />
-                </template>
-            </div>
+            </template>
         </div>
     </div>
 </template>
@@ -214,6 +215,7 @@ onBeforeMount(async () => {
     &__content {
         flex: 1 1 50%;
         padding: 1rem;
+        padding-top: 4rem;
         position: relative;
 
         img {
@@ -242,8 +244,8 @@ onBeforeMount(async () => {
 
         .edit-btn {
             position: absolute;
-            top: -1rem;
-            right: -1rem;
+            top: 0;
+            right: 0;
         }
     }
 }

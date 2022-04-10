@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -11,10 +11,14 @@ import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
 import { formatDate } from "../../utils";
 import { TRANSACTION_STATUS } from "../../constants";
 
-const { transactionData } = defineProps({
+const { transactionData, filterData } = defineProps({
     transactionData: {
         type: Array,
         required: true,
+    },
+    filterData: {
+        type: String,
+        required: false,
     },
 });
 
@@ -25,6 +29,7 @@ const events = transactionData
 
 onBeforeMount(() => {
     initFilter();
+
     transactions = transactionData.map((row) => {
         let transaction = { ...row };
 
@@ -36,11 +41,26 @@ onBeforeMount(() => {
     });
 });
 
+onMounted(() => {
+    if (filterData) {
+        filters["global"]["value"] = filterData;
+
+        document.getElementById("transaction_table").scrollIntoView({
+            behavior: "smooth",
+        });
+    }
+});
+
+const addBlinkAnimation = (data) => {
+    return filterData ? "blink-animation" : "";
+};
+
 // Filter configurations
 let filters = $ref(null);
 const initFilter = () => {
     filters = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        _id: { value: null, matchMode: FilterMatchMode.CONTAINS },
         dateDonated: {
             value: null,
             matchMode: FilterMatchMode.DATE_IS,
@@ -75,12 +95,14 @@ const clearFilter = () => {
         :rows="5"
         dataKey="_id"
         :rowHover="true"
+        :rowClass="addBlinkAnimation"
         removableSort
         filterDisplay="row"
         v-model:filters="filters"
         :filters="filters"
         responsiveLayout="scroll"
         :globalFilterFields="[
+            '_id',
             'dateDonated',
             'eventDonated.name',
             'amount',
@@ -89,7 +111,10 @@ const clearFilter = () => {
     >
         <!-- Header of the table -->
         <template #header>
-            <div class="flex justify-content-between flex-column sm:flex-row">
+            <div
+                class="flex justify-content-between flex-column sm:flex-row"
+                id="transaction_table"
+            >
                 <div class="flex">
                     <PrimeVueButton
                         type="button"
@@ -108,10 +133,11 @@ const clearFilter = () => {
                 </div>
 
                 <!-- Search Input -->
-                <span class="p-input-icon-left mb-2">
+                <span class="p-input-icon-left mb-2" style="width: 20em">
                     <i class="pi pi-search" />
                     <InputText
                         placeholder="Keyword Search"
+                        v-model="filters['global'].value"
                         style="width: 100%"
                     />
                 </span>

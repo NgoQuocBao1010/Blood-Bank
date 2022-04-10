@@ -207,12 +207,13 @@ const router = createRouter({
 
 // Verify if user is logged in
 router.beforeEach(async (to, from, next) => {
-    const user = useUserStore();
+    const userStore = useUserStore();
     try {
         // User has not logged in and try to navigate to page that need to be guard
-        if (!user.isLoggedIn && !to.meta.unguard) {
-            await user.verifyToken();
+        if (userStore.token) {
+            await userStore.verifyToken();
         }
+
         next();
     } catch (err) {
         console.log(err);
@@ -246,9 +247,7 @@ router.beforeEach((to, from, next) => {
 // Prevent logged in user to access login page
 router.beforeEach((to, from, next) => {
     if (to.name === "Login" && useUserStore().token) {
-        return next({
-            name: from.name ? from.name : useUserStore().defaultPage,
-        });
+        return next(useUserStore().defaultPage);
     }
     next();
 });
