@@ -85,12 +85,12 @@ namespace backend.Repositories
             return user;
         }
 
-        public async Task<DefaultData> ReadJson(string filePath)
-        {
-            var jsonText = await File.ReadAllTextAsync(filePath);
-            var json = JsonConvert.DeserializeObject<DefaultData>(jsonText);
-            return json;
-        }
+        // public async Task<DefaultData> ReadJson(string filePath)
+        // {
+        //     var jsonText = await File.ReadAllTextAsync(filePath);
+        //     var json = JsonConvert.DeserializeObject<DefaultData>(jsonText);
+        //     return json;
+        // }
         
         public async Task<long> Update(string _id, User user)
         {
@@ -109,30 +109,6 @@ namespace backend.Repositories
             var filter = Builders<User>.Filter.Eq(u => u._id, _id);
             var result = await _user.DeleteOneAsync(filter);
             return result.DeletedCount == 1;
-        }
-
-        public void AddDefaultData()
-        {
-            _hospitalRepository.AddDefaultData();
-            _eventRepository.AddDefaultData();
-            _eventSubmissionRepository.AddDefaultData();
-            _bloodRepository.AddDefaultData();
-            _requestRepository.AddDefaultData();
-
-            var user = Get();
-            if (user.Result.Any()) return;
-
-            var admin = new User("admin@gmail.com", "admin", true);
-
-            _user.InsertOne(admin);
-
-
-            var hospital = _hospitalRepository.GetFirstHospital();
-            var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
-            {
-                hospitalId = hospital.Result._id
-            };
-            _user.InsertOne(newUser);
         }
 
         public string Login(User user)
@@ -171,6 +147,35 @@ namespace backend.Repositories
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        
+        
+        public void AddDefaultData()
+        {
+            _hospitalRepository.AddDefaultData();
+            _eventRepository.AddDefaultData();
+            _eventSubmissionRepository.AddDefaultData();
+            _bloodRepository.AddDefaultData();
+            _requestRepository.AddDefaultData();
+
+            var user = Get();
+            if (user.Result.Any()) return;
+
+            var defaultData = new DefaultData();
+            var data = defaultData.ReadJson("default_data.json");
+            
+            var hospital = _hospitalRepository.Get();
+            for (var i = 0; i < data.Result.Users.Count; i++)
+            {
+                if (data.Result.Users[i].isAdmin)
+                {
+                    _user.InsertOne(data.Result.Users[i]);
+                    continue;
+                }
+                data.Result.Users[i].password ??= GeneratePassword(8);
+                data.Result.Users[i].hospitalId = hospital.Result.ElementAtOrDefault(i - 1)?._id;
+                _user.InsertOne(data.Result.Users[i]);
+            }
         }
     }
 }

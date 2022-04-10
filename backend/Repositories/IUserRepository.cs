@@ -18,7 +18,7 @@ namespace backend.Repositories
         Task<bool> CheckHospitalId(string hospitalId);
         Task<IEnumerable<User>> Get();
 
-        Task<DefaultData> ReadJson(string filePath);
+        // Task<DefaultData> ReadJson(string filePath);
 
         // Update
         Task<long> Update(string _id, User user);
@@ -33,5 +33,6 @@ namespace backend.Repositories
         bool CheckUserPassword(User user, string password);
         
         string GeneratePassword(int length);
+
     }
 }

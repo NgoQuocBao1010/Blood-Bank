@@ -205,13 +205,14 @@ namespace backend.Controllers
         [HttpGet("readJson")]
         public async Task<IActionResult> ReadJson()
         {
-            var json = await _userRepository.ReadJson("default_data.json");
+            var defaultData = new DefaultData();
+            var json = await defaultData.ReadJson("default_data.json");
             if (json == null)
             {
                 throw new Exception();
             }
 
-            return new JsonResult(json.Hospitals);
+            return new JsonResult(json.Users);
         }
     }
 }
