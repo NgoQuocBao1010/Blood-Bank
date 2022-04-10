@@ -210,7 +210,7 @@
         startDate: string,
         duration: int,
         detail,
-        binaryImage: string
+        binaryImage: string (base64)
     }
     ```
 2. GET an event data -> Endpoint: api/Event/{\_id}
@@ -257,7 +257,7 @@
         startDate: string,
         duration: int,
         detail,
-        image: File
+        binaryImage: string (base64)
     }
     ```
 5. DELETE events data -> Endpoint: api/Event/{\_id}
