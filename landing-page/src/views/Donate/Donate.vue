@@ -90,11 +90,16 @@ const handleClick = (eventId) => {
                       @change="onSortChange($event)"
                     />
                     <Button
-                      class="ml-2"
+                      class="mx-2"
                       style="background-color: var(--PRIMARY_COLOR)"
                       @click="cancelFilter"
                       >X</Button
                     >
+                    <span
+                      class="font-italic"
+                      style="color: var(--PRIMARY_COLOR)"
+                      >clear status before filtering events
+                    </span>
                   </div>
                   <div class="col-6" style="text-align: right">
                     <DataViewLayoutOptions v-model="layout" />
