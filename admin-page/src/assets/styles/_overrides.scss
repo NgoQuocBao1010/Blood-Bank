@@ -380,6 +380,23 @@ body::-webkit-scrollbar,
     }
 }
 
+// Blink animation
+.blink-animation {
+    animation: blinker 2s linear;
+}
+
+@keyframes blinker {
+    25% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 0;
+    }
+}
+
 // Skeleton loading animation
 @keyframes loading_skeleton {
     0% {

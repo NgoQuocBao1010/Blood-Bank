@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
@@ -29,9 +29,6 @@ const events = transactionData
 
 onBeforeMount(() => {
     initFilter();
-    if (filterData) {
-        filters["global"]["value"] = filterData;
-    }
 
     transactions = transactionData.map((row) => {
         let transaction = { ...row };
@@ -43,6 +40,20 @@ onBeforeMount(() => {
         return transaction;
     });
 });
+
+onMounted(() => {
+    if (filterData) {
+        filters["global"]["value"] = filterData;
+
+        document.getElementById("transaction_table").scrollIntoView({
+            behavior: "smooth",
+        });
+    }
+});
+
+const addBlinkAnimation = (data) => {
+    return filterData ? "blink-animation" : "";
+};
 
 // Filter configurations
 let filters = $ref(null);
@@ -84,6 +95,7 @@ const clearFilter = () => {
         :rows="5"
         dataKey="_id"
         :rowHover="true"
+        :rowClass="addBlinkAnimation"
         removableSort
         filterDisplay="row"
         v-model:filters="filters"
@@ -99,7 +111,10 @@ const clearFilter = () => {
     >
         <!-- Header of the table -->
         <template #header>
-            <div class="flex justify-content-between flex-column sm:flex-row">
+            <div
+                class="flex justify-content-between flex-column sm:flex-row"
+                id="transaction_table"
+            >
                 <div class="flex">
                     <PrimeVueButton
                         type="button"
