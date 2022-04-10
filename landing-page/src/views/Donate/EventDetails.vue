@@ -446,9 +446,9 @@ const resetForm = () => {
               </Divider>
 
               <p class="line-height-3 m-0 text-800">
-                <span>Address: Cafe Station</span>
+                <span>Address: {{ eventData.location.address }}</span>
                 <br />
-                <span>City: Can Tho</span>
+                <span>City: {{ eventData.location.city }}</span>
               </p>
 
               <!-- Event Participants -->

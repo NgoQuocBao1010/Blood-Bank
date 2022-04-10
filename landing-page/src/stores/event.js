@@ -20,6 +20,7 @@ export const useEventStore = defineStore("event", {
         event["bgImg"] =
           "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp";
 
+        console.log(event);
         return event;
       });
     },
