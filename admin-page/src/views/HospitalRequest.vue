@@ -1,15 +1,15 @@
 <script setup>
-import { onBeforeMount, defineAsyncComponent } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeMount, defineAsyncComponent, nextTick } from "vue";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
-import { useToast } from "primevue/usetoast";
+import RequestRepo from "../api/RequestRepo";
 import useVuelidate from "@vuelidate/core";
+import { useRoute } from "vue-router";
+import { useToast } from "primevue/usetoast";
 import { required, numeric } from "@vuelidate/validators";
 import { BLOOD_TYPES } from "../constants";
-
 import HospitalRepo from "../api/HospitalRepo";
-import RequestRepo from "../api/RequestRepo";
+import ProgressBar from "primevue/progressbar";
 
 const AsyncRequestHistory = defineAsyncComponent({
   loader: () => import("../components/tables/RequestHistoryTable.vue"),
@@ -27,7 +27,7 @@ let formData = $ref({
     type: "",
   },
   hospitalId: hospital_id,
-  date: Math.floor(new Date(today).getTime() / 1000),
+  date: today.getTime(),
 });
 
 const formRules = $computed(() => {
@@ -46,7 +46,7 @@ const toast = useToast();
 let hospitalName = $ref("");
 let errorMessage = $ref(null);
 let submitting = $ref(false);
-let requestHistory = $ref(null);
+let requestHistory = $ref([]);
 let showRequestHistory = $ref(false);
 
 // Reset form after submit
@@ -57,18 +57,26 @@ const resetForm = () => {
       type: "",
     }),
     (formData.hospitalId = hospital_id),
-    (formData.date = Math.floor(new Date(today).getTime() / 1000));
+    (formData.date = today.getTime());
+};
+
+const updateRequests = async () => {
+  requestHistory = null;
+  const { data } = await HospitalRepo.get(hospital_id);
+  hospitalName = data.name;
+  requestHistory = data.requestHistory;
+};
+
+// Rerender Form
+let isRerender = $ref(false);
+const forceReRenderForm = async () => {
+  isRerender = true;
+  await nextTick();
+  isRerender = false;
 };
 
 onBeforeMount(async () => {
-  const data = await HospitalRepo.get(hospital_id);
-  hospitalName = data.data.name;
-  const requestData = await RequestRepo.getAll();
-
-  if (requestData.data && requestData.data.length !== 0) {
-    requestHistory = requestData.data;
-    console.log(requestHistory);
-  }
+  await updateRequests();
 });
 
 const submitData = async () => {
@@ -108,6 +116,8 @@ const submitData = async () => {
       detail: "Your request is created",
       life: 3000,
     });
+    await updateRequests();
+    await forceReRenderForm();
   } catch (e) {
     if (e.response) {
       const { status } = e.response;
@@ -208,6 +218,7 @@ const submitData = async () => {
           </div>
         </div>
       </div>
+
       <!-- Request History -->
       <div class="card">
         <div class="flex-center" style="width: 100%" v-if="!showRequestHistory">
@@ -219,7 +230,23 @@ const submitData = async () => {
 
         <template v-else>
           <h2>Request History</h2>
-          <AsyncRequestHistory :requestHistory="requestHistory" />
+          <AsyncRequestHistory
+            :requestHistory="requestHistory"
+            v-if="requestHistory"
+          />
+
+          <!-- Progress bar -->
+          <div
+            class="flex flex-center"
+            style="flex-direction: column; margin-block: 3rem"
+            v-else
+          >
+            <h5>Loading ...</h5>
+            <ProgressBar
+              mode="indeterminate"
+              style="height: 0.5em; width: 100%"
+            />
+          </div>
         </template>
       </div>
     </div>
