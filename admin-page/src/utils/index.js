@@ -39,4 +39,12 @@ const converToDate = (stringDate) => {
     return dayjs(stringDate, "DD/MM/YYYY", true).toDate();
 };
 
-export { formatDate, getKeyByValue, converToDate, timeDiffernet };
+const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (e) => reject(e);
+    });
+
+export { formatDate, getKeyByValue, converToDate, timeDiffernet, fileToBase64 };

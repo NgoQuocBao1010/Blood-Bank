@@ -376,6 +376,21 @@ body::-webkit-scrollbar,
     }
 }
 
+// Skeleton loading animation
+@keyframes loading_skeleton {
+    0% {
+        background-color: rgb(177, 175, 175);
+    }
+
+    50% {
+        background-color: rgb(205, 203, 203);
+    }
+
+    100% {
+        background-color: rgb(177, 175, 175);
+    }
+}
+
 @media (min-width: 992px) {
     .layout-wrapper {
         &.layout-static {
