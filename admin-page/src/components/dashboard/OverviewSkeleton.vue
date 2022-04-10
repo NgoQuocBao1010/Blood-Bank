@@ -43,18 +43,4 @@
         animation: 1.5s loading_skeleton linear infinite;
     }
 }
-
-@keyframes loading_skeleton {
-    0% {
-        background-color: rgb(155, 153, 153);
-    }
-
-    50% {
-        background-color: rgb(205, 203, 203);
-    }
-
-    100% {
-        background-color: rgb(155, 153, 153);
-    }
-}
 </style>
