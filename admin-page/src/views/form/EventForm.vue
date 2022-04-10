@@ -28,6 +28,8 @@ const { _id, eventData } = defineProps({
     eventData: String,
 });
 
+let eventCoverImg = null;
+
 // Breadcums
 // Naviagtion settings
 const home = $ref({
@@ -65,6 +67,11 @@ const onImageUpload = async (e) => {
     if (!files.length) return;
 
     formData.binaryImage = await fileToBase64(files[0]);
+};
+
+const removeUploadImage = () => {
+    formData.binaryImage = eventCoverImg;
+    document.getElementById("preview").value = "";
 };
 
 onBeforeMount(async () => {
@@ -176,6 +183,8 @@ const fixingVuevalidateBugs = (data) => {
     formData.location.address = data.location.address;
     formData.duration = data.duration;
     formData.startDate = new Date(parseInt(data.startDate));
+    formData.binaryImage = data.binaryImage;
+    eventCoverImg = data.binaryImage;
 };
 </script>
 
@@ -295,14 +304,41 @@ const fixingVuevalidateBugs = (data) => {
                     </div>
 
                     <!-- Event Poster -->
-                    <div class="field col-12">
+                    <div class="field col-12 md:col-6">
                         <label for="poster">Event poster (* image file)</label>
                         <InputText
-                            id="poster"
+                            id="preview"
                             type="file"
                             @change="onImageUpload"
                             accept="image/png, image/gif, image/jpeg"
                         />
+                    </div>
+
+                    <!-- Preview image -->
+                    <div class="field col-12 md:col-6">
+                        <label>Preview of Event Cover Image</label>
+                        <div class="image-wrapper flex flex-center">
+                            <template v-if="formData.binaryImage">
+                                <img
+                                    :src="formData.binaryImage"
+                                    class="image-preview"
+                                    alt="Preview Image"
+                                />
+                                <PrimeVueButton
+                                    icon="pi pi-times"
+                                    class="p-button-rounded p-button-sm p-button-danger p-button-outlined remove-btn"
+                                    @click="removeUploadImage"
+                                    v-tooltip.top="'Remove this image'"
+                                    v-if="
+                                        formData.binaryImage !== eventCoverImg
+                                    "
+                                />
+                            </template>
+
+                            <div class="empty-image flex flex-center" v-else>
+                                <p>👈 Upload A Photo</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Submiitting button -->
@@ -367,6 +403,38 @@ const fixingVuevalidateBugs = (data) => {
     text-align: center;
     margin-bottom: 2rem;
 }
+
+.image-wrapper {
+    padding: 2rem 0.5rem !important;
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    position: relative;
+
+    .image-preview {
+        width: 80%;
+        border-radius: 15px;
+    }
+
+    .empty-image {
+        width: 60%;
+        aspect-ratio: 1 / 1;
+        border-radius: 15px;
+        border: 2px dashed lightgray;
+
+        p {
+            font-weight: 700;
+            color: lightgray;
+        }
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: calc(2rem);
+        right: 5px;
+        background-color: #fff;
+    }
+}
+
 .delete-btn,
 .submit-btn {
     margin-top: 3em;

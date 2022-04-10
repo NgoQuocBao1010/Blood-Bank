@@ -168,43 +168,43 @@ onBeforeMount(async () => {
                         </RouterLink>
                     </div>
                 </div>
-            </template>
 
-            <!-- Event participants -->
-            <div class="card">
-                <div
-                    class="flex-center"
-                    style="width: 100%"
-                    v-if="!showDonorTable"
-                >
-                    <PrimeVueButton
-                        :label="
-                            !isUpcomingEvent
-                                ? 'Show Event Participants'
-                                : 'Show Event Registers'
-                        "
-                        @click="getParticipants"
-                    />
+                <!-- Event participants -->
+                <div class="card">
+                    <div
+                        class="flex-center"
+                        style="width: 100%"
+                        v-if="!showDonorTable"
+                    >
+                        <PrimeVueButton
+                            :label="
+                                !isUpcomingEvent
+                                    ? 'Show Event Participants'
+                                    : 'Show Event Registers'
+                            "
+                            @click="getParticipants"
+                        />
+                    </div>
+
+                    <template v-else>
+                        <h2>
+                            {{
+                                !isUpcomingEvent
+                                    ? "Event Participants"
+                                    : "Event Registers"
+                            }}
+                        </h2>
+                        <Component
+                            :is="
+                                !isUpcomingEvent
+                                    ? AsyncDonorTable
+                                    : AsyncEventSubmissonTable
+                            "
+                            :donorsData="donorsData"
+                        />
+                    </template>
                 </div>
-
-                <template v-else>
-                    <h2>
-                        {{
-                            !isUpcomingEvent
-                                ? "Event Participants"
-                                : "Event Registers"
-                        }}
-                    </h2>
-                    <Component
-                        :is="
-                            !isUpcomingEvent
-                                ? AsyncDonorTable
-                                : AsyncEventSubmissonTable
-                        "
-                        :donorsData="donorsData"
-                    />
-                </template>
-            </div>
+            </template>
         </div>
     </div>
 </template>
