@@ -13,7 +13,6 @@ onBeforeMount(async () => {
     const { data, status } = await AppRepo.getRecentActivities();
 
     activities = JSON.parse(JSON.stringify(data));
-    console.log(activities);
     fetchingData = false;
 });
 </script>
@@ -45,7 +44,7 @@ onBeforeMount(async () => {
                             style="color: lightcoral"
                         ></i>
                         <!-- Mock data -->
-                        200ml
+                        {{ data.amount }} ml
                     </span>
                 </template>
             </PrimeVueColumn>
@@ -64,8 +63,10 @@ onBeforeMount(async () => {
                     <router-link
                         :to="{
                             name: 'Donor Detail',
-                            params: { _id: data._id },
-                            query: { donation: true },
+                            params: {
+                                _id: data._id,
+                                transactionId: data.transactionId,
+                            },
                         }"
                         class="p-button p-button-sm app-router-link-icon btn-icon-only"
                     >

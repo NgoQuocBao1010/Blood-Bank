@@ -1,6 +1,5 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
-import { useRoute } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 
 import DonorRepo from "../../api/DonorRepo";
@@ -9,17 +8,19 @@ import { formatDate } from "../../utils";
 
 const props = defineProps({
     _id: String,
+    transactionId: {
+        type: String,
+        default: "",
+    },
 });
 
-const route = useRoute();
 let donor = $ref(null);
 
 onBeforeMount(async () => {
     const { data } = await DonorRepo.getById(props._id);
     donor = data;
 
-    const { donation } = route.query;
-    if (donation) {
+    if (props.transactionId) {
         await getListTransaction();
     }
 });
@@ -119,7 +120,10 @@ let items = [{ label: "Donor Detail" }];
                 </div>
 
                 <template v-else>
-                    <AsyncTransactionTable :transactionData="listDonation" />
+                    <AsyncTransactionTable
+                        :transactionData="listDonation"
+                        :filterData="transactionId"
+                    />
                 </template>
             </div>
         </div>
