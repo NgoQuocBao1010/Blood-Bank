@@ -5,6 +5,7 @@ import Menu from "primevue/menu";
 import Overview from "../components/dashboard/Overview.vue";
 import OverviewSkeleton from "../components/dashboard/OverviewSkeleton.vue";
 import RecentActivities from "../components/dashboard/Recent.vue";
+import BloodStorage from "../components/dashboard/BloodStorage.vue";
 import { THEMES } from "../constants/index.js";
 
 // Chart data
@@ -66,136 +67,15 @@ let menuItems = $ref([
             <!-- Activity table -->
             <RecentActivities />
 
-            <!-- Blood Type Storage -->
-            <div class="card">
-                <div
-                    class="flex justify-content-between align-items-center mb-5"
-                >
-                    <h5>Blood Type Storage</h5>
-                    <div>
-                        <PrimeVueButton
-                            icon="pi pi-ellipsis-v"
-                            class="p-button-text p-button-plain p-button-rounded"
-                            @click="$refs.menu2.toggle($event)"
-                        ></PrimeVueButton>
-                        <Menu
-                            ref="menu2"
-                            :popup="true"
-                            :model="menuItems"
-                        ></Menu>
-                    </div>
-                </div>
-                <ul class="list-none p-0 m-0">
-                    <li
-                        class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-                    >
-                        <div>
-                            <span
-                                class="text-900 font-medium mr-2 mb-1 md:mb-0"
-                            >
-                                Type A
-                            </span>
-                            <div class="mt-1 text-600">A +, A -</div>
-                        </div>
-                        <div class="mt-2 md:mt-0 flex align-items-center">
-                            <div
-                                class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
-                                style="height: 8px"
-                            >
-                                <div
-                                    class="bg-orange-500 h-full"
-                                    style="width: 50%"
-                                ></div>
-                            </div>
-                            <span class="text-orange-500 ml-3 font-medium">
-                                500.000 ml
-                            </span>
-                        </div>
-                    </li>
-                    <li
-                        class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-                    >
-                        <div>
-                            <span
-                                class="text-900 font-medium mr-2 mb-1 md:mb-0"
-                            >
-                                Type O
-                            </span>
-                            <div class="mt-1 text-600">O +, O -</div>
-                        </div>
-                        <div
-                            class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center"
-                        >
-                            <div
-                                class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
-                                style="height: 8px"
-                            >
-                                <div
-                                    class="bg-cyan-500 h-full"
-                                    style="width: 16%"
-                                ></div>
-                            </div>
-                            <span class="text-cyan-500 ml-3 font-medium">
-                                160.000 ml
-                            </span>
-                        </div>
-                    </li>
-                    <li
-                        class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-                    >
-                        <div>
-                            <span
-                                class="text-900 font-medium mr-2 mb-1 md:mb-0"
-                            >
-                                Type B
-                            </span>
-                            <div class="mt-1 text-600">B+, B-</div>
-                        </div>
-                        <div
-                            class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center"
-                        >
-                            <div
-                                class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
-                                style="height: 8px"
-                            >
-                                <div
-                                    class="bg-pink-500 h-full"
-                                    style="width: 67%"
-                                ></div>
-                            </div>
-                            <span class="text-pink-500 ml-3 font-medium">
-                                670.000 ml
-                            </span>
-                        </div>
-                    </li>
-                    <li
-                        class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4"
-                    >
-                        <div>
-                            <span class="text-900 font-medium mr-2 mb-1 md:mb-0"
-                                >Type AB</span
-                            >
-                            <div class="mt-1 text-600">...</div>
-                        </div>
-                        <div
-                            class="mt-2 md:mt-0 ml-0 md:ml-8 flex align-items-center"
-                        >
-                            <div
-                                class="surface-300 border-round overflow-hidden w-10rem lg:w-6rem"
-                                style="height: 8px"
-                            >
-                                <div
-                                    class="bg-green-500 h-full"
-                                    style="width: 35%"
-                                ></div>
-                            </div>
-                            <span class="text-green-500 ml-3 font-medium">
-                                350.000 ml
-                            </span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+            <!-- Blood Storage -->
+            <Suspense>
+                <template #default>
+                    <BloodStorage />
+                </template>
+                <template #fallback>
+                    <p>Loading ...</p>
+                </template>
+            </Suspense>
         </div>
 
         <!-- Blood Activities && Notification Panel -->
