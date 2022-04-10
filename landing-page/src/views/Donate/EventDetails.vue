@@ -31,7 +31,7 @@ const submitted = ref(false);
 const toast = useToast();
 const today = new Date();
 
-let loadingData = ref(true);
+let isSubmitting = ref(false);
 let eventData = ref(null);
 
 const donateData = reactive({
@@ -72,7 +72,7 @@ const rules = {
 
 const v$ = useVuelidate(rules, donateData);
 
-onBeforeMount(async () => {
+const fetchEventsData = async () => {
   const data = await EventRepo.getById({ eventId: eventId, now: now });
   let event = { ...data.data };
   event["startDate"] = new Date(parseInt(event.startDate));
@@ -85,9 +85,14 @@ onBeforeMount(async () => {
       ? "have registered to join this event"
       : "donated for this event";
   eventData.value = event;
+};
+
+onBeforeMount(async () => {
+  await fetchEventsData();
 });
 
 const handleSubmitForm = async () => {
+  isSubmitting = true;
   submitted.value = true;
   v$.value.$validate();
   if (!v$.value.$error) {
@@ -110,15 +115,19 @@ const handleSubmitForm = async () => {
     };
 
     try {
-      await EventSubmissionRepo.post(data);
-      toast.add({
-        severity: "success",
-        summary: "Successful",
-        detail: "Your information is saved!!!",
-        life: 3000,
-      });
-
-      resetForm();
+      const { status } = await EventSubmissionRepo.post(data);
+      if (status === 200) {
+        toast.add({
+          severity: "success",
+          summary: "Successful",
+          detail: "Your information is saved!!!",
+          life: 3000,
+        });
+        isSubmitting = false;
+        resetForm();
+        await fetchEventsData();
+      }
+      return;
     } catch (error) {
       if (error.response.status == 400) {
         toast.add({
@@ -151,14 +160,6 @@ const resetForm = () => {
 
 <template>
   <div class="event-detail-container">
-    <template v-if="!eventData">
-      <div
-        class="flex align-items-center justify-content-center"
-        style="width 400px; height: 400px; font-size: 50px"
-      >
-        <ProgressSpinner strokeWidth="4" />
-      </div>
-    </template>
     <template v-if="eventData">
       <Toast position="top-right" class="pt-8" />
       <div class="col-12">
@@ -364,6 +365,7 @@ const resetForm = () => {
                     </div>
 
                     <Button
+                      :loading="isSubmitting"
                       type="submit"
                       label="Submit"
                       class="p-button-text w-full"
@@ -468,6 +470,14 @@ const resetForm = () => {
             </div>
           </div>
         </div>
+      </div>
+    </template>
+    <template v-else>
+      <div
+        class="flex align-items-center justify-content-center"
+        style="width 400px; height: 400px; font-size: 50px"
+      >
+        <ProgressSpinner strokeWidth="4" />
       </div>
     </template>
   </div>
