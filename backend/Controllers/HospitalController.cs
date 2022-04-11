@@ -39,6 +39,7 @@ namespace backend.Controllers
             try
             {
                 var hospital = await _hospitalRepository.Get(id);
+                hospital.RequestHistory = (List<Request>) await _requestRepository.GetRequestByHospitalId(hospital._id);
                 if (hospital == null)
                 {
                     throw new Exception();
