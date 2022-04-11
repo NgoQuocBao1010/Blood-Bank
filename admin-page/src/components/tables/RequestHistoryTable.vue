@@ -251,7 +251,6 @@ const handleRequests = async () => {
         selectionMode="multiple"
         v-if="isActivity"
         headerStyle="width: 2rem"
-        v-if="isActivity"
       ></PrimeVueColumn>
 
       <!-- Hospital name -->
