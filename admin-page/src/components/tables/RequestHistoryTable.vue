@@ -28,7 +28,6 @@ const { requestHistory, isActivity } = defineProps({
     type: Array,
     required: true,
   },
-
   isActivity: {
     type: Boolean,
     default: false,
@@ -251,6 +250,7 @@ const handleRequests = async () => {
       <PrimeVueColumn
         selectionMode="multiple"
         headerStyle="width: 2rem"
+        v-if="isActivity"
       ></PrimeVueColumn>
 
       <!-- Hospital name -->

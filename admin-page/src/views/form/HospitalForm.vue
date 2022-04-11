@@ -34,7 +34,7 @@ const { name } = router.currentRoute.value;
 onBeforeMount(async () => {
   // Check if this is a Event Edit page
   // Fetch data if there is no passed props
-  if (name === "Hospital Edit" && _id) {
+  if (name !== "Hospital Create" && _id) {
     const { data } = await HospitalRepo.get(_id);
     hospitalFetchData = data;
     if (hospitalData) {
@@ -73,14 +73,18 @@ const submitData = async () => {
   // Make API call to server
   submitting = true;
   try {
-    if (name === "Hospital Edit" && _id) {
+    if (name !== "Hospital Create" && _id) {
       await HospitalRepo.put({
         _id: _id,
         name: formData.name,
         address: formData.address,
         phone: formData.phone,
       });
-      router.push({ name: "Hospital Detail", params: { _id } });
+      if (name === "Hospital Edit") {
+        router.push({ name: "Hospital Detail", params: { _id } });
+      } else {
+        router.push({ name: "Hospital Profile", params: { _id } });
+      }
     } else {
       const response = await HospitalRepo.post({
         name: formData.name,
@@ -100,7 +104,7 @@ const submitData = async () => {
       severity: "success",
       summary: "Successful",
       detail:
-        name === "Hospital Edit"
+        name !== "Hospital Create"
           ? "Hospital is updated"
           : "New hospital is added",
       life: 3000,
