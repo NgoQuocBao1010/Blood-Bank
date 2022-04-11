@@ -136,6 +136,7 @@ namespace backend.Repositories
             var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             var update = Builders<Request>.Update
                 .Set(r => r.Status, request.Status = 1)
+                .Set(r => r.RejectReason, null)
                 .Set(r => r.updateStatusAt, time.ToString());
             await _request.UpdateOneAsync(filter, update);
         }
