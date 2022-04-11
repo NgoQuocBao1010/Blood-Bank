@@ -1,14 +1,15 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
-import { useRouter } from "vue-router";
 
 import EventRepo from "../../api/EventRepo";
 import EventHelper from "../../utils/helpers/Event";
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import { formatDate } from "../../utils";
 import { DEFAULT_EVENT_COVER } from "../../constants";
+import AppProgressBar from "../../components/AppProgressBar.vue";
 
 const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
@@ -217,6 +218,9 @@ onBeforeMount(async () => {
                     </template>
                 </div>
             </template>
+
+            <!-- Progress bar -->
+            <AppProgressBar v-else />
         </div>
     </div>
 </template>

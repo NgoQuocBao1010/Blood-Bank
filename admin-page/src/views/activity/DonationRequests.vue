@@ -1,9 +1,9 @@
 <script setup>
 import { onBeforeMount, watch } from "vue";
-import ProgressBar from "primevue/progressbar";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
+import AppProgressBar from "../../components/AppProgressBar.vue";
 
 let donorsData = $ref(null);
 const fetchData = (type) => {
@@ -77,21 +77,7 @@ onBeforeMount(async () => {
                 </div>
 
                 <!-- Progress bar -->
-                <div
-                    class="flex flex-center"
-                    style="
-                        flex-direction: column;
-                        padding: 3rem 1rem;
-                        background-color: #f8f9fa;
-                    "
-                    v-else
-                >
-                    <h5>Loading ...</h5>
-                    <ProgressBar
-                        mode="indeterminate"
-                        style="height: 0.5em; width: 100%"
-                    />
-                </div>
+                <AppProgressBar v-else />
             </div>
         </div>
     </div>
