@@ -1,13 +1,13 @@
--   [Search Keyword by \_id](#search-keyword-by-_id)
--   [Donors API](#donors-api)
--   [DonorTransaction API](#donortransaction-api)
--   [Participants API](#participants-api)
--   [Events](#events)
--   [Blood](#blood)
--   [User](#user)
--   [Event Submission](#event-submission)
--   [Hospital](#hospital)
--   [Hospital Request](#hospital-request)
+- [Search Keyword by \_id](#search-keyword-by-_id)
+- [Donors API](#donors-api)
+- [DonorTransaction API](#donortransaction-api)
+- [Participants API](#participants-api)
+- [Events](#events)
+- [Blood](#blood)
+- [User](#user)
+- [Event Submission](#event-submission)
+- [Hospital](#hospital)
+- [Hospital Request](#hospital-request)
 
 ## Search Keyword by \_id
 
@@ -210,7 +210,7 @@
         startDate: string,
         duration: int,
         detail,
-        binaryImage: string
+        binaryImage: string (base64)
     }
     ```
 2. GET an event data -> Endpoint: api/Event/{\_id}
@@ -257,7 +257,7 @@
         startDate: string,
         duration: int,
         detail,
-        image: File
+        binaryImage: string (base64)
     }
     ```
 5. DELETE events data -> Endpoint: api/Event/{\_id}
@@ -324,12 +324,11 @@
     }
     ```
 
-    Return token when login success.
+    Return token and user object when login success.
 
-1. GET user from token -> Endpoint: api/user/verify:
+2. GET user from token -> Endpoint: api/user/verify
 
     ```
-
     {
         "_id": "string",
         "email": "string",
@@ -337,10 +336,9 @@
         "isAdmin": boolean,
         "hospital_id": "string"
     }
-
     ```
 
-1. GET all user -> Endpoint: api/user
+3. GET all user -> Endpoint: api/user
 
     ```
     [
@@ -354,7 +352,7 @@
     ]
     ```
 
-1. GET user by id -> Endpoint: api/user/{id}
+4. GET user by id -> Endpoint: api/user/{id}
 
     ```
     {
@@ -366,18 +364,24 @@
     }
     ```
 
-1. POST create user -> Endpoint: api/user
+5. POST create user admin -> Endpoint: api/user
+
+    ```
+    {
+        "email": "string"
+    }
+    ```
+
+6. POST create user hospital -> Endpoint: api/user
 
     ```
     {
         "email": "string",
-        "password": "string",
-        "isAdmin": boolean,
         "hospital_id": "string"
     }
     ```
 
-1. DELETE user by id -> Endpoint: api/user/{id}
+7. DELETE user by id -> Endpoint: api/user/{id}
     ```
     Return true if delete success
     ```
@@ -462,6 +466,21 @@
         "name": "string",
         "address": "string",
         "phone": "string"
+        "requestHistory" : [
+            {
+                "_id": "string",
+                "date": "string",
+                "quantity": int,
+                "blood": {
+                    "name": "string",
+                    "type": "string"
+                },
+                "hospitalId": "string",
+                "hospitalName": "string"
+                "status": int,
+                "rejectReason": "string"
+            },
+        ]
     }
     ```
 
@@ -514,7 +533,7 @@
     ]
     ```
 
-2. GET hospital by id -> Endpoint: api/request/{id}
+2. GET hospital request by id -> Endpoint: api/request/{id}
 
     ```
     {
@@ -566,6 +585,7 @@
     Return status 200 if success. Error will return 400 bad request status.
 
 6. PUT reject request -> Endpoint: api/request/reject
+
     ```
     [
         {
@@ -575,3 +595,66 @@
     ]
     ```
     Return status **200** if success. Error will return **400** bad request status.
+
+7. GET pending request -> Endpoint: api/request/pendingRequest
+
+    ```
+    [
+        {
+            "_id": "string",
+            "date": "string",
+            "quantity": int,
+            "blood": {
+                "name": "string",
+                "type": "string"
+            },
+            "hospitalId": "string",
+            "hospitalName": "string",
+            "status": 0,
+            "rejectReason": "string"
+        }
+    ]
+    ```
+    Pending request **"status": 0**
+
+8. GET approved request -> Endpoint: api/request/approvedRequest
+
+    ```
+    [
+        {
+            "_id": "string",
+            "date": "string",
+            "quantity": int,
+            "blood": {
+                "name": "string",
+                "type": "string"
+            },
+            "hospitalId": "string",
+            "hospitalName": "string",
+            "status": 1,
+            "rejectReason": "string"
+        }
+    ]
+    ```
+    Approved request **"status": 1**
+
+9. GET rejected request -> Endpoint: api/request/rejectedRequest
+
+    ```
+    [
+        {
+            "_id": "string",
+            "date": "string",
+            "quantity": int,
+            "blood": {
+                "name": "string",
+                "type": "string"
+            },
+            "hospitalId": "string",
+            "hospitalName": "string",
+            "status": -1,
+            "rejectReason": "string"
+        }
+    ]
+    ```
+    Rected request **"status": -1**
