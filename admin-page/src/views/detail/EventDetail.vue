@@ -2,6 +2,7 @@
 import { defineAsyncComponent, onBeforeMount } from "vue";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
+import { useRouter } from "vue-router";
 
 import EventRepo from "../../api/EventRepo";
 import EventHelper from "../../utils/helpers/Event";
@@ -21,6 +22,7 @@ const props = defineProps({
     _id: String,
 });
 
+const router = useRouter();
 let event = $ref();
 let isUpcomingEvent = $ref(false);
 let catchedData = $ref({});
@@ -43,16 +45,26 @@ const home = $ref({
 let items = $ref(null);
 
 onBeforeMount(async () => {
-    const { data } = await EventRepo.getById(props._id);
+    try {
+        const { data } = await EventRepo.getById(props._id);
 
-    catchedData = JSON.stringify(data);
-    event = { ...data };
-    event["startDate"] = new Date(parseInt(event["startDate"]));
-    event["status"] = EventHelper.determineStatus(event);
+        catchedData = JSON.stringify(data);
+        event = { ...data };
+        event["startDate"] = new Date(parseInt(event["startDate"]));
+        event["status"] = EventHelper.determineStatus(event);
 
-    isUpcomingEvent = event["status"] === "upcoming";
+        isUpcomingEvent = event["status"] === "upcoming";
+        items = [{ label: event ? `${event.name} event` : "Unknown event" }];
+    } catch (e) {
+        if (e.response && e.response.status === 404) {
+            return router.push({
+                name: "404 Error",
+                params: { message: "Sorry! This event does not exist 🤔🤨" },
+            });
+        }
 
-    items = [{ label: event ? `${event.name} event` : "Unknown event" }];
+        throw e;
+    }
 });
 </script>
 
