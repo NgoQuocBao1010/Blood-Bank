@@ -52,7 +52,7 @@ onMounted(() => {
 });
 
 const addBlinkAnimation = (data) => {
-    return filterData ? "blink-animation" : "";
+    return filterData === data._id ? "blink-animation" : "";
 };
 
 // Filter configurations
