@@ -10,10 +10,13 @@ namespace backend.Models
         public List<Hospital> Hospitals { get; set; }
         public List<User> Users { get; set; }
         public List<Event> Events { get; set; }
-
-        public static async Task<DefaultData> ReadJson(string filePath)
+        public List<Blood> Blood { get; set; }
+        public List<ListParticipants> Donors { get; set; }
+        public List<EventSubmission> EventSubmissions { get; set; }
+        public List<Request> Requests { get; set; }
+        public static async Task<DefaultData> ReadJson()
         {
-            var jsonText = await File.ReadAllTextAsync(filePath);
+            var jsonText = await File.ReadAllTextAsync("default_data.json");
             var json = JsonConvert.DeserializeObject<DefaultData>(jsonText);
             return json;
         }

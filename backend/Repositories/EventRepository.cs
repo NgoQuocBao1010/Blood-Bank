@@ -21,25 +21,13 @@ namespace backend.Repositories
         {
             var e = Get();
             if (e.Result.Any()) return;
-
-            var listEvent = new List<Event>
+            
+            var data = DefaultData.ReadJson();
+            foreach (var events in data.Result.Events)
             {
-                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1612976400000",
-                    2, "This is a blood donation event at F+", null),
-                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1639069200000",
-                    2, "This is a blood donation event at Nga 6", null),
-                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1646067600000",
-                    2, "This is a blood donation event at Cho Ray", null),
-                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1644080400000",
-                    2, "This is a blood donation event at Nha Cua May", null),
-                new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
-                    100, "This is a blood donation event at Nomad", null),
-                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"),
-                    "1671469200000",
-                    2, "This is a blood donation event at Cafe Station", null)
-            };
-
-            _event.InsertMany(listEvent);
+                events.binaryImage = null;
+            }
+            _event.InsertMany(data.Result.Events);
         }
 
         public async Task<string> Create(Event e)

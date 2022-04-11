@@ -24,7 +24,7 @@ namespace backend.Repositories
         {
             var hospital = Get();
             if (hospital.Result.Any()) return;
-            var data = DefaultData.ReadJson("default_data.json");
+            var data = DefaultData.ReadJson();
 
             _hospital.InsertMany(data.Result.Hospitals);
         }

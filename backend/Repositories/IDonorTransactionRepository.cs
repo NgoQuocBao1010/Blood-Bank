@@ -30,6 +30,6 @@ namespace backend.Repositories
         Task<bool> Delete(string _id);
 
         Task<bool> CheckValidListParticipant(ListParticipants data, Event eventDonated);
-
+        
     }
 }

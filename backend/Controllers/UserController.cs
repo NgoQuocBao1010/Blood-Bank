@@ -201,18 +201,5 @@ namespace backend.Controllers
                 return BadRequest("User id error!");
             }
         }
-
-        [HttpGet("readJson")]
-        public async Task<IActionResult> ReadJson()
-        {
-            var defaultData = new DefaultData();
-            var json = await DefaultData.ReadJson("default_data.json");
-            if (json == null)
-            {
-                throw new Exception();
-            }
-
-            return new JsonResult(json.Events);
-        }
     }
 }

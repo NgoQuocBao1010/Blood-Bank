@@ -17,13 +17,15 @@ namespace backend.Controllers
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IBloodRepository _bloodRepository;
         private readonly IDonorRepository _donorRepository;
+        private readonly IRecentActivityRepository _recentActivityRepository;
 
         public DonorTransactionController(IDonorTransactionRepository donorTransactionRepository,
-            IBloodRepository bloodRepository, IDonorRepository donorRepository)
+            IBloodRepository bloodRepository, IDonorRepository donorRepository, IRecentActivityRepository recentActivityRepository)
         {
             _donorTransactionRepository = donorTransactionRepository;
             _bloodRepository = bloodRepository;
             _donorRepository = donorRepository;
+            _recentActivityRepository = recentActivityRepository;
         }
 
         [HttpPost]
@@ -91,6 +93,12 @@ namespace backend.Controllers
 
                 await _bloodRepository.UpdateQuantity(transaction.blood.name, transaction.blood.type,
                     transaction.amount);
+                
+                var donor = await _donorRepository.Get(transaction.donorId);
+                
+                var activity = new RecentActivity("Donor", donor._id, transaction._id,
+                    "plus", donor.name, transaction.updateStatusAt, transaction.amount);
+                await _recentActivityRepository.Create(activity);
             }
 
             return new JsonResult(result);
@@ -102,6 +110,8 @@ namespace backend.Controllers
             var result = false;
             foreach (var participant in listParticipants)
             {
+                var transaction = await _donorTransactionRepository.GetByEventAndDonor(participant._id, participant.eventId);
+
                 // reject transaction
                 result = await _donorTransactionRepository.RejectParticipants(participant._id, participant.eventId,
                     participant.rejectReason);
@@ -110,6 +120,17 @@ namespace backend.Controllers
                 {
                     return BadRequest();
                 }
+
+                if (transaction.status != 1) continue;
+                
+                await _bloodRepository.UpdateQuantity(transaction.blood.name, transaction.blood.type,
+                    -transaction.amount);
+                
+                var donor = await _donorRepository.Get(transaction.donorId);
+                    
+                var activity = new RecentActivity("Donor", donor._id, transaction._id,
+                    "minus", donor.name, transaction.updateStatusAt, transaction.amount);
+                await _recentActivityRepository.Create(activity);
             }
 
             return new JsonResult(result);

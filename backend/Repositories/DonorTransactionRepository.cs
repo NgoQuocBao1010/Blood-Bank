@@ -11,16 +11,12 @@ namespace backend.Repositories
     public class DonorTransactionRepository : IDonorTransactionRepository
     {
         private readonly IMongoCollection<DonorTransaction> _donorTransaction;
-        private readonly IMongoCollection<Donor> _donor;
 
         public DonorTransactionRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<DonorTransaction>(nameof(DonorTransaction));
-            var collection1 = database.GetCollection<Donor>(nameof(Donor));
-
             _donorTransaction = collection;
-            _donor = collection1;
         }
 
 
@@ -54,7 +50,7 @@ namespace backend.Repositories
 
             return transactions;
         }
-        
+
         public async Task<IEnumerable<DonorTransaction>> GetTransactionByStatus(int status)
         {
             var filter = Builders<DonorTransaction>.Filter.Eq(dt => dt.status, status);
@@ -69,7 +65,7 @@ namespace backend.Repositories
 
             return donorTransaction;
         }
-        
+
 
         public async Task<IEnumerable<DonorTransaction>> GetByEvent(string eventId)
         {
@@ -77,8 +73,8 @@ namespace backend.Repositories
             var transaction = await _donorTransaction.Find(filter).ToListAsync();
             return transaction;
         }
-        
-        
+
+
         public async Task<DonorTransaction> GetByEventAndDonor(string _id, string eventId)
         {
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
@@ -92,20 +88,22 @@ namespace backend.Repositories
         {
             // filter transaction
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
-                & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
+                         & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
             var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             // update status to 1 -> Approve to be a donor
             var update = Builders<DonorTransaction>.Update
                 .Set(d => d.status, 1)
+                .Set(d => d.rejectReason, null)
                 .Set(d => d.updateStatusAt, time.ToString());
             var result = await _donorTransaction.UpdateOneAsync(filter, update);
 
-
             return result.ModifiedCount == 1;
         }
-        
+
         public async Task<bool> RejectParticipants(string _id, string eventId, string rejectReason)
         {
+            var transaction = await GetByEventAndDonor(_id, eventId);
+
             // filter transaction
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
                          & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
@@ -118,7 +116,6 @@ namespace backend.Repositories
                 .Set(d => d.rejectReason, rejectReason);
             var result = await _donorTransaction.UpdateOneAsync(filter, update);
 
-
             return result.ModifiedCount == 1;
         }
 
@@ -129,7 +126,7 @@ namespace backend.Repositories
 
             return result.DeletedCount == 1;
         }
-        
+
         public async Task<bool> CheckValidListParticipant(ListParticipants data, Event eventDonated)
         {
             foreach (var donor in data.listParticipants)

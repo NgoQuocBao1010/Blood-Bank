@@ -17,13 +17,15 @@ namespace backend.Controllers
         private readonly IRequestRepository _requestRepository;
         private readonly IHospitalRepository _hospitalRepository;
         private readonly IBloodRepository _bloodRepository;
+        private readonly IRecentActivityRepository _recentActivityRepository;
 
         public RequestController(IRequestRepository requestRepository, IHospitalRepository hospitalRepository,
-            IBloodRepository bloodRepository)
+            IBloodRepository bloodRepository, IRecentActivityRepository recentActivityRepository)
         {
             _requestRepository = requestRepository;
             _hospitalRepository = hospitalRepository;
             _bloodRepository = bloodRepository;
+            _recentActivityRepository = recentActivityRepository;
         }
 
         [HttpPut("approve")]
@@ -45,6 +47,11 @@ namespace backend.Controllers
                     await _bloodRepository.UpdateQuantity(existRequest.Blood.Name, existRequest.Blood.Type,
                         -existRequest.Quantity);
                     _requestRepository.ApproveRequest(request);
+
+                    var req = await _requestRepository.Get(request._id);
+                    var activity = new RecentActivity("Hospital", req.HospitalId, req._id,
+                        "minus", req.HospitalName, req.updateStatusAt, req.Quantity);
+                    await _recentActivityRepository.Create(activity);
                 }
 
                 return Ok("Approve request successfully!");
@@ -69,9 +76,24 @@ namespace backend.Controllers
                 {
                     var existRequest = await _requestRepository.Get(request._id);
                     if (existRequest == null) throw new Exception();
-                    if (existRequest.Status == -1) throw new Exception("rejected");
-
                     _requestRepository.RejectRequest(request);
+
+                    switch (existRequest.Status)
+                    {
+                        case -1:
+                            throw new Exception("rejected");
+                        case 1:
+                            await _bloodRepository.UpdateQuantity(existRequest.Blood.Name, existRequest.Blood.Type,
+                                existRequest.Quantity);
+                            
+                            var req = await _requestRepository.Get(request._id);
+                            
+                            var activity = new RecentActivity("Hospital", req.HospitalId, req._id,
+                                "plus", req.HospitalName, req.updateStatusAt, req.Quantity);
+                            await _recentActivityRepository.Create(activity);
+                            break;
+                    }
+
                 }
 
                 return Ok("Reject request successfully!");

@@ -19,52 +19,29 @@ namespace backend.Controllers
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IRequestRepository _requestRepository;
         private readonly IEventRepository _eventRepository;
+        private readonly IRecentActivityRepository _recentActivityRepository;
 
         public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
-            IDonorTransactionRepository donorTransactionRepository, IEventRepository eventRepository)
+            IDonorTransactionRepository donorTransactionRepository, IEventRepository eventRepository,
+            IRecentActivityRepository recentActivityRepository)
         {
             _donorRepository = donorRepository;
             _requestRepository = requestRepository;
             _donorTransactionRepository = donorTransactionRepository;
             _eventRepository = eventRepository;
+            _recentActivityRepository = recentActivityRepository;
         }
 
         [HttpGet]
         [Route("recentActivities")]
         public async Task<IActionResult> GetRecentActivities()
         {
-            var result = new List<RecentActivities>();
-            var listApprovedTransactions = await _donorTransactionRepository.GetTransactionByStatus(1);
-            var listId = listApprovedTransactions
-                .Select(transaction => new Id(transaction.donorId, transaction.updateStatusAt, "transaction", transaction._id, transaction.amount)).ToList();
-
-            var listApprovedRequest = await _requestRepository.GetRequestByStatus(1);
-            listId.AddRange(listApprovedRequest.Select(request => new Id(request._id, request.updateStatusAt, "request", null, request.Quantity)));
-
-            listId = new List<Id>(listId.OrderByDescending(id => long.Parse(id.date)));
-
-            foreach (var id in listId)
+            var recentActivities = await _recentActivityRepository.Get();
+            var listActivity = recentActivities.ToList();
+            var result = new List<RecentActivity>();
+            for (var i = 0; i < 5; i++)
             {
-                RecentActivities recentActivity = null;
-                switch (id.type)
-                {
-                    case "transaction":
-                        var donor = await _donorRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "Receive", donor.name,
-                            id.date, id.transactionId, id.amount);
-                        break;
-                    case "request":
-                        var request = await _requestRepository.Get(id._id);
-                        recentActivity = new RecentActivities(id._id, "Donate", request.HospitalName,
-                            id.date, id.transactionId, id.amount);
-                        break;
-                }
-
-                result.Add(recentActivity);
-                if (result.Count == 5)
-                {
-                    break;
-                }
+                result.Add(listActivity[i]);
             }
 
             return new JsonResult(result);

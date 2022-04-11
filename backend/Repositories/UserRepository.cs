@@ -27,6 +27,8 @@ namespace backend.Repositories
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
         private readonly IBloodRepository _bloodRepository;
         private readonly IRequestRepository _requestRepository;
+        private readonly IDonorRepository _donorRepository;
+        private readonly IRecentActivityRepository _recentActivityRepository;
         private readonly IConfiguration _configuration;
 
         public UserRepository(IMongoClient client, IConfiguration configuration)
@@ -36,7 +38,9 @@ namespace backend.Repositories
             _eventRepository = new EventRepository(client);
             _eventSubmissionRepository = new EventSubmissionRepository(client);
             _bloodRepository = new BloodRepository(client);
+            _donorRepository = new DonorRepository(client);
             _requestRepository = new RequestRepository(client);
+            _recentActivityRepository = new RecentActivityRepository(client);
 
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<User>(nameof(User));
@@ -85,13 +89,6 @@ namespace backend.Repositories
             return user;
         }
 
-        // public async Task<DefaultData> ReadJson(string filePath)
-        // {
-        //     var jsonText = await File.ReadAllTextAsync(filePath);
-        //     var json = JsonConvert.DeserializeObject<DefaultData>(jsonText);
-        //     return json;
-        // }
-        
         public async Task<long> Update(string _id, User user)
         {
             var filter = Builders<User>.Filter.Eq(u => u._id, _id);
@@ -156,13 +153,15 @@ namespace backend.Repositories
             _eventRepository.AddDefaultData();
             _eventSubmissionRepository.AddDefaultData();
             _bloodRepository.AddDefaultData();
+            _donorRepository.AddDefaultData();
             _requestRepository.AddDefaultData();
+            _recentActivityRepository.AddDefaultData();
 
             var user = Get();
             if (user.Result.Any()) return;
 
             var defaultData = new DefaultData();
-            var data = DefaultData.ReadJson("default_data.json");
+            var data = DefaultData.ReadJson();
             
             var hospital = _hospitalRepository.Get();
             for (var i = 0; i < data.Result.Users.Count; i++)
