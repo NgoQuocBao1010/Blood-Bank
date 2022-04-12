@@ -19,7 +19,7 @@ watch(
             // Come to error page
             // If there is old layout, use if
             // Else detect layout base on auth status
-            if (layoutName === "__dynamic" && !oldLayout) {
+            if (layoutName === "__dynamic") {
                 layoutName = userStore.isLoggedIn
                     ? "LayoutDefault"
                     : "LayoutUnauth";

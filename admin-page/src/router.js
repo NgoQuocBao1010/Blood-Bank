@@ -190,7 +190,28 @@ const router = createRouter({
         {
             path: "/hospital-request/:_id",
             name: "Hospital Page",
-            component: () => import("./views/HospitalRequest.vue"),
+            component: () =>
+                import("./views/hospital-pages/HospitalRequest.vue"),
+            meta: {
+                layoutName: "LayoutDefault",
+                isHospital: true,
+            },
+        },
+        {
+            path: "/hospital-profile/:_id",
+            name: "Hospital Profile",
+            component: () =>
+                import("./views/hospital-pages/HospitalProfile.vue"),
+            meta: {
+                layoutName: "LayoutDefault",
+                isHospital: true,
+            },
+        },
+        {
+            path: "/hospital/edit-profile/:_id",
+            name: "Hospital Edit Profile",
+            component: () => import("./views/form/HospitalForm.vue"),
+            props: true,
             meta: {
                 layoutName: "LayoutDefault",
                 isHospital: true,

@@ -141,7 +141,6 @@ const submitData = async () => {
             router.push(redirectRoute);
         }
     } catch (e) {
-        console.log("Error", e);
         throw e;
     } finally {
         loading = false;

@@ -28,7 +28,6 @@ onBeforeMount(async () => {
     const { data, status } = await AppRepo.getRecentActivities();
 
     activities = JSON.parse(JSON.stringify(data));
-    console.log(activities);
     fetchingData = false;
 });
 </script>

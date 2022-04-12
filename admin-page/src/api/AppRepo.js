@@ -7,6 +7,9 @@ export default {
     searchByObjectById(id) {
         return Repository.get(`search/${id}`);
     },
+    getOverview() {
+        return Repository.get(`dashboardInfo`);
+    },
     getRecentActivities() {
         return Repository.get(`recentActivities`);
     },

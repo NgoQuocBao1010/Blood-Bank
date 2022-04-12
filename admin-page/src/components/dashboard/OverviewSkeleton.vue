@@ -21,7 +21,7 @@
 .skeleton {
     &__title {
         width: 50% !important;
-        height: 1.5rem;
+        height: 1.3rem;
         animation: 1.5s loading_skeleton linear infinite;
     }
 
