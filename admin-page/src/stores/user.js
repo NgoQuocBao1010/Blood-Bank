@@ -62,5 +62,12 @@ export const useUserStore = defineStore("user", {
                       params: { _id: state.hospitalId },
                   };
         },
+        profilePage: (state) =>
+            state.isAdmin
+                ? { name: "Dashboard" }
+                : {
+                      name: "Hospital Profile",
+                      params: { _id: state.hospitalId },
+                  },
     },
 });
