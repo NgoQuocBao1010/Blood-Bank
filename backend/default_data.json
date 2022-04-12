@@ -1376,6 +1376,16 @@
             "status": 1
         },
         {
+            "date": "1649721600000",
+            "quantity": 15000,
+            "blood": {
+                "name": "A",
+                "type": "positive"
+            },
+            "hospitalId": "0",
+            "status": 1
+        },
+        {
             "date": "1644235200000",
             "quantity": 100000,
             "blood": {
@@ -1438,6 +1448,16 @@
             "status": 1
         },
         {
+            "date": "1648857600000",
+            "quantity": 9800,
+            "blood": {
+                "name": "O",
+                "type": "negative"
+            },
+            "hospitalId": "1",
+            "status": 1
+        },
+        {
             "date": "1646049600000",
             "quantity": 200,
             "blood": {
@@ -1483,6 +1503,16 @@
             "quantity": 10000,
             "blood": {
                 "name": "A",
+                "type": "negative"
+            },
+            "hospitalId": "2",
+            "status": 1
+        },
+        {
+            "date": "1649203200000",
+            "quantity": 12000,
+            "blood": {
+                "name": "B",
                 "type": "negative"
             },
             "hospitalId": "2",

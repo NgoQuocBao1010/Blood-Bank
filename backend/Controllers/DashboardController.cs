@@ -75,21 +75,24 @@ namespace backend.Controllers
             var totalBloodReceive = await GetTotalBloodReceive();
             var bloodReceiveLastQuarter = await GetBloodReceiveLastQuarter(
                 firstDayOfLastQuarter.ToUnixTimeMilliseconds(),
-                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds());
+                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds(),
+                lastDayOfCurrentQuarter.ToUnixTimeMilliseconds());
             var bloodReceive = new BloodReceive(totalBloodReceive, bloodReceiveLastQuarter);
 
             // get total and percentage of blood donated when compare to last quarter
             var totalBloodDonated = await GetTotalBloodDonated();
             var bloodDonatedLastQuarter = await GetBloodDonatedLastQuarter(
                 firstDayOfLastQuarter.ToUnixTimeMilliseconds(),
-                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds());
+                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds(),
+                lastDayOfCurrentQuarter.ToUnixTimeMilliseconds());
             var bloodDonated = new BloodDonated(totalBloodDonated, bloodDonatedLastQuarter);
 
             // get total and percentage of donators when compare to last quarter
             var totalDonators = await GetTotalDonators();
             var donatorsLastQuarter = await GetDonatorsLastQuarter(
                 firstDayOfLastQuarter.ToUnixTimeMilliseconds(),
-                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds());
+                lastDayOfLastQuarter.ToUnixTimeMilliseconds(), firstDayOfCurrentQuarter.ToUnixTimeMilliseconds(),
+                lastDayOfCurrentQuarter.ToUnixTimeMilliseconds());
             var donators = new Donators(totalDonators.Count, donatorsLastQuarter);
 
             // get total and percentage of events when compare to last quarter
@@ -113,7 +116,7 @@ namespace backend.Controllers
         }
 
         public async Task<float> GetBloodReceiveLastQuarter(long firstDayOfLastQuarter, long lastDayOfLastQuarter,
-            long firstDayOfCurrentQuarter)
+            long firstDayOfCurrentQuarter, long lastDayOfCurrentQuarter)
         {
             var transactions = await _donorTransactionRepository.GetTransactionByStatus(1);
             float bloodReceiveLastQuarter = 0;
@@ -127,7 +130,7 @@ namespace backend.Controllers
                     bloodReceiveLastQuarter += transaction.amount;
                 }
 
-                if (date >= firstDayOfCurrentQuarter)
+                if (date >= firstDayOfCurrentQuarter && date <= lastDayOfCurrentQuarter)
                 {
                     bloodReceiveCurrentQuarter += transaction.amount;
                 }
@@ -161,7 +164,7 @@ namespace backend.Controllers
         }
 
         public async Task<float> GetBloodDonatedLastQuarter(long firstDayOfLastQuarter, long lastDayOfLastQuarter,
-            long firstDayOfCurrentQuarter)
+            long firstDayOfCurrentQuarter, long lastDayOfCurrentQuarter)
         {
             var requests = await _requestRepository.GetRequestByStatus(1);
             float bloodDonatedLastQuarter = 0;
@@ -175,7 +178,7 @@ namespace backend.Controllers
                     bloodDonatedLastQuarter += request.Quantity;
                 }
 
-                if (date >= firstDayOfCurrentQuarter)
+                if (date >= firstDayOfCurrentQuarter && date <= lastDayOfCurrentQuarter)
                 {
                     bloodDonatedCurrentQuarter += request.Quantity;
                 }
@@ -217,7 +220,7 @@ namespace backend.Controllers
         }
 
         public async Task<int> GetDonatorsLastQuarter(long firstDayOfLastQuarter, long lastDayOfLastQuarter,
-            long firstDayOfCurrentQuarter)
+            long firstDayOfCurrentQuarter, long lastDayOfCurrentQuarter)
         {
             var listDonatorsLastQuarter = new List<string>();
             var listDonatorsCurrentQuarter = new List<string>();
@@ -243,7 +246,8 @@ namespace backend.Controllers
                     listDonatorsLastQuarter.Add(transaction.donorId);
                 }
 
-                if (date >= firstDayOfCurrentQuarter && !listDonatorsCurrentQuarter.Contains(transaction.donorId) &&
+                if (date >= firstDayOfCurrentQuarter && date <= lastDayOfCurrentQuarter &&
+                    !listDonatorsCurrentQuarter.Contains(transaction.donorId) &&
                     !listDonatorsLastQuarter.Contains(transaction.donorId) && !listDonor.Contains(transaction.donorId))
                 {
                     listDonatorsCurrentQuarter.Add(transaction.donorId);
