@@ -123,13 +123,15 @@ namespace backend.Controllers
 
                 if (transaction.status != 1) continue;
                 
-                await _bloodRepository.UpdateQuantity(transaction.blood.name, transaction.blood.type,
-                    -transaction.amount);
+                var newTransaction = await _donorTransactionRepository.GetByEventAndDonor(participant._id, participant.eventId);
                 
-                var donor = await _donorRepository.Get(transaction.donorId);
+                await _bloodRepository.UpdateQuantity(newTransaction.blood.name, newTransaction.blood.type,
+                    -newTransaction.amount);
+                
+                var donor = await _donorRepository.Get(newTransaction.donorId);
                     
-                var activity = new RecentActivity("Donor", donor._id, transaction._id,
-                    "minus", donor.name, transaction.updateStatusAt, transaction.amount);
+                var activity = new RecentActivity("Donor", donor._id, newTransaction._id,
+                    "minus", donor.name, newTransaction.updateStatusAt, newTransaction.amount);
                 await _recentActivityRepository.Create(activity);
             }
 

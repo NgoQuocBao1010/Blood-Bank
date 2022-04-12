@@ -53,7 +53,8 @@
             },
             "startDate": "1641315600000",
             "duration": 3,
-            "detail": "The aim is to raise global awareness of the need for safe blood and blood products for transfusion and of the critical contribution voluntary, unpaid blood donors make to national health systems."
+            "detail": "The aim is to raise global awareness of the need for safe blood and blood products for transfusion and of the critical contribution voluntary, unpaid blood donors make to national health systems.",
+            "dateCreated": "1639267200000"
         },
         {
             "name": "Judoh Blood Donations",
@@ -63,7 +64,8 @@
             },
             "startDate": "1647277200000",
             "duration": 2,
-            "detail": "Safe blood and blood products and their transfusion are a critical aspect of care and public health. They save millions of lives and improve the health and quality of life of many patients every day."
+            "detail": "Safe blood and blood products and their transfusion are a critical aspect of care and public health. They save millions of lives and improve the health and quality of life of many patients every day.",
+            "dateCreated": "1644451200000"
         },
         {
             "name": "We are Donors",
@@ -73,7 +75,8 @@
             },
             "startDate": "1648746000000",
             "duration": 1,
-            "detail": "Throughout the COVID-19 pandemic, despite limited mobility and other challenges, blood donors in many countries have continued to donate blood and plasma to patients who need transfusion. "
+            "detail": "Throughout the COVID-19 pandemic, despite limited mobility and other challenges, blood donors in many countries have continued to donate blood and plasma to patients who need transfusion. ",
+            "dateCreated": "1646092800000"
         },
         {
             "name": "Judoh Blood Donations - Summer Edition",
@@ -83,7 +86,8 @@
             },
             "startDate": "1649264400000",
             "duration": 100,
-            "detail": "Encourage youth to embrace the humanitarian call to donate blood and inspire others to do the same"
+            "detail": "Encourage youth to embrace the humanitarian call to donate blood and inspire others to do the same",
+            "dateCreated": "1646611200000"
         },
         {
             "name": "Judoh Blood Donations - Christmast Edition",
@@ -93,7 +97,8 @@
             },
             "startDate": "1671642000000",
             "duration": 2,
-            "detail": "Encourage youth to embrace the humanitarian call to donate blood and inspire others to do the same"
+            "detail": "Encourage youth to embrace the humanitarian call to donate blood and inspire others to do the same",
+            "dateCreated": "1651363200000"
         }
     ],
     "donors": [
