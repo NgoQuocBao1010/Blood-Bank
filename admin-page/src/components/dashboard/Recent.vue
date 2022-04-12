@@ -9,24 +9,18 @@ let activities = $ref([]);
 let fetchingData = $ref(false);
 
 const getDetailRoute = (data) => {
-    if (data.type == "Receive") {
-        return {
-            name: "Donor Detail",
-            params: {
-                _id: data._id,
-                transactionId: data.transactionId,
-            },
-        };
-    }
+    if (!["Hospital", "Donor"].includes(data.trigger))
+        throw "Unidentified activities on recent activities table";
 
-    if (data.type === "Donate") {
-        return {
-            name: "Hospital Detail",
-            params: { _id: data._id },
-        };
-    }
+    const detail = {};
 
-    throw "Unidentified activities";
+    return {
+        name: `${data.trigger} Detail`,
+        params: {
+            _id: data.triggerId,
+            filterData: data.detailId,
+        },
+    };
 };
 
 onBeforeMount(async () => {
@@ -41,7 +35,7 @@ onBeforeMount(async () => {
 
 <template>
     <div class="card">
-        <h5>5 Recent Activites</h5>
+        <h5>Blood Activites</h5>
         <PrimeVueTable
             :value="activities"
             :loading="fetchingData"
@@ -57,12 +51,12 @@ onBeforeMount(async () => {
                     <span class="flex" style="align-items: center">
                         <i
                             class="fa-solid fa-circle-plus icon-type"
-                            v-if="data.type === 'Receive'"
+                            v-if="data.type === 'plus'"
                             style="color: lightgreen"
                         ></i>
                         <i
                             class="fa-solid fa-circle-minus icon-type"
-                            v-else
+                            v-if="data.type === 'minus'"
                             style="color: lightcoral"
                         ></i>
                         <!-- Mock data -->

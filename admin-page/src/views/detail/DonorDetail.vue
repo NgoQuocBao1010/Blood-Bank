@@ -8,7 +8,7 @@ import { formatDate } from "../../utils";
 
 const props = defineProps({
     _id: String,
-    transactionId: {
+    filterData: {
         type: String,
         default: "",
     },
@@ -20,7 +20,7 @@ onBeforeMount(async () => {
     const { data } = await DonorRepo.getById(props._id);
     donor = data;
 
-    if (props.transactionId) {
+    if (props.filterData) {
         await getListTransaction();
     }
 });
@@ -122,7 +122,7 @@ let items = [{ label: "Donor Detail" }];
                 <template v-else>
                     <AsyncTransactionTable
                         :transactionData="listDonation"
-                        :filterData="transactionId"
+                        :filterData="filterData"
                     />
                 </template>
             </div>
