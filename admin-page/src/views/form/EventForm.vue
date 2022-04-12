@@ -28,8 +28,6 @@ const { _id, eventData } = defineProps({
     eventData: String,
 });
 
-let eventCoverImg = null;
-
 // Breadcums
 // Naviagtion settings
 const home = $ref({
@@ -70,7 +68,7 @@ const onImageUpload = async (e) => {
 };
 
 const removeUploadImage = () => {
-    formData.binaryImage = eventCoverImg;
+    formData.binaryImage = null;
     document.getElementById("preview").value = "";
 };
 
@@ -184,7 +182,6 @@ const fixingVuevalidateBugs = (data) => {
     formData.duration = data.duration;
     formData.startDate = new Date(parseInt(data.startDate));
     formData.binaryImage = data.binaryImage;
-    eventCoverImg = data.binaryImage;
 };
 </script>
 
@@ -210,7 +207,7 @@ const fixingVuevalidateBugs = (data) => {
                 <!-- Form -->
                 <div
                     class="p-fluid formgrid col-10 grid"
-                    style="margin: 0 auto"
+                    style="margin: 0 auto; min-width: 700px"
                 >
                     <!-- Event Name -->
                     <div class="field col-12">
@@ -329,9 +326,6 @@ const fixingVuevalidateBugs = (data) => {
                                     class="p-button-rounded p-button-sm p-button-danger p-button-outlined remove-btn"
                                     @click="removeUploadImage"
                                     v-tooltip.top="'Remove this image'"
-                                    v-if="
-                                        formData.binaryImage !== eventCoverImg
-                                    "
                                 />
                             </template>
 
@@ -345,8 +339,9 @@ const fixingVuevalidateBugs = (data) => {
                     <div class="field col-12 flex">
                         <PrimeVueButton
                             type="button"
-                            label="Submit"
-                            class="submit-btn mb-2 mr-2"
+                            label="Save"
+                            icon="pi pi-save"
+                            class="submit-btn p-button-success mb-2 mr-2"
                             @click="submitData"
                             :loading="loading"
                         />
@@ -435,14 +430,13 @@ const fixingVuevalidateBugs = (data) => {
     }
 }
 
+.cancel-btn,
 .delete-btn,
 .submit-btn {
     margin-top: 3em;
     width: 8em;
 }
-
 .delete-btn {
-    background: red;
-    margin-left: auto;
+    background: rgb(246, 76, 76);
 }
 </style>
