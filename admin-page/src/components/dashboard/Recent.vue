@@ -8,11 +8,33 @@ import { timeDiffernet } from "../../utils";
 let activities = $ref([]);
 let fetchingData = $ref(false);
 
+const getDetailRoute = (data) => {
+    if (data.type == "Receive") {
+        return {
+            name: "Donor Detail",
+            params: {
+                _id: data._id,
+                transactionId: data.transactionId,
+            },
+        };
+    }
+
+    if (data.type === "Donate") {
+        return {
+            name: "Hospital Detail",
+            params: { _id: data._id },
+        };
+    }
+
+    throw "Unidentified activities";
+};
+
 onBeforeMount(async () => {
     fetchingData = true;
     const { data, status } = await AppRepo.getRecentActivities();
 
     activities = JSON.parse(JSON.stringify(data));
+    console.log(activities);
     fetchingData = false;
 });
 </script>
@@ -61,13 +83,7 @@ onBeforeMount(async () => {
                 <template #header> View </template>
                 <template #body="{ data }">
                     <router-link
-                        :to="{
-                            name: 'Donor Detail',
-                            params: {
-                                _id: data._id,
-                                transactionId: data.transactionId,
-                            },
-                        }"
+                        :to="getDetailRoute(data)"
                         class="p-button p-button-sm app-router-link-icon btn-icon-only"
                     >
                         <i
