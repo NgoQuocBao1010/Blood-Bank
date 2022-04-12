@@ -8,9 +8,9 @@ import AppProgressBar from "../../components/AppProgressBar.vue";
 let donorsData = $ref(null);
 const fetchData = (type) => {
     return {
-        pending: DonorRepo.getAllDonations(),
-        rejected: DonorRepo.getRejectDonations(),
-        approved: DonorRepo.getSuccessDonations(),
+        pending: () => DonorRepo.getAllDonations(),
+        rejected: () => DonorRepo.getRejectDonations(),
+        approved: () => DonorRepo.getSuccessDonations(),
     }[type];
 };
 
@@ -26,7 +26,7 @@ watch(
 const fetchParticipants = async () => {
     try {
         donorsData = null;
-        const { data } = await fetchData(donorType);
+        const { data } = await fetchData(donorType)();
         donorsData = data;
     } catch (e) {
         throw e;
