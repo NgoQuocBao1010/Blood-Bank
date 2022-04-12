@@ -41,6 +41,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "973468800",
+                    "1649693903000",
                     "1640390400000"),
                 new(eventId,
                     "093212345678",
@@ -50,6 +51,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "971136000",
+                    "1649693903000",
                     "1640390400000"),
                 new(eventId,
                     "093223456789",
@@ -59,6 +61,7 @@ namespace backend.Repositories
                     "Hồ Chí Minh",
                     "male",
                     "958003200",
+                    "1649780303000",
                     "1640390400000"),
                 new(eventId,
                     "0932345678912",
@@ -68,6 +71,7 @@ namespace backend.Repositories
                     "Cần Thơ",
                     "male",
                     "949881600",
+                    "1539780303000",
                     "1640390400000")
             };
             
@@ -96,6 +100,13 @@ namespace backend.Repositories
         public Task<List<EventSubmission>> GetByEvent(string eventId)
         {
             var filter = Builders<EventSubmission>.Filter.Eq(es => es.EventId, eventId);
+            var eventSubmission = _eventSubmission.Find(filter).ToListAsync();
+            return eventSubmission;
+        }
+
+        public Task<List<EventSubmission>> GetByDateSubmitted(string date)
+        {
+            var filter = Builders<EventSubmission>.Filter.Eq(es => es.DateSubmitted, date);
             var eventSubmission = _eventSubmission.Find(filter).ToListAsync();
             return eventSubmission;
         }

@@ -9,6 +9,7 @@ namespace backend.Repositories
     public class EventRepository : IEventRepository
     {
         private readonly IMongoCollection<Event> _event;
+
         public EventRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
@@ -16,7 +17,7 @@ namespace backend.Repositories
             _event = collection;
             AddDefaultData();
         }
-        
+
         public void AddDefaultData()
         {
             var e = Get();
@@ -24,19 +25,19 @@ namespace backend.Repositories
 
             var listEvent = new List<Event>
             {
-                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1612976400000",
-                    2, "This is a blood donation event at F+", null),
-                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1639069200000",
-                    2, "This is a blood donation event at Nga 6", null),
-                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1646067600000",
-                    2, "This is a blood donation event at Cho Ray", null),
-                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1644080400000",
-                    2, "This is a blood donation event at Nha Cua May", null),
+                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1659693903000",
+                    2, "This is a blood donation event at F+", null, "1649693903000"),
+                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1749693903000",
+                    2, "This is a blood donation event at Nga 6", null, "1649693903000"),
+                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1659780303000",
+                    2, "This is a blood donation event at Cho Ray", null, "1649780303000"),
+                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1646067600000",
+                    2, "This is a blood donation event at Nha Cua May", null, "1636067600000"),
                 new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
-                    100, "This is a blood donation event at Nomad", null),
+                    100, "This is a blood donation event at Nomad", null, "1544080400000"),
                 new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"),
                     "1671469200000",
-                    2, "This is a blood donation event at Cafe Station", null)
+                    2, "This is a blood donation event at Cafe Station", null, "1571469200000")
             };
 
             _event.InsertMany(listEvent);
@@ -77,7 +78,7 @@ namespace backend.Repositories
 
             return result.ModifiedCount;
         }
-        
+
         public async Task<bool> UpdateParticipant(string _id, int numOfParticipants)
         {
             var filter = Builders<Event>.Filter.Eq(events => events._id, _id);

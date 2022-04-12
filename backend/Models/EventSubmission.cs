@@ -5,7 +5,7 @@ namespace backend.Models
 {
     public class EventSubmission
     {
-        public EventSubmission(string eventId, string idCardNumber, string fullName, string phone, string email, string address, string gender, string dob, string latestDonationDate)
+        public EventSubmission(string eventId, string idCardNumber, string fullName, string phone, string email, string address, string gender, string dob, string dateSubmitted, string latestDonationDate)
         {
             EventId = eventId;
             IdCardNumber = idCardNumber;
@@ -15,6 +15,7 @@ namespace backend.Models
             Address = address;
             Gender = gender;
             Dob = dob;
+            DateSubmitted = dateSubmitted;
             LatestDonationDate = latestDonationDate;
         }
       
@@ -32,5 +33,6 @@ namespace backend.Models
         public string Gender { get; set; }
         public string Dob { get; set; }
         public string LatestDonationDate { get; set; }
+        public string DateSubmitted { get; set; }
     }
 }

@@ -18,10 +18,10 @@ namespace backend.Models
         public string city { get; set; }
         public string address { get; set; }
     }
-    
+
     public class Event
     {
-        public Event(string name, Location location, string startDate, int duration, string detail, IFormFile image)
+        public Event(string name, Location location, string startDate, int duration, string detail, IFormFile image, string dateCreated)
         {
             this.name = name;
             this.location = location;
@@ -29,8 +29,9 @@ namespace backend.Models
             this.duration = duration;
             this.detail = detail;
             this.image = image;
+            DateCreated = dateCreated;
         }
-        
+
         public Event()
         {
             this.name = "";
@@ -50,12 +51,10 @@ namespace backend.Models
         public string startDate { get; set; }
         public int duration { get; set; }
         public string detail { get; set; }
-        [BsonIgnore]
-        public IFormFile image { get; set; }
+        [BsonIgnore] public IFormFile image { get; set; }
         public string binaryImage { get; set; }
-        [BsonIgnore]
-        public int participants { get; set; }
-        
-    }
+        [BsonIgnore] public int participants { get; set; }
 
+        public string DateCreated { get; set; }
+    }
 }
