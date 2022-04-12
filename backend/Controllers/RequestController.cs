@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
@@ -169,7 +170,7 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-
+                
                 return Ok(result);
             }
             catch (Exception e)
@@ -189,8 +190,10 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
+                
+                var sortResult = result.OrderByDescending(r => long.Parse(r.Date));
 
-                return Ok(result);
+                return Ok(sortResult);
             }
             catch (Exception e)
             {
@@ -209,8 +212,9 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
+                var sortResult = result.OrderByDescending(r => long.Parse(r.Date));
 
-                return Ok(result);
+                return Ok(sortResult);
             }
             catch (Exception e)
             {
@@ -229,8 +233,9 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
+                var sortResult = result.OrderByDescending(r => long.Parse(r.Date));
 
-                return Ok(result);
+                return Ok(sortResult);
             }
             catch (Exception e)
             {

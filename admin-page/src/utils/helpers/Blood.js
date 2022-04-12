@@ -24,14 +24,14 @@ export default {
             const data = bloodData.filter((el) => el.name === name);
 
             // Evaluate stock status of blood type positive
-            const positiveData = data.find((el) => el.type === "positive");
+            const positiveData = data.find((el) => el.type === "Positive");
             const {
                 status: positiveStockStatus,
                 displayStatus: positiveStatusDisplay,
             } = this.determineStockStatus(positiveData.quantity);
 
             // Evaluate stock status of blood type negative
-            const negativeData = data.find((el) => el.type === "negative");
+            const negativeData = data.find((el) => el.type === "Negative");
             const {
                 status: negativeStockStatus,
                 displayStatus: negativeStatusDisplay,

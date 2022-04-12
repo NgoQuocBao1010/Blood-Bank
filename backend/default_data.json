@@ -116,7 +116,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 108,
@@ -134,7 +134,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641315600000,
                         "amount": 129,
@@ -152,7 +152,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 135,
@@ -170,7 +170,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641488400000,
                         "amount": 129,
@@ -188,7 +188,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641315600000,
                         "amount": 110,
@@ -206,7 +206,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641315600000,
                         "amount": 100,
@@ -224,7 +224,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 114,
@@ -242,7 +242,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641488400000,
                         "amount": 140,
@@ -260,7 +260,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 129,
@@ -278,7 +278,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 112,
@@ -297,7 +297,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 146,
@@ -316,7 +316,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1641402000000,
                         "amount": 112,
@@ -340,7 +340,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 120,
@@ -358,7 +358,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 125,
@@ -376,7 +376,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 132,
@@ -394,7 +394,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 140,
@@ -412,7 +412,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 101,
@@ -430,7 +430,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 127,
@@ -448,7 +448,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 123,
@@ -466,7 +466,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 148,
@@ -484,7 +484,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 125,
@@ -502,7 +502,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 126,
@@ -520,7 +520,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647363600000,
                         "amount": 109,
@@ -539,7 +539,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 101,
@@ -558,7 +558,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1647277200000,
                         "amount": 125,
@@ -582,7 +582,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 116,
@@ -600,7 +600,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 149,
@@ -618,7 +618,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 105,
@@ -636,7 +636,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 132,
@@ -654,7 +654,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 143,
@@ -672,7 +672,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 136,
@@ -690,7 +690,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 122,
@@ -708,7 +708,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 137,
@@ -726,7 +726,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 119,
@@ -744,7 +744,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 126,
@@ -762,7 +762,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 132,
@@ -781,7 +781,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1648746000000,
                         "amount": 130,
@@ -805,7 +805,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1653930000000,
                         "amount": 119,
@@ -823,7 +823,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1654621200000,
                         "amount": 112,
@@ -841,7 +841,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1650214800000,
                         "amount": 100,
@@ -859,7 +859,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1654362000000,
                         "amount": 121,
@@ -877,7 +877,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1649523600000,
                         "amount": 146,
@@ -895,7 +895,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1657040400000,
                         "amount": 107,
@@ -913,7 +913,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1653670800000,
                         "amount": 141,
@@ -931,7 +931,7 @@
                     "transaction": {
                         "blood": {
                             "name": "B",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1653930000000,
                         "amount": 122,
@@ -949,7 +949,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1649350800000,
                         "amount": 140,
@@ -967,7 +967,7 @@
                     "transaction": {
                         "blood": {
                             "name": "AB",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1649437200000,
                         "amount": 119,
@@ -985,7 +985,7 @@
                     "transaction": {
                         "blood": {
                             "name": "O",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1654621200000,
                         "amount": 111,
@@ -1004,7 +1004,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "negative"
+                            "type": "Negative"
                         },
                         "dateDonated": 1657645200000,
                         "amount": 132,
@@ -1023,7 +1023,7 @@
                     "transaction": {
                         "blood": {
                             "name": "A",
-                            "type": "positive"
+                            "type": "Positive"
                         },
                         "dateDonated": 1652547600000,
                         "amount": 117,
@@ -1037,52 +1037,52 @@
     "blood": [
         {
             "name": "A",
-            "type": "positive",
+            "type": "Positive",
             "quantity": 70000
         },
         {
             "name": "A",
-            "type": "negative",
+            "type": "Negative",
             "quantity": 60000
         },
         {
             "name": "B",
-            "type": "positive",
+            "type": "Positive",
             "quantity": 75000
         },
         {
             "name": "B",
-            "type": "negative",
+            "type": "Negative",
             "quantity": 80000
         },
         {
             "name": "AB",
-            "type": "positive",
+            "type": "Positive",
             "quantity": 65000
         },
         {
             "name": "AB",
-            "type": "negative",
+            "type": "Negative",
             "quantity": 50000
         },
         {
             "name": "O",
-            "type": "positive",
+            "type": "Positive",
             "quantity": 60000
         },
         {
             "name": "O",
-            "type": "negative",
+            "type": "Negative",
             "quantity": 70000
         },
         {
             "name": "Rh",
-            "type": "positive",
+            "type": "Positive",
             "quantity": 4000
         },
         {
             "name": "Rh",
-            "type": "negative",
+            "type": "Negative",
             "quantity": 3000
         }
     ],
@@ -1370,7 +1370,7 @@
             "quantity": 7000,
             "blood": {
                 "name": "AB",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "0",
             "status": 1
@@ -1380,7 +1380,7 @@
             "quantity": 15000,
             "blood": {
                 "name": "A",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "0",
             "status": 1
@@ -1390,7 +1390,7 @@
             "quantity": 100000,
             "blood": {
                 "name": "B",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "0",
             "status": -1,
@@ -1401,7 +1401,7 @@
             "quantity": 8000,
             "blood": {
                 "name": "O",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "0",
             "status": 1
@@ -1411,7 +1411,7 @@
             "quantity": 4000,
             "blood": {
                 "name": "AB",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "0",
             "status": 1
@@ -1421,7 +1421,7 @@
             "quantity": 90000,
             "blood": {
                 "name": "A",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "1",
             "status": -1,
@@ -1432,7 +1432,7 @@
             "quantity": 7500,
             "blood": {
                 "name": "B",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "1",
             "status": 1
@@ -1442,7 +1442,7 @@
             "quantity": 9300,
             "blood": {
                 "name": "O",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "1",
             "status": 1
@@ -1452,7 +1452,7 @@
             "quantity": 9800,
             "blood": {
                 "name": "O",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "1",
             "status": 1
@@ -1462,7 +1462,7 @@
             "quantity": 200,
             "blood": {
                 "name": "Rh",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "1",
             "status": 1
@@ -1472,7 +1472,7 @@
             "quantity": 4000,
             "blood": {
                 "name": "Rh",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "2",
             "status": -1,
@@ -1483,7 +1483,7 @@
             "quantity": 6000,
             "blood": {
                 "name": "AB",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "2",
             "status": 1
@@ -1493,7 +1493,7 @@
             "quantity": 7000,
             "blood": {
                 "name": "O",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "2",
             "status": 1
@@ -1503,7 +1503,7 @@
             "quantity": 10000,
             "blood": {
                 "name": "A",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "2",
             "status": 1
@@ -1513,7 +1513,7 @@
             "quantity": 12000,
             "blood": {
                 "name": "B",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "2",
             "status": 1
@@ -1523,7 +1523,7 @@
             "quantity": 13000,
             "blood": {
                 "name": "O",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "3",
             "status": 1
@@ -1533,7 +1533,7 @@
             "quantity": 8000,
             "blood": {
                 "name": "B",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "3",
             "status": 1
@@ -1543,7 +1543,7 @@
             "quantity": 6500,
             "blood": {
                 "name": "AB",
-                "type": "positive"
+                "type": "Positive"
             },
             "hospitalId": "3",
             "status": 1
@@ -1553,7 +1553,7 @@
             "quantity": 5500,
             "blood": {
                 "name": "AB",
-                "type": "negative"
+                "type": "Negative"
             },
             "hospitalId": "3",
             "status": 1
