@@ -1,52 +1,21 @@
 <script setup>
-import { defineAsyncComponent, onBeforeMount } from "vue";
-import Breadcrumb from "primevue/breadcrumb";
-
+import { onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
 import HospitalRepo from "../../api/HospitalRepo";
 
-const AsyncRequestHistory = defineAsyncComponent({
-  loader: () => import("../../components/tables/RequestHistoryTable.vue"),
-});
-
-const { _id } = defineProps({
-  _id: String,
-});
-
-let requestHistory = $ref(null);
+const route = useRoute();
+const hospitalId = route.params._id;
 let hospital = $ref(null);
-let showRequestHistory = $ref(false);
-
-// Naviagtion settings
-const home = $ref({
-  icon: "fa-solid fa-hospital",
-  to: { name: "Hospitals Management" },
-});
-let items = $ref(null);
 
 onBeforeMount(async () => {
-  const hospitalData = await HospitalRepo.get(_id);
+  const hospitalData = await HospitalRepo.get(hospitalId);
   hospital = hospitalData.data;
-  requestHistory = hospital.requestHistory;
-
-  items = [
-    {
-      label: hospital ? `${hospital.name} Hospital` : "Unknown hospital",
-    },
-  ];
 });
 </script>
 
 <template>
   <div class="grid">
     <div class="col-12">
-      <!-- Navigation -->
-      <Breadcrumb
-        :isAdmin="true"
-        :home="home"
-        :model="items"
-        style="margin-bottom: 1rem; border-radius: 15px"
-      />
-
       <!-- Hospital Content -->
       <div class="card">
         <div class="card__content">
@@ -55,9 +24,9 @@ onBeforeMount(async () => {
             <!-- Edit Button -->
             <RouterLink
               :to="{
-                name: 'Hospital Edit',
+                name: 'Hospital Edit Profile',
                 params: {
-                  _id,
+                  hospitalId,
                   hospitalData: JSON.stringify(hospital),
                 },
               }"
@@ -88,27 +57,10 @@ onBeforeMount(async () => {
           </div>
         </div>
       </div>
-
-      <!-- Request History -->
-      <div class="card">
-        <div class="flex-center" style="width: 100%" v-if="!showRequestHistory">
-          <PrimeVueButton
-            label="Show Request History"
-            @click="showRequestHistory = !showRequestHistory"
-          />
-        </div>
-
-        <template v-else>
-          <h2>Request History</h2>
-          <AsyncRequestHistory :requestHistory="requestHistory" />
-        </template>
-      </div>
     </div>
   </div>
 </template>
-
 <style lang="scss" scoped>
-@import "../../assets/styles/badge.scss";
 .card {
   &__content {
     flex: 1 1 50%;

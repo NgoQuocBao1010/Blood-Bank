@@ -28,7 +28,6 @@ const { requestHistory, isActivity } = defineProps({
     type: Array,
     required: true,
   },
-
   isActivity: {
     type: Boolean,
     default: false,
@@ -123,7 +122,7 @@ const downloadExcel = () => {
     return;
   }
 
-  JSONtoExcel(excelData, "Pending_Requests");
+  JSONtoExcel(excelData, "Blood_Requests");
 };
 
 // Approve reject
@@ -250,6 +249,7 @@ const handleRequests = async () => {
       <!-- Selection column -->
       <PrimeVueColumn
         selectionMode="multiple"
+        v-if="isActivity"
         headerStyle="width: 2rem"
       ></PrimeVueColumn>
 

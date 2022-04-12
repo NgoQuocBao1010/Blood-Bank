@@ -2,17 +2,17 @@
 import { onBeforeMount, defineAsyncComponent, nextTick } from "vue";
 import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
-import RequestRepo from "../api/RequestRepo";
+import RequestRepo from "../../api/RequestRepo";
 import useVuelidate from "@vuelidate/core";
 import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { required, numeric } from "@vuelidate/validators";
-import { BLOOD_TYPES } from "../constants";
-import HospitalRepo from "../api/HospitalRepo";
+import { BLOOD_TYPES } from "../../constants";
+import HospitalRepo from "../../api/HospitalRepo";
 import ProgressBar from "primevue/progressbar";
 
 const AsyncRequestHistory = defineAsyncComponent({
-  loader: () => import("../components/tables/RequestHistoryTable.vue"),
+  loader: () => import("../../components/tables/RequestHistoryTable.vue"),
 });
 
 const route = useRoute();
@@ -233,6 +233,7 @@ const submitData = async () => {
           <AsyncRequestHistory
             :requestHistory="requestHistory"
             v-if="requestHistory"
+            :isAdmin="false"
           />
 
           <!-- Progress bar -->
@@ -254,7 +255,7 @@ const submitData = async () => {
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/styles/badge.scss";
+@import "../../assets/styles/badge.scss";
 
 .title {
   font-weight: 900;
