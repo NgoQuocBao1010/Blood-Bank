@@ -19,18 +19,10 @@ watch(
             // Come to error page
             // If there is old layout, use if
             // Else detect layout base on auth status
-            if (layoutName === "__dynamic") {
-                if (oldLayout) {
-                    return;
-                } else {
-                    // Verify if token found but user has not logged in
-                    if (userStore.token && !userStore.isLoggedIn)
-                        await userStore.verifyToken();
-
-                    layoutName = userStore.isLoggedIn
-                        ? "LayoutDefault"
-                        : "LayoutUnauth";
-                }
+            if (layoutName === "__dynamic" && !oldLayout) {
+                layoutName = userStore.isLoggedIn
+                    ? "LayoutDefault"
+                    : "LayoutUnauth";
             }
 
             // Come from error pages
@@ -48,6 +40,7 @@ watch(
     { immediate: true }
 );
 
+// Global Error Dialog
 const AsyncErrorDialog = defineAsyncComponent({
     loader: () => import("primevue/dialog"),
 });
