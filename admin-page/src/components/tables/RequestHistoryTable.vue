@@ -159,10 +159,16 @@ const handleRequests = async () => {
       : await RequestRepo.rejectRequests(requests);
 
     if (data && status === 200) {
+      const action = isApprove ? "approved" : "rejected";
+      const toastType = isApprove ? "success" : "warn";
+
       toast.add({
-        severity: "success",
-        summary: isApprove ? "requests Approved" : "requests Rejected",
-        life: 2000,
+        severity: toastType,
+        summary: isApprove ? "Approved" : "Rejected",
+        detail: `${selectedRequests.length} ${
+          selectedRequests.length > 1 ? "requests are" : "request is"
+        } ${action}`,
+        life: 3000,
       });
       emits("updateRequests");
     }

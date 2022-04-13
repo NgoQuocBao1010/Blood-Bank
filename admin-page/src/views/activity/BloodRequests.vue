@@ -7,12 +7,15 @@ import RequestHistoryTable from "../../components/tables/RequestHistoryTable.vue
 
 let requestHistory = $ref(null);
 let fetchingRequests = $ref(false);
+
 const fetchData = (type) => {
-  return {
-    pending: RequestRepo.getPending(),
-    rejected: RequestRepo.getRejected(),
-    approved: RequestRepo.getApproved(),
-  }[type];
+  if (type === "pending") {
+    return RequestRepo.getPending();
+  } else if (type === "rejected") {
+    return RequestRepo.getRejected();
+  } else if (type === "approved") {
+    return RequestRepo.getApproved();
+  }
 };
 
 const tabs = ["approved", "rejected", "pending"];
