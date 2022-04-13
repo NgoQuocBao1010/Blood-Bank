@@ -10,6 +10,10 @@
     --font-family: "Roboto", sans-serif;
 }
 
+body {
+    font-family: var(--font-family);
+}
+
 .p-component {
     font-family: var(--font-family);
     font-weight: 400;
@@ -373,6 +377,38 @@ body::-webkit-scrollbar,
 #donor-table {
     .p-datatable-header {
         border: none !important;
+    }
+}
+
+// Blink animation
+.blink-animation {
+    animation: blinker 2s linear;
+}
+
+@keyframes blinker {
+    25% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 0;
+    }
+}
+
+// Skeleton loading animation
+@keyframes loading_skeleton {
+    0% {
+        background-color: rgb(177, 175, 175);
+    }
+
+    50% {
+        background-color: rgb(205, 203, 203);
+    }
+
+    100% {
+        background-color: rgb(177, 175, 175);
     }
 }
 

@@ -1,9 +1,9 @@
 <script setup>
 import { onBeforeMount, watch } from "vue";
-import ProgressBar from "primevue/progressbar";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
+import AppProgressBar from "../../components/AppProgressBar.vue";
 
 let donorsData = $ref(null);
 let fetchingDonors = $ref(false);

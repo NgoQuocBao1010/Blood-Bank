@@ -10,14 +10,49 @@ namespace backend.Repositories
     public class DonorRepository : IDonorRepository
     {
         private readonly IMongoCollection<Donor> _donor;
+        private readonly IMongoCollection<DonorTransaction> _donorTransaction;
+        private readonly IEventRepository _eventRepository;
         public DonorRepository(IMongoClient client)
         {
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<Donor>(nameof(Donor));
+            var collection1 = database.GetCollection<DonorTransaction>(nameof(DonorTransaction));
 
+            _eventRepository = new EventRepository(client);
+            
             _donor = collection;
+            _donorTransaction = collection1;
+            AddDefaultData();
         }
+        
+        public void AddDefaultData()
+        {
+            var donors = Get();
+            if (donors.Result.Any()) return;
+            var data = DefaultData.ReadJson();
+            var listDonors = data.Result.Donors;
+            for (var i = 0; i < listDonors.Count; i++)
+            {
+                var e = _eventRepository.Get();
+                var listEvent = e.Result.ToList();
+                var listTransaction = listDonors[i].listParticipants;
+                
+                foreach (var donor in listTransaction)
+                {
+                    donor.blood = donor.transaction.blood;
+                    _donor.InsertOne(donor);
 
+                    donor.transaction.eventDonated = new EventDonated
+                    {
+                        _id = listEvent[listEvent.Count - i - 1]._id,
+                        name = listEvent[listEvent.Count - i - 1].name
+                    };
+                    donor.transaction.donorId = donor._id;
+                    donor.transaction.updateStatusAt = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                    _donorTransaction.InsertOne(donor.transaction);
+                }
+            }
+        }
 
         public async Task<string> Create(Donor donor)
         {

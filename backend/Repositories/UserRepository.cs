@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using backend.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.IO;
 using MongoDB.Driver;
+using Newtonsoft.Json;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
+
 
 namespace backend.Repositories
 {
@@ -21,6 +27,8 @@ namespace backend.Repositories
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
         private readonly IBloodRepository _bloodRepository;
         private readonly IRequestRepository _requestRepository;
+        private readonly IDonorRepository _donorRepository;
+        private readonly IRecentActivityRepository _recentActivityRepository;
         private readonly IConfiguration _configuration;
 
         public UserRepository(IMongoClient client, IConfiguration configuration)
@@ -30,7 +38,9 @@ namespace backend.Repositories
             _eventRepository = new EventRepository(client);
             _eventSubmissionRepository = new EventSubmissionRepository(client);
             _bloodRepository = new BloodRepository(client);
+            _donorRepository = new DonorRepository(client);
             _requestRepository = new RequestRepository(client);
+            _recentActivityRepository = new RecentActivityRepository(client);
 
             var database = client.GetDatabase("BloodBank");
             var collection = database.GetCollection<User>(nameof(User));
@@ -98,30 +108,6 @@ namespace backend.Repositories
             return result.DeletedCount == 1;
         }
 
-        public void AddDefaultData()
-        {
-            _hospitalRepository.AddDefaultData();
-            _eventRepository.AddDefaultData();
-            _eventSubmissionRepository.AddDefaultData();
-            _bloodRepository.AddDefaultData();
-            _requestRepository.AddDefaultData();
-
-            var user = Get();
-            if (user.Result.Any()) return;
-
-            var admin = new User("admin@gmail.com", "admin", true);
-
-            _user.InsertOne(admin);
-
-
-            var hospital = _hospitalRepository.GetFirstHospital();
-            var newUser = new User("hoanmy@gmail.com", "hoanmy123", false)
-            {
-                hospitalId = hospital.Result._id
-            };
-            _user.InsertOne(newUser);
-        }
-
         public string Login(User user)
         {
             // Get user role.
@@ -158,6 +144,37 @@ namespace backend.Repositories
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
             return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        
+        
+        public void AddDefaultData()
+        {
+            _hospitalRepository.AddDefaultData();
+            _eventRepository.AddDefaultData();
+            _eventSubmissionRepository.AddDefaultData();
+            _bloodRepository.AddDefaultData();
+            _donorRepository.AddDefaultData();
+            _requestRepository.AddDefaultData();
+            _recentActivityRepository.AddDefaultData();
+
+            var user = Get();
+            if (user.Result.Any()) return;
+
+            var defaultData = new DefaultData();
+            var data = DefaultData.ReadJson();
+            
+            var hospital = _hospitalRepository.Get();
+            for (var i = 0; i < data.Result.Users.Count; i++)
+            {
+                if (data.Result.Users[i].isAdmin)
+                {
+                    _user.InsertOne(data.Result.Users[i]);
+                    continue;
+                }
+                data.Result.Users[i].password ??= GeneratePassword(8);
+                data.Result.Users[i].hospitalId = hospital.Result.ElementAtOrDefault(i - 1)?._id;
+                _user.InsertOne(data.Result.Users[i]);
+            }
         }
     }
 }
