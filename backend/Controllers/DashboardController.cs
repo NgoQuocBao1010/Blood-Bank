@@ -11,7 +11,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("api")]
     public class DashboardController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;
