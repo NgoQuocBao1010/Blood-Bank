@@ -22,6 +22,7 @@ import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import EventRepo from "../../api/EventRepo";
 import { determineStatus, formatDate } from "../../utils/index";
 import ProgressSpinner from "primevue/progressspinner";
+import { DEFAULT_EVENT_COVER } from "../../constant";
 
 const route = useRoute();
 const eventId = route.params.eventId;
@@ -77,8 +78,7 @@ const fetchEventsData = async () => {
   let event = { ...data.data };
   event["startDate"] = new Date(parseInt(event.startDate));
   event["status"] = determineStatus(event);
-  event["bgImg"] =
-    "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp";
+  event["bgImg"] = event.binaryImg || DEFAULT_EVENT_COVER;
   eventData.value = event;
   event["participantsValue"] =
     eventData.value.status === "upcoming"
@@ -166,12 +166,12 @@ const resetForm = () => {
         <div class="card">
           <div class="form-donation flex justify-content-center">
             <div>
-              <div class="mb-4">
+              <div class="mb-4" style="width: 100%; height: 200px">
                 <img
                   :src="eventData.bgImg"
                   alt=""
                   class="card"
-                  style="width: 450px"
+                  style="max-width: 100%; max-height: 100%; object-fit: contain'"
                 />
               </div>
 

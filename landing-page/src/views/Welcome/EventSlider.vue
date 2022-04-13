@@ -45,13 +45,9 @@ const handleClick = (eventId) => {
       class="carousel-slider"
     >
       <template #item="slotProps">
-        <div
-          class="product-item"
-          :style="{
-            backgroundImage: 'url(' + slotProps.data.bgImg + ')',
-          }"
-        >
-          <div class="product-item-content">
+        <div class="event-item">
+          <img class="event-item-image" :src="slotProps.data.bgImg" alt="" />
+          <div class="event-item-button">
             <Button @click="() => handleClick(slotProps.data._id)"
               >Donate Now</Button
             >
@@ -69,46 +65,44 @@ const handleClick = (eventId) => {
   }
 }
 
-.product-item {
-  display: block;
-  width: 100%;
-  height: 400px;
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  &-content {
-    height: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-
-    button {
-      background-color: #1e2d50 !important;
-      border: 1px solid #fff;
-      color: #fff;
-      margin-bottom: 20px;
-      margin-right: 20px;
-    }
-
-    button:hover {
-      background-color: var(--PRIMARY_COLOR) !important;
-      border: 1px solid #fff;
-      color: #fff;
-      transition: background-color linear 0.2s, color linear 0.2s,
-        border linear 0.2s;
-    }
-  }
-
-  .product-image {
-    width: 100%;
-    display: block;
-    height: 400px;
-  }
-}
-
 .p-carousel-indicators.p-reset .p-carousel-indicator.p-highlight {
   .p-link button {
     background-color: var(--DARK_BLUE) !important;
+  }
+}
+
+.event {
+  &-item {
+    width: 100%;
+    height: 400px;
+    position: relative;
+
+    &-image {
+      width: 100%;
+      height: 100%;
+    }
+
+    &-button {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+
+      button {
+        background-color: #1e2d50 !important;
+        border: 1px solid #fff;
+        color: #fff;
+        margin-bottom: 20px;
+        margin-right: 20px;
+      }
+
+      button:hover {
+        background-color: var(--PRIMARY_COLOR) !important;
+        border: 1px solid #fff;
+        color: #fff;
+        transition: background-color linear 0.2s, color linear 0.2s,
+          border linear 0.2s;
+      }
+    }
   }
 }
 </style>
