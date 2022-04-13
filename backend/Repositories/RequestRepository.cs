@@ -12,6 +12,7 @@ namespace backend.Repositories
         private readonly IMongoCollection<Request> _request;
         private readonly IHospitalRepository _hospitalRepository;
 
+
         public RequestRepository(IMongoClient client)
         {
             _hospitalRepository = new HospitalRepository(client);
@@ -100,34 +101,25 @@ namespace backend.Repositories
             if (requests.Result.Any()) return;
             var hospitals = _hospitalRepository.Get();
 
-            var listRequest = new List<Request>();
-            if (hospitals != null)
+            if (hospitals == null) return;
+            var listHospital = hospitals.Result.ToList();
+            var data = DefaultData.ReadJson();
+            foreach (var request in data.Result.Requests)
             {
-                var listHospital = hospitals.Result.ToList();
-                for (var i = 0; i < listHospital.Count; i++)
-                {
-                    var requestBlood = new RequestBlood("A", "Negative");
-                    var request = new Request("1614976400000", 4000, requestBlood, listHospital[i]._id,
-                        listHospital[i].Name, 0, "");
-                    switch (i)
-                    {
-                        case 1:
-                            requestBlood = new RequestBlood("AB", "Positive");
-                            request = new Request("1648659600000", 7000, requestBlood, listHospital[i]._id,
-                                listHospital[i].Name, 0, "");
-                            break;
-                        case 2:
-                            requestBlood = new RequestBlood("O", "Negative");
-                            request = new Request("1649091600000", 10000, requestBlood, listHospital[i]._id,
-                                listHospital[i].Name, 0, "");
-                            break;
-                    }
+                var hospital = listHospital[int.Parse(request.HospitalId)];
+                request.HospitalId = hospital._id;
+                request.HospitalName = hospital.Name;
+                request.updateStatusAt = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                    
+                _request.InsertOne(request);
 
-                    listRequest.Add(request);
-                }
             }
 
-            _request.InsertMany(listRequest);
+            foreach (var hospital in listHospital)
+            {
+                hospital.RequestHistory = (List<Request>) GetRequestByHospitalId(hospital._id).Result;
+                _hospitalRepository.Update(hospital._id, hospital);
+            }
         }
         
         public async void ApproveRequest(Request request)
@@ -139,6 +131,7 @@ namespace backend.Repositories
                 .Set(r => r.RejectReason, null)
                 .Set(r => r.updateStatusAt, time.ToString());
             await _request.UpdateOneAsync(filter, update);
+            
         }
 
         public async void RejectRequest(Request request)

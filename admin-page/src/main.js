@@ -59,5 +59,7 @@ app.config.errorHandler = (err, instance, info) => {
             router.push({ name: "404 Error" });
         return;
     }
+
+    console.log("FROM MAIN.JS", err, instance, info);
     throw err;
 };

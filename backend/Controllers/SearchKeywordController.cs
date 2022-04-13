@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/search")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class SearchKeywordController : ControllerBase
     {
         private readonly IDonorRepository _donorRepository;

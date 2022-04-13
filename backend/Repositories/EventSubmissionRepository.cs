@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using backend.Models;
@@ -25,57 +26,19 @@ namespace backend.Repositories
         {
             _eventRepository.AddDefaultData();
             // Get the first eventId from default data.
-            var firstEvent = _eventRepository.Get();
-            var eventId = firstEvent.Result.First()._id;
+            var e = _eventRepository.Get();
+            var listEvent = e.Result.ToList();
 
             var eventSubmission = Get();
             if (eventSubmission.Result.Any()) return;
 
-            var listEventSubmission = new List<EventSubmission>
+            var data = DefaultData.ReadJson();
+            foreach (var submission in data.Result.EventSubmissions)
             {
-                new(eventId,
-                    "093201234567",
-                    "Trương Hoàng Thuận",
-                    "0123456789",
-                    "thuan@gmail.com",
-                    "Cần Thơ",
-                    "male",
-                    "973468800",
-                    "1649693903000",
-                    "1640390400000"),
-                new(eventId,
-                    "093212345678",
-                    "Ngô Hồng Quốc Bảo",
-                    "1234567890",
-                    "bao@gmail.com",
-                    "Cần Thơ",
-                    "male",
-                    "971136000",
-                    "1649693903000",
-                    "1640390400000"),
-                new(eventId,
-                    "093223456789",
-                    "Bùi Quốc Trọng",
-                    "2345678901",
-                    "trong@gmail.com",
-                    "Hồ Chí Minh",
-                    "male",
-                    "958003200",
-                    "1649780303000",
-                    "1640390400000"),
-                new(eventId,
-                    "0932345678912",
-                    "Lê Chánh Nhựt",
-                    "3456789012",
-                    "nhut@gmail.com",
-                    "Cần Thơ",
-                    "male",
-                    "949881600",
-                    "1539780303000",
-                    "1640390400000")
-            };
+                submission.EventId = listEvent[^int.Parse(submission.EventId)]._id;
+            }
             
-            _eventSubmission.InsertMany(listEventSubmission);
+            _eventSubmission.InsertMany(data.Result.EventSubmissions);
         }
 
         public async Task<string> Create(EventSubmission eventSubmission)

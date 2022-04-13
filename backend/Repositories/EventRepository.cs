@@ -22,25 +22,13 @@ namespace backend.Repositories
         {
             var e = Get();
             if (e.Result.Any()) return;
-
-            var listEvent = new List<Event>
+            
+            var data = DefaultData.ReadJson();
+            foreach (var events in data.Result.Events)
             {
-                new("Health and Wellbeing at work", new Location("Cần Thơ", "F+"), "1659693903000",
-                    2, "This is a blood donation event at F+", null, "1649693903000"),
-                new("Tell me, do you bleed?", new Location("Hậu Giang", "Nga 6"), "1749693903000",
-                    2, "This is a blood donation event at Nga 6", null, "1649693903000"),
-                new("We are donors", new Location("Hồ Chí Minh", "Cho Ray"), "1659780303000",
-                    2, "This is a blood donation event at Cho Ray", null, "1649780303000"),
-                new("Judoh Blood Donations", new Location("An Giang", "Nha Cua May"), "1646067600000",
-                    2, "This is a blood donation event at Nha Cua May", null, "1636067600000"),
-                new("Judoh Blood Donations - Summer Edition", new Location("Đà Lạt", "Nomad Homestay"), "1644080400000",
-                    100, "This is a blood donation event at Nomad", null, "1544080400000"),
-                new("Judoh Blood Donations - Chrismas Edition", new Location("Cần Thơ", "Cafe Station"),
-                    "1671469200000",
-                    2, "This is a blood donation event at Cafe Station", null, "1571469200000")
-            };
-
-            _event.InsertMany(listEvent);
+                events.binaryImage = null;
+            }
+            _event.InsertMany(data.Result.Events);
         }
 
         public async Task<string> Create(Event e)
@@ -63,7 +51,7 @@ namespace backend.Repositories
             return sortEvent;
         }
 
-        public async Task<long> Update(string _id, Event e)
+        public async Task<Event> Update(string _id, Event e)
         {
             var filter = Builders<Event>.Filter.Eq(events => events._id, _id);
             var update = Builders<Event>.Update
@@ -72,11 +60,13 @@ namespace backend.Repositories
                 .Set(events => events.location.address, e.location.address)
                 .Set(events => events.startDate, e.startDate)
                 .Set(events => events.duration, e.duration)
-                .Set(events => events.detail, e.detail);
+                .Set(events => events.detail, e.detail)
+                .Set(events => events.binaryImage, e.binaryImage);
 
             var result = await _event.UpdateOneAsync(filter, update);
 
-            return result.ModifiedCount;
+            e._id = _id;
+            return e;
         }
 
         public async Task<bool> UpdateParticipant(string _id, int numOfParticipants)
