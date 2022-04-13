@@ -1,3 +1,6 @@
+import * as defaultEventCoverImage from "../assets/images/default_event_cover.png";
+import { fileToBase64 } from "../utils";
+
 const THEMES = {
     primaryColor: "#f07279",
     secondaryColor: "#faadb3",
@@ -18,4 +21,12 @@ const PRIMARY_CITIES = [
 
 const TRANSACTION_STATUS = ["pending", "failed", "success"];
 
-export { THEMES, BLOOD_TYPES, PRIMARY_CITIES, TRANSACTION_STATUS };
+const DEFAULT_EVENT_COVER = defaultEventCoverImage.default;
+
+export {
+    THEMES,
+    BLOOD_TYPES,
+    PRIMARY_CITIES,
+    TRANSACTION_STATUS,
+    DEFAULT_EVENT_COVER,
+};

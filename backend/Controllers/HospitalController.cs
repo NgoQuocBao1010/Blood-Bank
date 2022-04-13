@@ -49,7 +49,7 @@ namespace backend.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Hospital ID error!");
+                return NotFound("Hospital ID error!");
             }
         }
 
@@ -95,7 +95,7 @@ namespace backend.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Hospital ID error!");
+                return NotFound("Hospital ID error!");
             }
         }
 
@@ -117,7 +117,7 @@ namespace backend.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Hospital ID error!");
+                return NotFound("Hospital ID error!");
             }
         }
     }

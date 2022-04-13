@@ -2,10 +2,11 @@
 import { onBeforeMount } from "vue";
 import OverlayPanel from "primevue/overlaypanel";
 
-import BloodRepo from "../../api/BloodRepo";
+import { useBloodStore } from "../../stores/blood";
 import BloodHelper from "../../utils/helpers/Blood";
 import { JSONtoExcel } from "../../utils/excel";
 
+const bloodStore = useBloodStore();
 let bloodData = null;
 let tableData = $ref([]);
 let fetchingData = $ref(true);
@@ -15,23 +16,21 @@ const expandAllRows = () => {
     expandedRows = tableData.filter((el) => el._id);
 };
 
+onBeforeMount(async () => {
+    fetchingData = false;
+    bloodData = await bloodStore.getData();
+    tableData = bloodStore.summaryData;
+});
+
 let stockInfo = $ref(null);
 const toggleStockInfo = (event) => {
     // Toggle info button about stock status
     stockInfo.toggle(event);
 };
 
-onBeforeMount(async () => {
-    const { data } = await BloodRepo.getAll();
-    fetchingData = false;
-    bloodData = data;
-    tableData = BloodHelper.transformDataForTable(bloodData);
-});
-
 const downloadExcelFile = () => {
     const excelData = BloodHelper.transformRowsForExcelDownload(bloodData);
-    console.log(excelData);
-    JSONtoExcel(excelData, "blood_data");
+    JSONtoExcel(excelData, "Blood_data");
 };
 </script>
 

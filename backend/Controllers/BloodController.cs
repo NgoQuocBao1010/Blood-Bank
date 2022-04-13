@@ -12,7 +12,7 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class BloodController : ControllerBase
     {
         private readonly IBloodRepository _bloodRepository;

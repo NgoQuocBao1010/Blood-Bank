@@ -93,9 +93,6 @@ namespace backend.Controllers
                 
                 // Check existing submission for event.
                 var result = await _eventSubmissionRepository.GetByEvent(id);
-                if (!result.Any())
-                    return NotFound("There aren't any submissions for this event!");
-
                 return Ok(result);
             }
             catch (Exception)

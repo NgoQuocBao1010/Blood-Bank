@@ -8,19 +8,33 @@ import { timeDiffernet } from "../../utils";
 let activities = $ref([]);
 let fetchingData = $ref(false);
 
+const getDetailRoute = (data) => {
+    if (!["Hospital", "Donor"].includes(data.trigger))
+        throw "Unidentified activities on recent activities table";
+
+    const detail = {};
+
+    return {
+        name: `${data.trigger} Detail`,
+        params: {
+            _id: data.triggerId,
+            filterData: data.detailId,
+        },
+    };
+};
+
 onBeforeMount(async () => {
     fetchingData = true;
     const { data, status } = await AppRepo.getRecentActivities();
 
     activities = JSON.parse(JSON.stringify(data));
-    console.log(activities);
     fetchingData = false;
 });
 </script>
 
 <template>
     <div class="card">
-        <h5>5 Recent Activites</h5>
+        <h5>Blood Activites</h5>
         <PrimeVueTable
             :value="activities"
             :loading="fetchingData"
@@ -31,21 +45,21 @@ onBeforeMount(async () => {
             <PrimeVueColumn field="detail" header="Detail"></PrimeVueColumn>
 
             <!-- Type -->
-            <PrimeVueColumn field="type" header="amount">
+            <PrimeVueColumn field="type" header="Amount">
                 <template #body="{ data }">
-                    <span class="flex flex-center">
+                    <span class="flex" style="align-items: center">
                         <i
                             class="fa-solid fa-circle-plus icon-type"
-                            v-if="data.type === 'Receive'"
+                            v-if="data.type === 'plus'"
                             style="color: lightgreen"
                         ></i>
                         <i
                             class="fa-solid fa-circle-minus icon-type"
-                            v-else
+                            v-if="data.type === 'minus'"
                             style="color: lightcoral"
                         ></i>
                         <!-- Mock data -->
-                        200ml
+                        {{ data.amount }} ml
                     </span>
                 </template>
             </PrimeVueColumn>
@@ -62,11 +76,7 @@ onBeforeMount(async () => {
                 <template #header> View </template>
                 <template #body="{ data }">
                     <router-link
-                        :to="{
-                            name: 'Donor Detail',
-                            params: { _id: data._id },
-                            query: { donation: true },
-                        }"
+                        :to="getDetailRoute(data)"
                         class="p-button p-button-sm app-router-link-icon btn-icon-only"
                     >
                         <i

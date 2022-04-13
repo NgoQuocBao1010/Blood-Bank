@@ -1,17 +1,16 @@
 <script setup>
 import { onBeforeMount, watch } from "vue";
-import ProgressBar from "primevue/progressbar";
 
 import DonorRepo from "../../api/DonorRepo";
 import DonorTable from "../../components/tables/DonorTable.vue";
+import AppProgressBar from "../../components/AppProgressBar.vue";
 
 let donorsData = $ref(null);
-let fetchingDonors = $ref(false);
 const fetchData = (type) => {
     return {
-        pending: DonorRepo.getAllDonations(),
-        rejected: DonorRepo.getRejectDonations(),
-        approved: DonorRepo.getSuccessDonations(),
+        pending: () => DonorRepo.getAllDonations(),
+        rejected: () => DonorRepo.getRejectDonations(),
+        approved: () => DonorRepo.getSuccessDonations(),
     }[type];
 };
 
@@ -25,15 +24,12 @@ watch(
 );
 
 const fetchParticipants = async () => {
-    fetchingDonors = true;
     try {
         donorsData = null;
-        const { data } = await fetchData(donorType);
+        const { data } = await fetchData(donorType)();
         donorsData = data;
     } catch (e) {
         throw e;
-    } finally {
-        fetchingDonors = false;
     }
 };
 
@@ -81,21 +77,7 @@ onBeforeMount(async () => {
                 </div>
 
                 <!-- Progress bar -->
-                <div
-                    class="flex flex-center"
-                    style="
-                        flex-direction: column;
-                        padding: 3rem 1rem;
-                        background-color: #f8f9fa;
-                    "
-                    v-else
-                >
-                    <h5>Loading ...</h5>
-                    <ProgressBar
-                        mode="indeterminate"
-                        style="height: 0.5em; width: 100%"
-                    />
-                </div>
+                <AppProgressBar v-else />
             </div>
         </div>
     </div>
