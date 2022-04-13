@@ -83,22 +83,19 @@ onBeforeMount(async () => {
           />
         </div>
 
-        <!-- Progress bar -->
-        <div
-          class="flex flex-center"
-          style="
-            flex-direction: column;
-            padding: 3rem 1rem;
-            background-color: #f8f9fa;
-          "
-          v-else
-        >
-          <h5>Loading ...</h5>
-          <ProgressBar
-            mode="indeterminate"
-            style="height: 0.5em; width: 100%"
+        <!-- Donor Table -->
+        <div id="donor-table" v-if="donorsData">
+          <DonorTable
+            :donorsData="donorsData"
+            :participants="true"
+            :isRejectParticipant="donorType === 'rejected'"
+            :isApproveParticipant="donorType === 'approved'"
+            @updateParticipants="updateParticipants"
           />
         </div>
+
+        <!-- Progress bar -->
+        <AppProgressBar v-else />
       </div>
     </div>
   </div>
