@@ -20,15 +20,11 @@ namespace backend.Controllers
         private readonly IRequestRepository _requestRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IEventSubmissionRepository _eventSubmissionRepository;
-
-        public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
-            IDonorTransactionRepository donorTransactionRepository, IEventRepository eventRepository,
-            IEventSubmissionRepository eventSubmissionRepository)
         private readonly IRecentActivityRepository _recentActivityRepository;
 
         public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
             IDonorTransactionRepository donorTransactionRepository, IEventRepository eventRepository,
-            IRecentActivityRepository recentActivityRepository)
+            IRecentActivityRepository recentActivityRepository, IEventSubmissionRepository eventSubmissionRepository)
         {
             _donorRepository = donorRepository;
             _requestRepository = requestRepository;
