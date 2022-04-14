@@ -1,4 +1,5 @@
 - [Search Keyword by \_id](#search-keyword-by-_id)
+- [Dashboard](#dashboard)
 - [Donors API](#donors-api)
 - [DonorTransaction API](#donortransaction-api)
 - [Participants API](#participants-api)
@@ -16,6 +17,50 @@
     return JSON
     ```
     if id is invalid, return 404 Not Found error
+
+## Dashboard
+
+1. GET notification -> Endpoint: api/notification
+
+    ```
+    [
+        {
+            "date": "string",
+            "eventSubmission": [
+                {
+                    "_id": "string",
+                    "eventId": "string",
+                    "idCardNumber": "string",
+                    "fullName": "string",
+                    "phone": "string",
+                    "email": "string",
+                    "address": "string",
+                    "gender": "string",
+                    "dob": "string",
+                    "latestDonationDate": "string",
+                    "dateSubmitted": "string"
+                },
+            ],
+            "event": [
+                {
+                    "_id": "string",
+                    "name": "string",
+                    "location": {
+                        "city": "string",
+                        "address": "string"
+                    },
+                    "startDate": "string",
+                    "duration": int,
+                    "detail": "string",
+                    "image": null,
+                    "binaryImage": null,
+                    "participants": 0,
+                    "dateCreated": "string"
+                }
+            ]
+        },
+    ]
+    ```
 
 ## Donors API
 

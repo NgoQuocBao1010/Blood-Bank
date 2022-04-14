@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver.Linq;
 
 namespace backend.Controllers
 {
@@ -54,13 +55,13 @@ namespace backend.Controllers
         public async Task<IActionResult> GetDashboardInfo()
         {
             // get current time
-            var currentUnixTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var currentUnixTime = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
             // convert to current date
-            var currentDate = DateTimeOffset.FromUnixTimeMilliseconds(currentUnixTime).DateTime;
+            var currentDate = DateTimeOffset.FromUnixTimeMilliseconds(currentUnixTime).DateTime.ToLocalTime();
             // get an index of quarter
             var quarterNumber = (currentDate.Month - 1) / 3 + 1;
             // get first day of current quarter
-            DateTimeOffset firstDayOfCurrentQuarter = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1);
+            DateTimeOffset firstDayOfCurrentQuarter = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1).ToLocalTime();
             // get last day of current quarter
             var lastDayOfCurrentQuarter = firstDayOfCurrentQuarter.AddMonths(3).AddDays(-1);
             // get first day of last quarter
@@ -298,12 +299,14 @@ namespace backend.Controllers
                 new Id(request.HospitalId, request.updateStatusAt, "request", request._id, request.Quantity)));
 
             listId = new List<Id>(listId.OrderByDescending(id => long.Parse(id.date)));
+            var firstMonth = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(listId.Last().date)).ToLocalTime();
 
-            var endDate = DateTimeOffset.Now;
-            var startDate = endDate.AddMonths(-6);
 
-            // var startDate = new DateTime(firstMonth.Year, firstMonth.Month, 1);
-            // var endDate = new DateTime(lastMonth.Year, lastMonth.Month, lastMonth.Day);
+            var endDate = DateTimeOffset.Now.ToLocalTime();
+            var rangeOfMonth = ((endDate.Year - firstMonth.Year) * 12) + endDate.Month - firstMonth.Month;
+            var startDate = rangeOfMonth > 6 ? endDate.AddMonths(-6) : endDate.AddMonths(-rangeOfMonth);
+            startDate = new DateTime(startDate.Year, startDate.Month, 1);
+
 
             var tempDate = startDate;
             chartData.labels = new List<string>();
@@ -316,11 +319,9 @@ namespace backend.Controllers
                 var donated = 0;
                 foreach (var data in listId)
                 {
-                    Console.WriteLine(data._id);
-                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data.date));
-                    // Console.WriteLine(date.Month);
+                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data.date)).ToLocalTime();
                     if (date < startDate || date > endDate) continue;
-                    if (date.Month == tempDate.Month && date.Year == tempDate.Year)
+                    if (date.Month == tempDate.Month)
                     {
                         switch (data.type)
                         {
@@ -331,16 +332,13 @@ namespace backend.Controllers
                                 donated++;
                                 break;
                         }
-                        // Console.WriteLine(month + ": " + received + ", " + donated);
                     }
                 }
 
                 
                 listOfReceived.Add(received);
                 listOfDonated.Add(donated);
-
-                received = 0;
-                donated = 0;
+                
                 tempDate = tempDate.AddMonths(1);
             }
             

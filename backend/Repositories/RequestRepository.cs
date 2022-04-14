@@ -109,7 +109,7 @@ namespace backend.Repositories
                 var hospital = listHospital[int.Parse(request.HospitalId)];
                 request.HospitalId = hospital._id;
                 request.HospitalName = hospital.Name;
-                request.updateStatusAt = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                request.updateStatusAt ??= DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds().ToString();
                     
                 _request.InsertOne(request);
 
@@ -125,7 +125,7 @@ namespace backend.Repositories
         public async void ApproveRequest(Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
-            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var time = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
             var update = Builders<Request>.Update
                 .Set(r => r.Status, request.Status = 1)
                 .Set(r => r.RejectReason, null)
@@ -137,7 +137,7 @@ namespace backend.Repositories
         public async void RejectRequest(Request request)
         {
             var filter = Builders<Request>.Filter.Eq(r => r._id, request._id);
-            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var time = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
             var update = Builders<Request>.Update
                 .Set(r => r.Status, request.Status = -1)
                 .Set(r => r.updateStatusAt, time.ToString())

@@ -48,7 +48,7 @@ namespace backend.Repositories
                         name = listEvent[listEvent.Count - i - 1].name
                     };
                     donor.transaction.donorId = donor._id;
-                    donor.transaction.updateStatusAt = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                    donor.transaction.updateStatusAt ??= DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds().ToString();
                     _donorTransaction.InsertOne(donor.transaction);
                 }
             }
