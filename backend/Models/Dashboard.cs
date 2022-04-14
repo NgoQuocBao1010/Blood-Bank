@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace backend.Models
 {
 
@@ -64,6 +66,23 @@ namespace backend.Models
             this.events = events;
         }
     }
+
+    public class Datasets
+    {
+        public string label { get; set; }
+        public List<int> data { get; set; }
+
+        public Datasets(string label, List<int> data)
+        {
+            this.label = label;
+            this.data = data;
+        }
+    }
     
+    public class Chart
+    {
+        public List<string> labels { get; set; }
+        public List<Datasets>  datasets { get; set; }
+    }
     
 }

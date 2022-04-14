@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Microsoft.AspNetCore.Mvc.Route("api")]
     [Authorize(Roles = "admin")]
     public class DashboardController : ControllerBase
     {
@@ -33,7 +35,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("recentActivities")]
+        [Microsoft.AspNetCore.Mvc.Route("recentActivities")]
         public async Task<IActionResult> GetRecentActivities()
         {
             var recentActivities = await _recentActivityRepository.Get();
@@ -48,7 +50,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("dashboardInfo")]
+        [Microsoft.AspNetCore.Mvc.Route("dashboardInfo")]
         public async Task<IActionResult> GetDashboardInfo()
         {
             // get current time
@@ -275,6 +277,80 @@ namespace backend.Controllers
                 .Count(date => date >= firstDayOfCurrentQuarter && date <= lastDayOfCurrentQuarter);
 
             return eventsCurrentQuarter - eventsLastQuarter;
+        }
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("chart")]
+        public async Task<IActionResult> GetChartData()
+        {
+            var chartData = new Chart();
+            var datasets = new List<Datasets>();
+            
+            var listOfReceived = new List<int>();
+            var listOfDonated = new List<int>();
+            
+            var listApprovedTransactions = await _donorTransactionRepository.GetTransactionByStatus(1);
+            var listId = listApprovedTransactions.Select(transaction => new Id(transaction.donorId,
+                transaction.updateStatusAt, "transaction", transaction._id, transaction.amount)).ToList();
+
+            var listApprovedRequest = await _requestRepository.GetRequestByStatus(1);
+            listId.AddRange(listApprovedRequest.Select(request =>
+                new Id(request.HospitalId, request.updateStatusAt, "request", request._id, request.Quantity)));
+
+            listId = new List<Id>(listId.OrderByDescending(id => long.Parse(id.date)));
+
+            var endDate = DateTimeOffset.Now;
+            var startDate = endDate.AddMonths(-6);
+
+            // var startDate = new DateTime(firstMonth.Year, firstMonth.Month, 1);
+            // var endDate = new DateTime(lastMonth.Year, lastMonth.Month, lastMonth.Day);
+
+            var tempDate = startDate;
+            chartData.labels = new List<string>();
+            while (tempDate <= endDate)
+            {
+                var month = tempDate.ToString("MMMM");
+                chartData.labels.Add(month);
+                
+                var received = 0;
+                var donated = 0;
+                foreach (var data in listId)
+                {
+                    Console.WriteLine(data._id);
+                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data.date));
+                    // Console.WriteLine(date.Month);
+                    if (date < startDate || date > endDate) continue;
+                    if (date.Month == tempDate.Month && date.Year == tempDate.Year)
+                    {
+                        switch (data.type)
+                        {
+                            case "transaction":
+                                received++;
+                                break;
+                            case "request":
+                                donated++;
+                                break;
+                        }
+                        // Console.WriteLine(month + ": " + received + ", " + donated);
+                    }
+                }
+
+                
+                listOfReceived.Add(received);
+                listOfDonated.Add(donated);
+
+                received = 0;
+                donated = 0;
+                tempDate = tempDate.AddMonths(1);
+            }
+            
+        
+            datasets.Add(new Datasets("Received", listOfReceived));
+            datasets.Add(new Datasets("Donated", listOfDonated));
+
+            chartData.datasets = datasets;
+
+            return new JsonResult(chartData);
         }
     }
 }
