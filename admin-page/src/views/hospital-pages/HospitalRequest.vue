@@ -50,15 +50,15 @@ let requestHistory = $ref([]);
 let showRequestHistory = $ref(false);
 
 // Reset form after submit
-const resetForm = () => {
-  (formData.quantity = null),
-    (formData.blood = {
-      name: "",
-      type: "",
-    }),
-    (formData.hospitalId = hospital_id),
-    (formData.date = today.getTime());
-};
+// const resetForm = () => {
+//   (formData.quantity = null),
+//     (formData.blood = {
+//       name: "",
+//       type: "",
+//     }),
+//     (formData.hospitalId = hospital_id),
+//     (formData.date = today.getTime());
+// };
 
 const updateRequests = async () => {
   requestHistory = null;
@@ -108,7 +108,7 @@ const submitData = async () => {
 
     errorMessage = null;
     submitting = false;
-    resetForm();
+    // resetForm();
 
     toast.add({
       severity: "success",
@@ -140,85 +140,86 @@ const submitData = async () => {
 <template>
   <div class="grid">
     <div class="col-12">
-      <div class="card">
-        <h4 class="hospital-name" :v-model="hospitalName">
-          <i class="fa fa-hospital"></i>
-          {{ hospitalName }}
-        </h4>
-        <h3 class="title">Hospital Blood Request Form</h3>
+      <!-- Form -->
+      <template v-if="!isRerender">
+        <div class="card">
+          <h4 class="hospital-name" :v-model="hospitalName">
+            <i class="fa fa-hospital"></i>
+            {{ hospitalName }}
+          </h4>
+          <h3 class="title">Hospital Blood Request Form</h3>
 
-        <!-- Form -->
-        <div class="p-fluid formgrid grid">
-          <!-- Blood name -->
-          <div class="field col-12 md:col-6">
-            <label for="city">Blood Name</label>
-            <Dropdown
-              id="city"
-              v-model="formData.blood.name"
-              :options="BLOOD_TYPES"
-              placeholder="Select One"
-              :class="{ 'p-invalid': $v.blood.name.$error }"
-            >
-              <template #option="slotProps">
-                <span :class="'blood-badge type-' + slotProps.option">
-                  Type {{ slotProps.option }}
-                </span>
-              </template>
-            </Dropdown>
-            <span v-if="$v.blood.name.$error" class="app-form-error">
-              This field is required
-            </span>
-          </div>
+          <div class="p-fluid formgrid grid">
+            <!-- Blood name -->
+            <div class="field col-12 md:col-6">
+              <label for="city">Blood Name</label>
+              <Dropdown
+                id="city"
+                v-model="formData.blood.name"
+                :options="BLOOD_TYPES"
+                placeholder="Select One"
+                :class="{ 'p-invalid': $v.blood.name.$error }"
+              >
+                <template #option="slotProps">
+                  <span :class="'blood-badge type-' + slotProps.option">
+                    Type {{ slotProps.option }}
+                  </span>
+                </template>
+              </Dropdown>
+              <span v-if="$v.blood.name.$error" class="app-form-error">
+                This field is required
+              </span>
+            </div>
 
-          <!-- Blood name -->
-          <div class="field col-12 md:col-6">
-            <label for="city">Blood Type</label>
-            <Dropdown
-              id="city"
-              v-model="formData.blood.type"
-              :options="['Positive', 'Negative']"
-              placeholder="Select One"
-              :class="{ 'p-invalid': $v.blood.type.$error }"
-            >
-              <template #option="slotProps">
-                <span :class="'blood-badge type-' + slotProps.option">
-                  {{ slotProps.option }}
-                </span>
-              </template>
-            </Dropdown>
-            <span v-if="$v.blood.type.$error" class="app-form-error">
-              This field is required
-            </span>
-          </div>
+            <!-- Blood name -->
+            <div class="field col-12 md:col-6">
+              <label for="city">Blood Type</label>
+              <Dropdown
+                id="city"
+                v-model="formData.blood.type"
+                :options="['Positive', 'Negative']"
+                placeholder="Select One"
+                :class="{ 'p-invalid': $v.blood.type.$error }"
+              >
+                <template #option="slotProps">
+                  <span :class="'blood-badge type-' + slotProps.option">
+                    {{ slotProps.option }}
+                  </span>
+                </template>
+              </Dropdown>
+              <span v-if="$v.blood.type.$error" class="app-form-error">
+                This field is required
+              </span>
+            </div>
 
-          <!-- Event detail -->
-          <div class="field col-12 md:col-6">
-            <label for="event-detail">Quantity (ml)</label>
-            <InputNumber
-              v-model="formData.quantity"
-              :autoResize="true"
-              rows="5"
-              cols="30"
-              :class="{ 'p-invalid': $v.quantity.$error }"
-            />
-            <span v-if="$v.quantity.$error" class="app-form-error">
-              This field is required
-            </span>
-          </div>
+            <!-- Event detail -->
+            <div class="field col-12 md:col-6">
+              <label for="event-detail">Quantity (ml)</label>
+              <InputNumber
+                v-model="formData.quantity"
+                :autoResize="true"
+                rows="5"
+                cols="30"
+                :class="{ 'p-invalid': $v.quantity.$error }"
+              />
+              <span v-if="$v.quantity.$error" class="app-form-error">
+                This field is required
+              </span>
+            </div>
 
-          <!-- Submiitting button -->
-          <div class="field col-12">
-            <PrimeVueButton
-              type="button"
-              label="Submit"
-              class="submit-btn mb-2 mr-2"
-              @click="submitData"
-              :loading="submitting"
-            />
+            <!-- Submiitting button -->
+            <div class="field col-12">
+              <PrimeVueButton
+                type="button"
+                label="Submit"
+                class="submit-btn mb-2 mr-2"
+                @click="submitData"
+                :loading="submitting"
+              />
+            </div>
           </div>
         </div>
-      </div>
-
+      </template>
       <!-- Request History -->
       <div class="card">
         <div class="flex-center" style="width: 100%" v-if="!showRequestHistory">
