@@ -315,10 +315,10 @@ namespace backend.Controllers
         */
         private static string Epoch2String(string epoch)
         {
-            var epochDate = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(epoch))
+            var epochDate = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(epoch)).ToLocalTime()
                 .DateTime;
             DateTimeOffset dateTimeOffset = new DateTime(epochDate.Year, epochDate.Month, epochDate.Day);
-            var date = dateTimeOffset.ToUnixTimeMilliseconds().ToString();
+            var date = dateTimeOffset.ToLocalTime().ToUnixTimeMilliseconds().ToString();
             return date;
         }
 
@@ -397,7 +397,7 @@ namespace backend.Controllers
                 }
 
                 // Return Ok status with the sorted result list.º
-                return Ok(listNotification.OrderByDescending(notification => notification.Date));
+                return Ok(listNotification.OrderByDescending(notification => long.Parse(notification.Date)));
             }
             catch (Exception)
             {
