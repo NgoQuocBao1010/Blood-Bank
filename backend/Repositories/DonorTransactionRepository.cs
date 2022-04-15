@@ -89,7 +89,7 @@ namespace backend.Repositories
             // filter transaction
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
                          & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
-            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var time = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
             // update status to 1 -> Approve to be a donor
             var update = Builders<DonorTransaction>.Update
                 .Set(d => d.status, 1)
@@ -107,7 +107,7 @@ namespace backend.Repositories
             // filter transaction
             var filter = Builders<DonorTransaction>.Filter.Eq(d => d.donorId, _id)
                          & Builders<DonorTransaction>.Filter.Eq(d => d.eventDonated._id, eventId);
-            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var time = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
 
             // update status to 1 -> Approve to be a donor
             var update = Builders<DonorTransaction>.Update
