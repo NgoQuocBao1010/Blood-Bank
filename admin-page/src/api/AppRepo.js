@@ -13,4 +13,7 @@ export default {
     getRecentActivities() {
         return Repository.get(`recentActivities`);
     },
+    getEventNotifications() {
+        return Repository.get(`notification`);
+    },
 };
