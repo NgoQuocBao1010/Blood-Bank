@@ -232,8 +232,10 @@ router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
     try {
         // User has not logged in and try to navigate to page that need to be guard
-        if (userStore.token) {
+        if (userStore.token && !userStore.isLoggedIn) {
+            console.log("Verifying token");
             await userStore.verifyToken();
+            console.log("Verified");
         }
 
         next();
