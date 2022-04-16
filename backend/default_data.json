@@ -29,18 +29,22 @@
         },
         {
             "email": "hoanmy@judoh.io",
+            "password": "hoanmy123",
             "isAdmin": false
         },
         {
             "email": "dakhoatrunguongcantho@judoh.io",
+            "password": "dktwct99",
             "isAdmin": false
         },
         {
             "email": "121@judoh.io",
+            "password": "bv121123",
             "isAdmin": false
         },
         {
             "email": "choray@judoh.io",
+            "password": "bvchoray",
             "isAdmin": false
         }
     ],

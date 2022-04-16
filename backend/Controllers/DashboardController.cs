@@ -451,10 +451,10 @@ namespace backend.Controllers
                         switch (data.type)
                         {
                             case "transaction":
-                                received++;
+                                received += data.amount;
                                 break;
                             case "request":
-                                donated++;
+                                donated += data.amount;
                                 break;
                         }
                     }
