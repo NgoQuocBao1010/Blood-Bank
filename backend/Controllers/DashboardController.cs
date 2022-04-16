@@ -64,7 +64,8 @@ namespace backend.Controllers
             // get an index of quarter
             var quarterNumber = (currentDate.Month - 1) / 3 + 1;
             // get first day of current quarter
-            DateTimeOffset firstDayOfCurrentQuarter = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1).ToLocalTime();
+            DateTimeOffset firstDayOfCurrentQuarter =
+                new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1).ToLocalTime();
             // get last day of current quarter
             var lastDayOfCurrentQuarter = firstDayOfCurrentQuarter.AddMonths(3).AddDays(-1);
             // get first day of last quarter
@@ -315,8 +316,7 @@ namespace backend.Controllers
         */
         private static string Epoch2String(string epoch)
         {
-            var epochDate = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(epoch)).ToLocalTime()
-                .DateTime;
+            var epochDate = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(epoch)).ToLocalTime();
             DateTimeOffset dateTimeOffset = new DateTime(epochDate.Year, epochDate.Month, epochDate.Day);
             var date = dateTimeOffset.ToLocalTime().ToUnixTimeMilliseconds().ToString();
             return date;
@@ -401,7 +401,7 @@ namespace backend.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Get notification error!");
+                return StatusCode(500, "Get notification error!");
             }
         }
 
@@ -411,10 +411,10 @@ namespace backend.Controllers
         {
             var chartData = new Chart();
             var datasets = new List<Datasets>();
-            
+
             var listOfReceived = new List<int>();
             var listOfDonated = new List<int>();
-            
+
             var listApprovedTransactions = await _donorTransactionRepository.GetTransactionByStatus(1);
             var listId = listApprovedTransactions.Select(transaction => new Id(transaction.donorId,
                 transaction.updateStatusAt, "transaction", transaction._id, transaction.amount)).ToList();
@@ -439,7 +439,7 @@ namespace backend.Controllers
             {
                 var month = tempDate.ToString("MMMM");
                 chartData.labels.Add(month);
-                
+
                 var received = 0;
                 var donated = 0;
                 foreach (var data in listId)
@@ -460,14 +460,12 @@ namespace backend.Controllers
                     }
                 }
 
-                
                 listOfReceived.Add(received);
                 listOfDonated.Add(donated);
-                
+
                 tempDate = tempDate.AddMonths(1);
             }
-            
-        
+
             datasets.Add(new Datasets("Received", listOfReceived));
             datasets.Add(new Datasets("Donated", listOfDonated));
 
