@@ -70,7 +70,7 @@ const onRowClick = (payload) => {
                     :loading="fetchingEvent"
                     data-key="_id"
                     class="p-datatable-gridlines"
-                    :rows="5"
+                    :rows="10"
                     :row-hover="true"
                     rowStyle="cursor: pointer"
                     @row-click="onRowClick"
