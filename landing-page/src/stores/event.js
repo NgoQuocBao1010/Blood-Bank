@@ -17,7 +17,10 @@ export const useEventStore = defineStore("event", {
 
         event["startDate"] = new Date(parseInt(event["startDate"]));
         event["status"] = determineStatus(event);
-        event["bgImg"] = event.binaryImg || DEFAULT_EVENT_COVER;
+        event["bgImg"] = event.binaryImage
+          ? event.binaryImage
+          : DEFAULT_EVENT_COVER;
+        console.log(event);
         return event;
       });
     },

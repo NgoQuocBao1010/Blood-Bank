@@ -61,8 +61,6 @@ const rules = {
   gender: { required },
   phone: {
     required,
-    numeric,
-    maxLnght: maxLength(10),
     minLength: minLength(10),
   },
 

@@ -35,10 +35,11 @@ const cancelFilter = async () => {
   sortKey.value = "";
 };
 
-const onSortChange = (event) => {
+const onSortChange = async (event) => {
   const value = event.value.value;
   const sortValue = event.value;
   eventStore.filter(value);
+
   if (value === "ongoing") {
     sortKey.value = sortValue;
   } else if (value === "upcoming") {
@@ -95,10 +96,8 @@ const handleClick = (eventId) => {
                       @click="cancelFilter"
                       >X</Button
                     >
-                    <span
-                      class="font-italic"
-                      style="color: var(--PRIMARY_COLOR)"
-                      >clear status before filtering events
+                    <span class="font-italic"
+                      >*clear status before filtering events
                     </span>
                   </div>
                   <div class="col-6" style="text-align: right">

@@ -5,6 +5,7 @@ import Carousel from "primevue/carousel";
 import { useRouter } from "vue-router";
 import { useEventStore } from "../../stores/event";
 import ProgressSpinner from "primevue/progressspinner";
+import { DEFAULT_EVENT_COVER } from "../../constant";
 
 const eventStore = useEventStore();
 const router = useRouter();
@@ -74,12 +75,13 @@ const handleClick = (eventId) => {
 .event {
   &-item {
     width: 100%;
-    height: 400px;
+    height: 500px;
     position: relative;
 
     &-image {
       width: 100%;
-      height: 100%;
+      max-height: 100%;
+      vertical-align: middle;
     }
 
     &-button {
