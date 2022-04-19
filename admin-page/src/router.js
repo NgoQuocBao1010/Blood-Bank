@@ -236,9 +236,9 @@ router.beforeEach(async (to, from, next) => {
     try {
         // User has not logged in and try to navigate to page that need to be guard
         if (userStore.token && !userStore.isLoggedIn) {
-            appStore.triggerLoad();
+            appStore.openLoadingScreen();
             await userStore.verifyToken();
-            appStore.closeLoad();
+            appStore.closeLoadingScreen();
         }
 
         next();

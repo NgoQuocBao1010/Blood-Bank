@@ -5,7 +5,7 @@ import Toast from "primevue/toast";
 
 import { useUserStore } from "./stores/user";
 import { useAppStore } from "./stores/app";
-import AppProgressBar from "./components/AppProgressBar.vue";
+import AppLoadingPage from "./components/AppLoadingPage.vue";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -66,9 +66,9 @@ provide("errorDialog", { showErrorDialog, closeErrorDialog });
     </component>
 
     <!-- Loading screen -->
-    <transition name="tray">
+    <transition name="fade">
         <div class="loading-wrapper" v-if="useAppStore().loading">
-            <AppProgressBar style="width: 50vw" />
+            <AppLoadingPage />
         </div>
     </transition>
 
@@ -143,6 +143,6 @@ provide("errorDialog", { showErrorDialog, closeErrorDialog });
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: all ease 300ms;
+    transition: all ease 700ms;
 }
 </style>

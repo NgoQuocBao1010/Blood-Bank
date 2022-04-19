@@ -7,11 +7,11 @@ export const useAppStore = defineStore("app", {
         };
     },
     actions: {
-        triggerLoad() {
+        openLoadingScreen() {
             this.loading = true;
             document.body.style.overflowY = "hidden";
         },
-        closeLoad() {
+        closeLoadingScreen() {
             this.loading = false;
             document.body.style.overflowY = "auto";
         },
