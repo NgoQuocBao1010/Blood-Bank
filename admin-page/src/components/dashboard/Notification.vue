@@ -1,12 +1,9 @@
 <script setup>
 import AppRepo from "../../api/AppRepo";
+import { formatDate } from "../../utils";
 
-try {
-    let data = $ref(await AppRepo.getEventNotifications());
-    console.log(data);
-} catch (err) {
-    console.log(err.response);
-}
+const response = await AppRepo.getEventNotifications();
+let data = $ref(response.data);
 </script>
 
 <template>

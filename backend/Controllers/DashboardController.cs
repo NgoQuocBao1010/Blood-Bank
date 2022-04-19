@@ -337,67 +337,17 @@ namespace backend.Controllers
                 foreach (var eventSubmission in listEventSubmission)
                 {
                     // Check is the current time contained in list or not.
-                    var date = Epoch2String(eventSubmission.DateSubmitted);
-                    if (!listDate.Contains(date))
-                    {
-                        /*
-                        Add date to list if not, and create new Notification object
-                        which contains the current date and eventSubmission.
-                        Add new notification to the result list.
-                        */
-                        listDate.Add(date);
-                        var notification = new Notification(date)
-                        {
-                            EventSubmission = new List<EventSubmission> {eventSubmission},
-                            Event = new List<Event>()
-                        };
-                        listNotification.Add(notification);
-                    }
-                    else
-                    {
-                        /*
-                        If the current date is exist. Find the notification with that date
-                        and add the current eventSubmission to the eventSubmission list.
-                        */
-                        var notification = listNotification.Find(notification => notification.Date.Equals(date));
-                        notification?.EventSubmission.Add(eventSubmission);
-                    }
-                }
+                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(eventSubmission.DateSubmitted)).ToLocalTime();
 
-                // Get all event.
-                var listEvent = await _eventRepository.Get();
-                foreach (var createdEvent in listEvent)
-                {
-                    // Check is the current time contained in list or not.
-                    var date = Epoch2String(createdEvent.DateCreated);
-                    if (!listDate.Contains(date))
-                    {
-                        /*
-                        Add date to list if not, and create new Notification object
-                        which contains the current date and eventSubmission.
-                        Add new notification to the result list.
-                        */
-                        listDate.Add(date);
-                        var notification = new Notification(date)
-                        {
-                            Event = new List<Event> {createdEvent},
-                            EventSubmission = new List<EventSubmission>()
-                        };
-                        listNotification.Add(notification);
-                    }
-                    else
-                    {
-                        /*
-                        If the current date is exist. Find the notification with that date
-                        and add the current eventSubmission to the eventSubmission list.
-                        */
-                        var notification = listNotification.Find(notification => notification.Date.Equals(date));
-                        notification?.Event.Add(createdEvent);
+                    var now = DateTime.Now;
+
+                    if (date.Day == now.Day && date.Month == now.Month) {
+                        Console.WriteLine(eventSubmission.FullName);
                     }
                 }
 
                 // Return Ok status with the sorted result list.º
-                return Ok(listNotification.OrderByDescending(notification => long.Parse(notification.Date)));
+                return Ok("Data");
             }
             catch (Exception)
             {
