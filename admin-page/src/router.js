@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "./stores/user";
+import { useAppStore } from "./stores/app";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -230,17 +231,19 @@ const router = createRouter({
 // Verify if user is logged in
 router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
+    const appStore = useAppStore();
+
     try {
         // User has not logged in and try to navigate to page that need to be guard
         if (userStore.token && !userStore.isLoggedIn) {
-            console.log("Verifying token");
+            appStore.triggerLoad();
             await userStore.verifyToken();
-            console.log("Verified");
+            appStore.closeLoad();
         }
 
         next();
     } catch (err) {
-        console.log(err);
+        console.log("Error in ROUTER", err);
         if (!err.response) return next({ name: "Server Error" });
         if (err.response) {
             if (err.response.status === 401)
