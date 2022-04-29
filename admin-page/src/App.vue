@@ -1,6 +1,6 @@
 <script setup>
 import { defineAsyncComponent, markRaw, watch, provide } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 
 import { useUserStore } from "./stores/user";
@@ -9,6 +9,7 @@ import AppLoadingPage from "./components/AppLoadingPage.vue";
 
 const userStore = useUserStore();
 const route = useRoute();
+const router = useRouter();
 let layout = $ref(null);
 
 watch(
@@ -34,9 +35,11 @@ watch(
             const layoutComponent =
                 layoutName && (await import(`./layouts/${layoutName}.vue`));
 
-            layout = markRaw(layoutComponent?.default || "section");
+            layout = markRaw(layoutComponent?.default);
         } catch (e) {
+            router.replace({ name: "Server Error" });
             layout = "section";
+            throw "Layout Error";
         }
     },
     { immediate: true }
@@ -50,19 +53,19 @@ let dialogProps = $ref({
     title: null,
     message: null,
 });
-let isShowErroDialog = $ref(null);
+let isShowErrorDialog = $ref(null);
 const showErrorDialog = (title, message) => {
     dialogProps = { title, message };
-    isShowErroDialog = true;
+    isShowErrorDialog = true;
 };
-const closeErrorDialog = () => (isShowErroDialog = false);
+const closeErrorDialog = () => (isShowErrorDialog = false);
 
 provide("errorDialog", { showErrorDialog, closeErrorDialog });
 </script>
 
 <template>
     <component :is="layout">
-        <router-view />
+        <router-view :key="route.fullPath" />
     </component>
 
     <!-- Loading screen -->
@@ -73,10 +76,10 @@ provide("errorDialog", { showErrorDialog, closeErrorDialog });
     </transition>
 
     <!-- Error Dialog -->
-    <template v-if="isShowErroDialog">
+    <template v-if="isShowErrorDialog">
         <AsyncErrorDialog
             :header="dialogProps.title"
-            v-model:visible="isShowErroDialog"
+            v-model:visible="isShowErrorDialog"
             :style="{ width: '50vw' }"
             :modal="true"
         >

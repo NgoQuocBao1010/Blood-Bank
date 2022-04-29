@@ -243,6 +243,11 @@ router.beforeEach(async (to, from, next) => {
 
         next();
     } catch (err) {
+        // Close loading screen if it is open
+        if (appStore.loading) {
+            appStore.closeLoadingScreen();
+        }
+
         console.log("Error in ROUTER", err);
         if (!err.response) return next({ name: "Server Error" });
         if (err.response) {
