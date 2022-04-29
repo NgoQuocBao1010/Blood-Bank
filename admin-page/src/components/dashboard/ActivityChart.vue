@@ -30,14 +30,14 @@ const CHART_OPTIONS = {
 const getChartConfig = (type) => {
     return {
         Received: {
-            label: "Blood Received",
+            label: "Blood Imported",
             fill: false,
             backgroundColor: THEMES.primaryColor,
             borderColor: THEMES.primaryColor,
             tension: 0.4,
         },
         Donated: {
-            label: "Blood Donated",
+            label: "Blood Exported",
             fill: false,
             backgroundColor: THEMES.darkColor,
             borderColor: THEMES.darkColor,
