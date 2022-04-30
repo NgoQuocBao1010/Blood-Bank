@@ -1,5 +1,5 @@
 <script setup>
-import { defineAsyncComponent, onBeforeMount } from "vue";
+import { defineAsyncComponent, onBeforeMount, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
@@ -15,18 +15,23 @@ const AsyncDonorTable = defineAsyncComponent({
     loader: () => import("../../components/tables/DonorTable.vue"),
 });
 
-const AsyncEventSubmissonTable = defineAsyncComponent({
+const AsyncEventSubmissionTable = defineAsyncComponent({
     loader: () => import("../../components/tables/EventSubmissionTable.vue"),
 });
 
 const props = defineProps({
     _id: String,
+    showRegister: {
+        type: String,
+        default: null,
+        required: false,
+    },
 });
 
 const router = useRouter();
 let event = $ref();
 let isUpcomingEvent = $ref(false);
-let catchedData = $ref({});
+let cacheData = $ref({});
 
 let showDonorTable = $ref(false);
 let donorsData = $ref(null);
@@ -38,7 +43,7 @@ const getParticipants = async () => {
     showDonorTable = true;
 };
 
-// Naviagtion settings
+// Navigation settings
 const home = $ref({
     icon: "fa-solid fa-calendar-days",
     to: { name: "Events Management" },
@@ -49,13 +54,23 @@ onBeforeMount(async () => {
     try {
         const { data } = await EventRepo.getById(props._id);
 
-        catchedData = JSON.stringify(data);
+        cacheData = JSON.stringify(data);
         event = { ...data };
         event["startDate"] = new Date(parseInt(event["startDate"]));
         event["status"] = EventHelper.determineStatus(event);
 
         isUpcomingEvent = event["status"] === "upcoming";
         items = [{ label: event ? `${event.name} event` : "Unknown event" }];
+
+        if (props.showRegister) {
+            await getParticipants();
+
+            setTimeout(() => {
+                document.getElementById("test").scrollIntoView({
+                    behavior: "smooth",
+                });
+            }, 500);
+        }
     } catch (e) {
         if (e.response && e.response.status === 404) {
             return router.push({
@@ -169,7 +184,7 @@ onBeforeMount(async () => {
                                 name: 'Event Edit',
                                 params: {
                                     _id,
-                                    eventData: catchedData,
+                                    eventData: cacheData,
                                 },
                             }"
                             v-ripple
@@ -183,7 +198,7 @@ onBeforeMount(async () => {
                 </div>
 
                 <!-- Event participants -->
-                <div class="card">
+                <div class="card" id="event-table">
                     <div
                         class="flex-center"
                         style="width: 100%"
@@ -211,9 +226,10 @@ onBeforeMount(async () => {
                             :is="
                                 !isUpcomingEvent
                                     ? AsyncDonorTable
-                                    : AsyncEventSubmissonTable
+                                    : AsyncEventSubmissionTable
                             "
                             :donorsData="donorsData"
+                            id="test"
                         />
                     </template>
                 </div>
