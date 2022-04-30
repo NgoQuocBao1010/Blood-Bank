@@ -73,7 +73,7 @@ namespace backend.Repositories
                          & Builders<EventSubmission>.Filter.Lte(e => e.DateSubmitted, today.ToString());
             var listEventSub = await _eventSubmission.Find(filter).ToListAsync();
             var listReport = listEventSub
-                .Select(e => new Report(e._id, "Event Submission", e.FullName, null, e.DateSubmitted))
+                .Select(e => new Report(e.EventId, "Event Submission", e.FullName, null, e.DateSubmitted))
                 .ToList();
 
             return listReport;
