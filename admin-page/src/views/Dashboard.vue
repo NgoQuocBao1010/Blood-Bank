@@ -6,6 +6,7 @@ import BloodStorage from "../components/dashboard/BloodStorage.vue";
 import BloodStorageSkeleton from "../components/dashboard/BloodStorageSkeleton.vue";
 import ActivityChart from "../components/dashboard/ActivityChart.vue";
 import Notification from "../components/dashboard/Notification.vue";
+import AppProgressBar from "../components/AppProgressBar.vue";
 </script>
 
 <template>
@@ -54,7 +55,7 @@ import Notification from "../components/dashboard/Notification.vue";
                     <Notification />
                 </template>
                 <template #fallback>
-                    <p>Loading ...</p>
+                    <AppProgressBar />
                 </template>
             </Suspense>
         </div>

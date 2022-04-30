@@ -2,7 +2,7 @@
 import { onBeforeMount } from "vue";
 
 import AppRepo from "../../api/AppRepo";
-import { timeDiffernet } from "../../utils";
+import { timeDifference } from "../../utils";
 
 // Activitiy data
 let activities = $ref([]);
@@ -67,7 +67,7 @@ onBeforeMount(async () => {
             <!-- Date -->
             <PrimeVueColumn field="date">
                 <template #body="{ data }">
-                    {{ timeDiffernet(parseInt(data.date)) }}
+                    {{ timeDifference(parseInt(data.date)) }}
                 </template>
             </PrimeVueColumn>
 

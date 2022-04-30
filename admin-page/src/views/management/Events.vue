@@ -6,8 +6,6 @@ import MultiSelect from "primevue/multiselect";
 import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
-import EventRepo from "../../api/EventRepo";
-import EventHelper from "../../utils/helpers/Event";
 import { useEventStore } from "../../stores/event";
 import { formatDate } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
