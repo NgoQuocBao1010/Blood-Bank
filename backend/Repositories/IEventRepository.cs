@@ -14,6 +14,8 @@ namespace backend.Repositories
         // Read
         Task<Event> Get(string _id);
         Task<IEnumerable<Event>> Get();
+        Task<IEnumerable<Report>> GetLast2Days(long today, long yesterday);
+        long CalculateDuration(string startDate, int duration);
         
         // Update
         Task<Event> Update(string _id, Event e);

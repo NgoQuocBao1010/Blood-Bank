@@ -13,7 +13,7 @@ namespace backend.Repositories
         Task<EventSubmission> Get(string _id);
         Task<IEnumerable<EventSubmission>> Get();
         Task<List<EventSubmission>> GetByEvent(string eventId);
-        Task<List<EventSubmission>> GetByDateSubmitted(string date);
+        Task<IEnumerable<Report>> GetLast2Days(long today, long yesterday);
         
         // Update
         Task<bool> Update(string _id, EventSubmission eventSubmission);

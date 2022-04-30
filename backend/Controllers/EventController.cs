@@ -37,6 +37,8 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Event e)
         {
+            var today = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
+            e.DateCreated = today.ToString();
             var id = await _eventRepository.Create(e);
             if (id == null)
             {

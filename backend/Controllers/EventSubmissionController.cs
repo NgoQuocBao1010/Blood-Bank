@@ -33,6 +33,7 @@ namespace backend.Controllers
                 var existEventSubmission = await _eventRepository.Get(eventSubmission.EventId);
                 if (existEventSubmission == null) throw new Exception();
 
+                eventSubmission.DateSubmitted = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds().ToString();
                 var result = await _eventSubmissionRepository.Create(eventSubmission);
                 return Ok(new {id = result});
             }

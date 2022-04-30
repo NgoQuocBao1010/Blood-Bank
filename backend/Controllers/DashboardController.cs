@@ -285,74 +285,59 @@ namespace backend.Controllers
         }
 
         /*
-         Private class Notification JSON:
-        [
-            {
-                "date": "string",
-                "eventSubmission": [
-                    {},
-                ],
-                "event": [
-                    {},
-                ]
-            },
-        ] 
-        */
-        private class Notification
-        {
-            public Notification(string date)
-            {
-                Date = date;
-            }
-
-            public string Date { get; set; }
-            public List<EventSubmission> EventSubmission { get; set; }
-            public List<Event> Event { get; set; }
-        }
-
-        /*
         Function to convert string epoch to DateTime yyyy-mm-dd
         and return string epoch for that DateTime.
         */
-        private static string Epoch2String(string epoch)
-        {
-            var epochDate = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(epoch)).ToLocalTime();
-            DateTimeOffset dateTimeOffset = new DateTime(epochDate.Year, epochDate.Month, epochDate.Day);
-            var date = dateTimeOffset.ToLocalTime().ToUnixTimeMilliseconds().ToString();
-            return date;
-        }
 
         [HttpGet]
         [Microsoft.AspNetCore.Mvc.Route("notification")]
         public async Task<IActionResult> GetDashboardNotification()
         {
-            try
-            {
-                // Create list date to check exist date.
-                var listDate = new List<string>();
-                var listNotification = new List<Notification>();
-
-                // Get all eventSubmission.
-                var listEventSubmission = await _eventSubmissionRepository.Get();
-                foreach (var eventSubmission in listEventSubmission)
+            // try
+            // {
+                var notification = new Notifications();
+                var listReportToday = new List<Report>();
+                var listReportYesterday = new List<Report>();
+                var today = DateTime.Today.ToLocalTime();
+                var todayStart = new DateTimeOffset(today).ToUnixTimeMilliseconds();
+                var unixToday = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
+                var yesterday = DateTime.Today.ToLocalTime().AddDays(-1);
+                var unixYesterday = ((DateTimeOffset) yesterday).ToUnixTimeMilliseconds();
+                var listEvent = await _eventRepository.GetLast2Days(unixToday, unixYesterday);
+                var listEventSub = await _eventSubmissionRepository.GetLast2Days(unixToday, unixYesterday);
+                foreach (var rp in listEvent)
                 {
-                    // Check is the current time contained in list or not.
-                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(eventSubmission.DateSubmitted)).ToLocalTime();
-
-                    var now = DateTime.Now;
-
-                    if (date.Day == now.Day && date.Month == now.Month) {
-                        Console.WriteLine(eventSubmission.FullName);
+                    if (long.Parse(rp.date) < todayStart)
+                    {
+                        listReportYesterday.Add(rp);
+                    }
+                    else
+                    {
+                        listReportToday.Add(rp);
+                    }
+                }
+                
+                foreach (var rp in listEventSub)
+                {
+                    if (long.Parse(rp.date) < todayStart)
+                    {
+                        listReportYesterday.Add(rp);
+                    }
+                    else
+                    {
+                        listReportToday.Add(rp);
                     }
                 }
 
-                // Return Ok status with the sorted result list.º
-                return Ok("Data");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Get notification error!");
-            }
+                notification.today = listReportToday.OrderByDescending(rp => long.Parse(rp.date)).ToList();
+                notification.yesterday = listReportYesterday.OrderByDescending(rp => long.Parse(rp.date)).ToList();
+
+                return Ok(notification);
+            // }
+            // catch (Exception)
+            // {
+            //     return StatusCode(500, "Get notification error!");
+            // }
         }
 
         [HttpGet]
