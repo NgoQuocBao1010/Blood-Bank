@@ -50,14 +50,15 @@ namespace backend.Repositories
         public Task<EventSubmission> Get(string _id)
         {
             var filter = Builders<EventSubmission>.Filter.Eq(es => es._id, _id);
-            var request = _eventSubmission.Find(filter).FirstOrDefaultAsync();
-            return request;
+            var submission = _eventSubmission.Find(filter).FirstOrDefaultAsync();
+            return submission;
         }
 
         public async Task<IEnumerable<EventSubmission>> Get()
         {
-            var request = await _eventSubmission.Find(_ => true).ToListAsync();
-            return request;
+            var submission = await _eventSubmission.Find(_ => true).ToListAsync();
+            var sortEventSubmission = submission.OrderByDescending(s => long.Parse(s.DateSubmitted));
+            return sortEventSubmission;
         }
 
         public Task<List<EventSubmission>> GetByEvent(string eventId)
