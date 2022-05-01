@@ -5,7 +5,6 @@ const items = [
   { label: "HOME", to: "/" },
   { label: "ABOUT DONATION", to: "/about" },
   { label: "WANT TO DONATE", to: "/donate" },
-  { label: "LOGIN", to: "/login" },
 ];
 </script>
 

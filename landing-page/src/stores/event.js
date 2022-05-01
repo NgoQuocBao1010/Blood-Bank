@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 import EventRepo from "../api/EventRepo";
 import { determineStatus } from "../utils/index.js";
-
+import { DEFAULT_EVENT_COVER } from "../constant";
 export const useEventStore = defineStore("event", {
   state: () => {
     return {
@@ -17,9 +17,10 @@ export const useEventStore = defineStore("event", {
 
         event["startDate"] = new Date(parseInt(event["startDate"]));
         event["status"] = determineStatus(event);
-        event["bgImg"] =
-          "https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/assets/webp/mobile_banner_center_2500_600.webp";
-
+        event["bgImg"] = event.binaryImage
+          ? event.binaryImage
+          : DEFAULT_EVENT_COVER;
+        console.log(event);
         return event;
       });
     },
@@ -33,5 +34,9 @@ export const useEventStore = defineStore("event", {
       state.events.filter(
         (event) => event.status === "ongoing" || event.status === "upcoming"
       ),
+
+    getEventById: (state) => {
+      return (eventID) => state.events?.find((event) => event._id === eventID);
+    },
   },
 });

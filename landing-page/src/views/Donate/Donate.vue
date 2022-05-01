@@ -23,7 +23,6 @@ let sortOptions = ref([
 ]);
 
 const today = new Date();
-const now = new Date(today).getTime();
 
 onBeforeMount(async () => {
   if (!eventStore.events) {
@@ -36,10 +35,11 @@ const cancelFilter = async () => {
   sortKey.value = "";
 };
 
-const onSortChange = (event) => {
+const onSortChange = async (event) => {
   const value = event.value.value;
   const sortValue = event.value;
   eventStore.filter(value);
+
   if (value === "ongoing") {
     sortKey.value = sortValue;
   } else if (value === "upcoming") {
@@ -52,7 +52,6 @@ const onSortChange = (event) => {
 const handleClick = (eventId) => {
   router.push({
     path: `/donate/${eventId}`,
-    query: { now: now },
   });
 };
 </script>
@@ -92,11 +91,14 @@ const handleClick = (eventId) => {
                       @change="onSortChange($event)"
                     />
                     <Button
-                      class="ml-2"
+                      class="mx-2"
                       style="background-color: var(--PRIMARY_COLOR)"
                       @click="cancelFilter"
                       >X</Button
                     >
+                    <span class="font-italic"
+                      >*clear status before filtering events
+                    </span>
                   </div>
                   <div class="col-6" style="text-align: right">
                     <DataViewLayoutOptions v-model="layout" />
