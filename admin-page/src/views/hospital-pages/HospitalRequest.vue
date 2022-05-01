@@ -79,6 +79,7 @@ onBeforeMount(async () => {
 });
 
 const submitData = async () => {
+  console.log("Submit");
   // Form validation
   const isCorrect = await $v.$validate();
   if (!isCorrect) {
@@ -88,51 +89,52 @@ const submitData = async () => {
       detail: "Please fix your form 🙏",
       life: 3000,
     });
-
     return;
-  }
+  } else {
+    // Make API call to server
+    try {
+      submitting = true;
+      const response = await RequestRepo.post({
+        quantity: formData.quantity,
+        blood: {
+          name: formData.blood.name,
+          type: formData.blood.type,
+        },
+        hospitalId: hospital_id,
+        date: formData.date.toString(),
+      });
 
-  // Make API call to server
-  submitting = true;
-  try {
-    await RequestRepo.post({
-      quantity: formData.quantity,
-      blood: {
-        name: formData.blood.name,
-        type: formData.blood.type,
-      },
-      hospitalId: hospital_id,
-      date: formData.date.toString(),
-    });
+      if (response.status === 200) {
+        errorMessage = null;
+        submitting = false;
 
-    errorMessage = null;
-    submitting = false;
-
-    toast.add({
-      severity: "success",
-      summary: "Successful",
-      detail: "Your request is created",
-      life: 3000,
-    });
-
-    await updateRequests();
-
-    resetForm();
-    $v.$reset();
-  } catch (e) {
-    if (e.response) {
-      const { status } = e.response;
-      if (status === 400) {
-        errorMessage = "You have an error";
         toast.add({
-          severity: "error",
-          summary: "Form Error",
-          detail: errorMessage,
+          severity: "success",
+          summary: "Successful",
+          detail: "Your request is created",
           life: 3000,
         });
+
+        await updateRequests();
+
+        resetForm();
+        $v.$reset();
       }
-    } else {
-      throw e;
+    } catch (e) {
+      if (e.response) {
+        const { status } = e.response;
+        if (status === 400) {
+          errorMessage = "You have an error";
+          toast.add({
+            severity: "error",
+            summary: "Form Error",
+            detail: errorMessage,
+            life: 3000,
+          });
+        }
+      } else {
+        throw e;
+      }
     }
   }
 };

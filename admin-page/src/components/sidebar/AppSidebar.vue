@@ -83,25 +83,21 @@ const adminMenu = [
 
 const hospitalMenu = [
   {
-    label: "Overview",
+    label: "Hospital",
     items: [
       {
-        label: "Dashboard",
+        label: "Request",
         icon: "pi pi-fw pi-home",
         to: userStore.defaultPage,
       },
-    ],
-  },
-  {
-    label: "Overview",
-    items: [
       {
         label: "Profile",
-        icon: "fa-solid fa-hospital-user pi-fw",
+        icon: "fa-solid fa-hospital-user",
         to: userStore.profilePage,
       },
     ],
   },
+
   // Information
   {
     label: "Information",
