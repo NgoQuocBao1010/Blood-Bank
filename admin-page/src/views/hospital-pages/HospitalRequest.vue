@@ -34,7 +34,6 @@ const formRules = $computed(() => {
   return {
     quantity: {
       required,
-      numeric,
       maxValue: helpers.withMessage(
         "You can request maximum 4000ml",
         maxValue(4000)
@@ -79,8 +78,6 @@ onBeforeMount(async () => {
 });
 
 const submitData = async () => {
-  $v.$reset();
-  console.log("Submit");
   // Form validation
   const isCorrect = await $v.$validate();
   if (!isCorrect) {
@@ -204,6 +201,7 @@ const submitData = async () => {
               rows="5"
               cols="30"
               :class="{ 'p-invalid': $v.quantity.$error }"
+              @focus="$v.$reset()"
             />
             <span v-if="$v.quantity.$error" class="app-form-error">
               {{ $v.quantity.$errors[0].$message }}
