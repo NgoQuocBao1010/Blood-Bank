@@ -17,24 +17,19 @@ import {
 } from "@vuelidate/validators";
 import { useVuelidate } from "@vuelidate/core";
 import { useRoute } from "vue-router";
-
 import EventSubmissionRepo from "../../api/EventSubmissionRepo";
 import EventRepo from "../../api/EventRepo";
 import { determineStatus, formatDate } from "../../utils/index";
 import ProgressSpinner from "primevue/progressspinner";
 import { DEFAULT_EVENT_COVER } from "../../constant";
-
 const route = useRoute();
 const eventId = route.params.eventId;
 const now = route.query.now;
-
 const submitted = ref(false);
 const toast = useToast();
 const today = new Date();
-
 let isSubmitting = ref(false);
 let eventData = ref(null);
-
 const donateData = reactive({
   eventId: "",
   fullname: "",
@@ -47,7 +42,6 @@ const donateData = reactive({
   latestDonationDate: "",
   medicalHistory: [],
 });
-
 const rules = {
   fullname: {
     required,
@@ -63,14 +57,11 @@ const rules = {
     required,
     minLength: minLength(10),
   },
-
   dob: { required },
   email: { required, email },
   address: { required },
 };
-
 const v$ = useVuelidate(rules, donateData);
-
 const fetchEventsData = async () => {
   const data = await EventRepo.getById({ eventId: eventId, now: now });
   let event = { ...data.data };
@@ -84,11 +75,9 @@ const fetchEventsData = async () => {
       : "donated for this event";
   eventData.value = event;
 };
-
 onBeforeMount(async () => {
   await fetchEventsData();
 });
-
 const handleSubmitForm = async () => {
   isSubmitting = true;
   submitted.value = true;
@@ -99,7 +88,6 @@ const handleSubmitForm = async () => {
     donateData.latestDonationDate = donateData.latestDonationDate
       ? new Date(donateData.latestDonationDate).getTime().toString()
       : "";
-
     const data = {
       eventId: eventId,
       fullname: donateData.fullname,
@@ -111,7 +99,6 @@ const handleSubmitForm = async () => {
       address: donateData.address,
       latestDonationDate: donateData.latestDonationDate,
     };
-
     try {
       const { status } = await EventSubmissionRepo.post(data);
       if (status === 200) {
@@ -140,7 +127,6 @@ const handleSubmitForm = async () => {
     }
   }
 };
-
 // Reset form after submit
 const resetForm = () => {
   donateData.fullname = "";
@@ -487,18 +473,14 @@ const resetForm = () => {
     .card {
       min-width: 450px;
       background-color: #ebf0f6;
-
       border: 1px solid var(--DARK_BLUE);
       border-radius: 20px;
-
       .field {
         margin-bottom: 0.5rem;
       }
-
       .p-inputtext:enabled:hover {
         border-color: var(--DARK_BLUE) !important;
       }
-
       .p-inputtext.p-component {
         .p-inputtext:enabled:hover {
           border-color: var(--DARK_BLUE);

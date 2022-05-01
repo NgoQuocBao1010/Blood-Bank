@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver.Linq;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Microsoft.AspNetCore.Mvc.Route("api")]
     [Authorize(Roles = "admin")]
     public class DashboardController : ControllerBase
     {
@@ -19,21 +22,24 @@ namespace backend.Controllers
         private readonly IDonorTransactionRepository _donorTransactionRepository;
         private readonly IRequestRepository _requestRepository;
         private readonly IEventRepository _eventRepository;
+        private readonly IEventSubmissionRepository _eventSubmissionRepository;
         private readonly IRecentActivityRepository _recentActivityRepository;
 
         public DashboardController(IDonorRepository donorRepository, IRequestRepository requestRepository,
             IDonorTransactionRepository donorTransactionRepository, IEventRepository eventRepository,
-            IRecentActivityRepository recentActivityRepository)
+            IRecentActivityRepository recentActivityRepository, IEventSubmissionRepository eventSubmissionRepository)
         {
             _donorRepository = donorRepository;
             _requestRepository = requestRepository;
             _donorTransactionRepository = donorTransactionRepository;
             _eventRepository = eventRepository;
+            _eventSubmissionRepository = eventSubmissionRepository;
             _recentActivityRepository = recentActivityRepository;
         }
 
+
         [HttpGet]
-        [Route("recentActivities")]
+        [Microsoft.AspNetCore.Mvc.Route("recentActivities")]
         public async Task<IActionResult> GetRecentActivities()
         {
             var recentActivities = await _recentActivityRepository.Get();
@@ -48,17 +54,18 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Route("dashboardInfo")]
+        [Microsoft.AspNetCore.Mvc.Route("dashboardInfo")]
         public async Task<IActionResult> GetDashboardInfo()
         {
             // get current time
-            var currentUnixTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            var currentUnixTime = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
             // convert to current date
-            var currentDate = DateTimeOffset.FromUnixTimeMilliseconds(currentUnixTime).DateTime;
+            var currentDate = DateTimeOffset.FromUnixTimeMilliseconds(currentUnixTime).DateTime.ToLocalTime();
             // get an index of quarter
             var quarterNumber = (currentDate.Month - 1) / 3 + 1;
             // get first day of current quarter
-            DateTimeOffset firstDayOfCurrentQuarter = new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1);
+            DateTimeOffset firstDayOfCurrentQuarter =
+                new DateTime(currentDate.Year, (quarterNumber - 1) * 3 + 1, 1).ToLocalTime();
             // get last day of current quarter
             var lastDayOfCurrentQuarter = firstDayOfCurrentQuarter.AddMonths(3).AddDays(-1);
             // get first day of last quarter
@@ -275,6 +282,131 @@ namespace backend.Controllers
                 .Count(date => date >= firstDayOfCurrentQuarter && date <= lastDayOfCurrentQuarter);
 
             return eventsCurrentQuarter - eventsLastQuarter;
+        }
+
+        /*
+        Function to convert string epoch to DateTime yyyy-mm-dd
+        and return string epoch for that DateTime.
+        */
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("notification")]
+        public async Task<IActionResult> GetDashboardNotification()
+        {
+            // try
+            // {
+                var notification = new Notifications();
+                var listReportToday = new List<Report>();
+                var listReportYesterday = new List<Report>();
+                var today = DateTime.Today.ToLocalTime();
+                var todayStart = new DateTimeOffset(today).ToUnixTimeMilliseconds();
+                var unixToday = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
+                var yesterday = DateTime.Today.ToLocalTime().AddDays(-1);
+                var unixYesterday = ((DateTimeOffset) yesterday).ToUnixTimeMilliseconds();
+                var listEvent = await _eventRepository.GetLast2Days(unixToday, unixYesterday);
+                var listEventSub = await _eventSubmissionRepository.GetLast2Days(unixToday, unixYesterday);
+                foreach (var rp in listEvent)
+                {
+                    if (long.Parse(rp.date) < todayStart)
+                    {
+                        listReportYesterday.Add(rp);
+                    }
+                    else
+                    {
+                        listReportToday.Add(rp);
+                    }
+                }
+                
+                foreach (var rp in listEventSub)
+                {
+                    if (long.Parse(rp.date) < todayStart)
+                    {
+                        listReportYesterday.Add(rp);
+                    }
+                    else
+                    {
+                        listReportToday.Add(rp);
+                    }
+                }
+
+                notification.today = listReportToday.OrderByDescending(rp => long.Parse(rp.date)).ToList();
+                notification.yesterday = listReportYesterday.OrderByDescending(rp => long.Parse(rp.date)).ToList();
+
+                return Ok(notification);
+            // }
+            // catch (Exception)
+            // {
+            //     return StatusCode(500, "Get notification error!");
+            // }
+        }
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("chart")]
+        public async Task<IActionResult> GetChartData()
+        {
+            var chartData = new Chart();
+            var datasets = new List<Datasets>();
+
+            var listOfReceived = new List<int>();
+            var listOfDonated = new List<int>();
+
+            var listApprovedTransactions = await _donorTransactionRepository.GetTransactionByStatus(1);
+            var listId = listApprovedTransactions.Select(transaction => new Id(transaction.donorId,
+                transaction.updateStatusAt, "transaction", transaction._id, transaction.amount)).ToList();
+
+            var listApprovedRequest = await _requestRepository.GetRequestByStatus(1);
+            listId.AddRange(listApprovedRequest.Select(request =>
+                new Id(request.HospitalId, request.updateStatusAt, "request", request._id, request.Quantity)));
+
+            listId = new List<Id>(listId.OrderByDescending(id => long.Parse(id.date)));
+            var firstMonth = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(listId.Last().date)).ToLocalTime();
+
+
+            var endDate = DateTimeOffset.Now.ToLocalTime();
+            var rangeOfMonth = ((endDate.Year - firstMonth.Year) * 12) + endDate.Month - firstMonth.Month;
+            var startDate = rangeOfMonth > 6 ? endDate.AddMonths(-6) : endDate.AddMonths(-rangeOfMonth);
+            startDate = new DateTime(startDate.Year, startDate.Month, 1);
+
+
+            var tempDate = startDate;
+            chartData.labels = new List<string>();
+            while (tempDate <= endDate)
+            {
+                var month = tempDate.ToString("MMMM");
+                chartData.labels.Add(month);
+
+                var received = 0;
+                var donated = 0;
+                foreach (var data in listId)
+                {
+                    var date = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(data.date)).ToLocalTime();
+                    if (date < startDate || date > endDate) continue;
+                    if (date.Month == tempDate.Month)
+                    {
+                        switch (data.type)
+                        {
+                            case "transaction":
+                                received += data.amount;
+                                break;
+                            case "request":
+                                donated += data.amount;
+                                break;
+                        }
+                    }
+                }
+
+                listOfReceived.Add(received);
+                listOfDonated.Add(donated);
+
+                tempDate = tempDate.AddMonths(1);
+            }
+
+            datasets.Add(new Datasets("Received", listOfReceived));
+            datasets.Add(new Datasets("Donated", listOfDonated));
+
+            chartData.datasets = datasets;
+
+            return new JsonResult(chartData);
         }
     }
 }

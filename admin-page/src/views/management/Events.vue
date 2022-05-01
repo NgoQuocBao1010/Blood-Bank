@@ -6,8 +6,6 @@ import MultiSelect from "primevue/multiselect";
 import Calendar from "primevue/calendar";
 import { FilterMatchMode } from "primevue/api";
 
-import EventRepo from "../../api/EventRepo";
-import EventHelper from "../../utils/helpers/Event";
 import { useEventStore } from "../../stores/event";
 import { formatDate } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
@@ -70,7 +68,7 @@ const onRowClick = (payload) => {
                     :loading="fetchingEvent"
                     data-key="_id"
                     class="p-datatable-gridlines"
-                    :rows="5"
+                    :rows="10"
                     :row-hover="true"
                     rowStyle="cursor: pointer"
                     @row-click="onRowClick"

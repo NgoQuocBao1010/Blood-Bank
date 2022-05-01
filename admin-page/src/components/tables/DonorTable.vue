@@ -248,7 +248,7 @@ const handleParticipants = async () => {
         :value="donors"
         :paginator="true"
         class="p-datatable-gridlines"
-        :rows="5"
+        :rows="10"
         dataKey="dataKey"
         :rowHover="true"
         removableSort

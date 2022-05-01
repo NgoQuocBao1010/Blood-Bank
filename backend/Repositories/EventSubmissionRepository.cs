@@ -21,7 +21,7 @@ namespace backend.Repositories
             _eventSubmission = collection;
             AddDefaultData();
         }
-        
+
         public void AddDefaultData()
         {
             _eventRepository.AddDefaultData();
@@ -37,7 +37,7 @@ namespace backend.Repositories
             {
                 submission.EventId = listEvent[^int.Parse(submission.EventId)]._id;
             }
-            
+
             _eventSubmission.InsertMany(data.Result.EventSubmissions);
         }
 
@@ -50,21 +50,34 @@ namespace backend.Repositories
         public Task<EventSubmission> Get(string _id)
         {
             var filter = Builders<EventSubmission>.Filter.Eq(es => es._id, _id);
-            var request = _eventSubmission.Find(filter).FirstOrDefaultAsync();
-            return request;
+            var submission = _eventSubmission.Find(filter).FirstOrDefaultAsync();
+            return submission;
         }
 
         public async Task<IEnumerable<EventSubmission>> Get()
         {
-            var request = await _eventSubmission.Find(_ => true).ToListAsync();
-            return request;
+            var submission = await _eventSubmission.Find(_ => true).ToListAsync();
+            var sortEventSubmission = submission.OrderByDescending(s => long.Parse(s.DateSubmitted));
+            return sortEventSubmission;
         }
-        
+
         public Task<List<EventSubmission>> GetByEvent(string eventId)
         {
             var filter = Builders<EventSubmission>.Filter.Eq(es => es.EventId, eventId);
             var eventSubmission = _eventSubmission.Find(filter).ToListAsync();
             return eventSubmission;
+        }
+
+        public async Task<IEnumerable<Report>> GetLast2Days(long today, long yesterday)
+        {
+            var filter = Builders<EventSubmission>.Filter.Gte(e => e.DateSubmitted, yesterday.ToString())
+                         & Builders<EventSubmission>.Filter.Lte(e => e.DateSubmitted, today.ToString());
+            var listEventSub = await _eventSubmission.Find(filter).ToListAsync();
+            var listReport = listEventSub
+                .Select(e => new Report(e.EventId, "Event Submission", e.FullName, null, e.DateSubmitted))
+                .ToList();
+
+            return listReport;
         }
 
         public async Task<bool> Update(string _id, EventSubmission eventSubmission)
@@ -81,9 +94,9 @@ namespace backend.Repositories
                 .Set(es => es.Gender, eventSubmission.Gender)
                 .Set(es => es.Dob, eventSubmission.Dob)
                 .Set(es => es.LatestDonationDate, eventSubmission.LatestDonationDate);
-            
+
             var result = await _eventSubmission.UpdateOneAsync(filter, update);
-            
+
             return result.ModifiedCount == 1;
         }
 

@@ -14,7 +14,7 @@ import { required } from "@vuelidate/validators";
 
 import { useEventStore } from "../../stores/event";
 import EventRepo from "../../api/EventRepo";
-import { fileToBase64 } from "../../utils";
+import { fileToBase64, formatDate, stringToDate } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
 
 const router = useRouter();
@@ -29,7 +29,7 @@ const { _id, eventData } = defineProps({
 });
 
 // Breadcums
-// Naviagtion settings
+// Navigation settings
 const home = $ref({
     icon: "fa-solid fa-calendar-days",
     to: { name: "Events Management" },
@@ -117,7 +117,11 @@ const submitData = async () => {
     }
     // Make API call to server
     loading = true;
-    formData.startDate = formData.startDate.getTime().toString();
+
+    // Convert start date's time to 0:00
+    formData.startDate = stringToDate(formatDate(formData.startDate))
+        .getTime()
+        .toString();
 
     try {
         const { data, status } = isEditPage

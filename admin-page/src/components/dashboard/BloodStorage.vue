@@ -8,7 +8,7 @@ let data = $ref(bloodStore.summaryData);
 const maxQuantity = $computed(() => {
     const quantity = data.map((row) => row.quantity);
 
-    return Math.max(...quantity);
+    return Math.max(...quantity) + 10000;
 });
 </script>
 

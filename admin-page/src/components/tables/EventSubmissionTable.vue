@@ -42,7 +42,7 @@ onBeforeMount(() => {
         :value="data"
         :paginator="true"
         class="p-datatable-gridlines"
-        :rows="5"
+        :rows="10"
         dataKey="_id"
         :rowHover="true"
         removableSort

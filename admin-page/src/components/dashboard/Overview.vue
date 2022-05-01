@@ -24,8 +24,8 @@ const formatData = $computed(() => {
 
             obj["compared"] =
                 obj["lastQuarter"] >= 0
-                    ? `%${obj["lastQuarter"] * 100}+ `
-                    : `%${Math.abs(obj["lastQuarter"]) * 100}- `;
+                    ? `%${(obj["lastQuarter"] * 100).toFixed(2)}+ `
+                    : `%${(Math.abs(obj["lastQuarter"]) * 100).toFixed(2)}- `;
         } else {
             obj["compared"] =
                 obj["lastQuarter"] >= 0

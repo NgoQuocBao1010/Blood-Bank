@@ -7,7 +7,7 @@ import AppFooter from "../components/footer/AppFooter.vue";
     <main>
         <!-- Navbar -->
         <nav class="navbar">
-            <router-link to="/" class="navbar-logo">
+            <router-link :to="{ name: 'Login' }" class="navbar-logo">
                 <img alt="Logo" src="../assets/images/logo.png" />
                 <span class="title">JUDOH Blood Bank Operations</span>
             </router-link>

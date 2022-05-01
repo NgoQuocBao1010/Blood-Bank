@@ -14,19 +14,20 @@ namespace backend.Models
         public string city { get; set; }
         public string address { get; set; }
     }
-    
+
     public class Event
     {
-        public Event(string name, Location location, string startDate, int duration, string detail, string binaryImage)
+        public Event(string name, Location location, string startDate, int duration, string detail, string binaryImage, string dateCreated)
         {
             this.name = name;
             this.location = location;
             this.startDate = startDate;
             this.duration = duration;
             this.detail = detail;
+            DateCreated = dateCreated;
             this.binaryImage = binaryImage;
         }
-        
+
         public Event()
         {
             this.name = "";
@@ -46,9 +47,8 @@ namespace backend.Models
         public int duration { get; set; }
         public string detail { get; set; }
         public string binaryImage { get; set; }
-        [BsonIgnore]
-        public int participants { get; set; }
-        
-    }
+        [BsonIgnore] public int participants { get; set; }
 
+        public string DateCreated { get; set; }
+    }
 }
