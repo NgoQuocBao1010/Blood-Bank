@@ -39,7 +39,7 @@ const getListTransaction = async () => {
     fetchingDonations = false;
 };
 
-// Naviagtion settings
+// Navigation settings
 const home = $ref({
     icon: "fa-solid fa-user-group",
     to: { name: "Donors Management" },

@@ -13,4 +13,10 @@ export default {
     getRecentActivities() {
         return Repository.get(`recentActivities`);
     },
+    getActivityChartData() {
+        return Repository.get(`chart`);
+    },
+    getEventNotifications() {
+        return Repository.get(`notification`);
+    },
 };

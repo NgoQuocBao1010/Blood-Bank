@@ -212,7 +212,7 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                var sortResult = result.OrderByDescending(r => long.Parse(r.Date));
+                var sortResult = result.OrderByDescending(r => long.Parse(r.updateStatusAt));
 
                 return Ok(sortResult);
             }
@@ -233,7 +233,7 @@ namespace backend.Controllers
                 {
                     throw new Exception();
                 }
-                var sortResult = result.OrderByDescending(r => long.Parse(r.Date));
+                var sortResult = result.OrderByDescending(r => long.Parse(r.updateStatusAt));
 
                 return Ok(sortResult);
             }

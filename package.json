@@ -9,7 +9,9 @@
         "install-lp": "cd landing-page && npm i",
         "start-lp": "cd landing-page && npm run dev",
         "start-sv": "cd backend && dotnet run",
-        "install-all": "npm run install-admin && npm run install-lp"
+        "install-all": "npm run install-admin && npm run install-lp",
+        "build-admin": "cd admin-page && npm run build",
+        "preview-admin": "npm run build-admin && cd admin-page && npm run preview"
     },
     "repository": {
         "type": "git",

@@ -1,4 +1,4 @@
-import { formatDate, converToDate, getKeyByValue } from "..";
+import { formatDate, stringToDate, getKeyByValue } from "..";
 
 const KEYS_TRANSFORM = {
     _id: "Personal ID",
@@ -48,7 +48,7 @@ export default {
                 reformData[reformKey] =
                     reformKey !== "dob"
                         ? data[key]
-                        : converToDate(data[key]).getTime().toString();
+                        : stringToDate(data[key]).getTime().toString();
             } else {
                 if (key === "Blood Type") {
                     const [name, type] = [...data[key].split(" ")];
@@ -56,7 +56,7 @@ export default {
                 } else if (key === "Donation Amount (ml)") {
                     reformData.transaction["amount"] = data[key];
                 } else if (key === "Date Donated") {
-                    reformData.transaction["dateDonated"] = converToDate(
+                    reformData.transaction["dateDonated"] = stringToDate(
                         data[key]
                     )
                         .getTime()

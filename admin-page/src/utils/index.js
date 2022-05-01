@@ -6,7 +6,9 @@ const getKeyByValue = (object, value) => {
     return Object.keys(object).find((key) => object[key] === value);
 };
 
-const timeDiffernet = (date) => {
+const timeDifference = (date) => {
+    // Calculate the time different between a datetime object and now
+    // Return int
     const date1 = dayjs(date);
     const now = dayjs();
 
@@ -31,11 +33,14 @@ const timeDiffernet = (date) => {
 
 const formatDate = (date) => {
     // Format date object
+    // Return a string DD/MM/YYYY
     const day = dayjs(date);
     return day.format("DD/MM/YYYY");
 };
 
-const converToDate = (stringDate) => {
+const stringToDate = (stringDate) => {
+    // Covert a string DD/MM/YYYY to a date object
+    // Return a date type
     return dayjs(stringDate, "DD/MM/YYYY", true).toDate();
 };
 
@@ -47,4 +52,10 @@ const fileToBase64 = (file) =>
         reader.onerror = (e) => reject(e);
     });
 
-export { formatDate, getKeyByValue, converToDate, timeDiffernet, fileToBase64 };
+export {
+    formatDate,
+    getKeyByValue,
+    stringToDate,
+    timeDifference,
+    fileToBase64,
+};

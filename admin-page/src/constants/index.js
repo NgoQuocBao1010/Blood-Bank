@@ -11,7 +11,7 @@ const BLOOD_TYPES = ["A", "B", "AB", "O", "Rh"];
 
 const PRIMARY_CITIES = [
     "Cần Thơ",
-    "Hồ Chí Minh",
+    "TP. Hồ Chí Minh",
     "Đà Nẵng",
     "Hà Nội",
     "Hậu Giang",
