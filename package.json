@@ -11,7 +11,7 @@
         "start-sv": "cd backend && dotnet run",
         "install-all": "npm run install-admin && npm run install-lp",
         "build-admin": "cd admin-page && npm run build",
-        "preview-admin": "npm run build-admin && cd admin-page && npm run preview"
+        "preview-build-admin": "npm run build-admin && cd admin-page && npm run preview"
     },
     "repository": {
         "type": "git",
