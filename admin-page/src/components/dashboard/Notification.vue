@@ -20,7 +20,7 @@ const ICONS = [
         bgColor: "blue",
     },
     {
-        name: "Ended",
+        name: "Finished",
         fontAwesomeClass: "fa-solid fa-flag-checkered text-purple-500",
         bgColor: "purple",
     },
@@ -42,10 +42,10 @@ const getMessage = (data) => {
             highlight: "has begin.",
             color: "blue",
         },
-        Ended: {
+        Finished: {
             trigger: data.name,
             action: "",
-            highlight: "has ended.",
+            highlight: "has Finished.",
             color: "purple",
         },
     }[type];
@@ -88,6 +88,7 @@ for (let timeline in data) {
                 ...getMessage(event),
                 linkTo: event.id,
             },
+            showRegister: event.status === null ? "yes" : "",
         });
     });
     notifications[timeline] = formatData;
@@ -136,7 +137,7 @@ for (let timeline in data) {
                             name: 'Event Detail',
                             params: {
                                 _id: notification.message.linkTo,
-                                showRegister: true,
+                                showRegister: notification.showRegister,
                             },
                         }"
                         class="text-900"

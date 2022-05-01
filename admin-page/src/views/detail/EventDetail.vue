@@ -66,7 +66,7 @@ onBeforeMount(async () => {
             await getParticipants();
 
             setTimeout(() => {
-                document.getElementById("test").scrollIntoView({
+                document.getElementById("event-table").scrollIntoView({
                     behavior: "smooth",
                 });
             }, 500);
@@ -198,7 +198,7 @@ onBeforeMount(async () => {
                 </div>
 
                 <!-- Event participants -->
-                <div class="card" id="event-table">
+                <div class="card">
                     <div
                         class="flex-center"
                         style="width: 100%"
@@ -215,7 +215,7 @@ onBeforeMount(async () => {
                     </div>
 
                     <template v-else>
-                        <h2>
+                        <h2 id="event-table">
                             {{
                                 !isUpcomingEvent
                                     ? "Event Participants"
@@ -229,7 +229,6 @@ onBeforeMount(async () => {
                                     : AsyncEventSubmissionTable
                             "
                             :donorsData="donorsData"
-                            id="test"
                         />
                     </template>
                 </div>
