@@ -388,7 +388,7 @@ const handleRequests = async () => {
       <!-- quantity -->
       <PrimeVueColumn
         field="quantity"
-        header="quantity (ml)"
+        header="Quantity (ml)"
         dataType="numeric"
         :sortable="true"
         :showFilterMatchModes="false"
