@@ -79,6 +79,7 @@ onBeforeMount(async () => {
 });
 
 const submitData = async () => {
+  $v.$reset();
   console.log("Submit");
   // Form validation
   const isCorrect = await $v.$validate();
