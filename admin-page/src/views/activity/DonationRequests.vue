@@ -83,17 +83,6 @@ onBeforeMount(async () => {
           />
         </div>
 
-        <!-- Donor Table -->
-        <div id="donor-table" v-if="donorsData">
-          <DonorTable
-            :donorsData="donorsData"
-            :participants="true"
-            :isRejectParticipant="donorType === 'rejected'"
-            :isApproveParticipant="donorType === 'approved'"
-            @updateParticipants="updateParticipants"
-          />
-        </div>
-
         <!-- Progress bar -->
         <AppProgressBar v-else />
       </div>
