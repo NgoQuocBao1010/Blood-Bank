@@ -45,7 +45,7 @@ import AppProgressBar from "../components/AppProgressBar.vue";
                     <ActivityChart />
                 </template>
                 <template #fallback>
-                    <p>Loading ...</p>
+                    <AppProgressBar />
                 </template>
             </Suspense>
 

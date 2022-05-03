@@ -28,14 +28,25 @@ namespace backend.Repositories
             // Get the first eventId from default data.
             var e = _eventRepository.Get();
             var listEvent = e.Result.ToList();
+            var eventUpcoming = new Event();
+            foreach(var eve in listEvent) {
+                var date = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds();
+                var dateStarted = long.Parse(eve.startDate);
+                if (date < dateStarted) {
+                    eventUpcoming = eve;
+                    break;
+                }
+            }
 
             var eventSubmission = Get();
             if (eventSubmission.Result.Any()) return;
 
             var data = DefaultData.ReadJson();
+
             foreach (var submission in data.Result.EventSubmissions)
             {
-                submission.EventId = listEvent[^int.Parse(submission.EventId)]._id;
+                submission.DateSubmitted = DateTimeOffset.Now.ToLocalTime().ToUnixTimeMilliseconds().ToString();
+                submission.EventId = eventUpcoming._id;
             }
 
             _eventSubmission.InsertMany(data.Result.EventSubmissions);

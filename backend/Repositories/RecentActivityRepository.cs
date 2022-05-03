@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,7 +73,7 @@ namespace backend.Repositories
         public async Task<IEnumerable<RecentActivity>> Get()
         {
             var recentActivities = await _recentActivity.Find(_ => true).ToListAsync();
-            var sortActivities = recentActivities.OrderByDescending(r => long.Parse(r.date));
+            var sortActivities = recentActivities.OrderByDescending(r => Convert.ToInt64(r.date));
             return sortActivities;
         }
     }
