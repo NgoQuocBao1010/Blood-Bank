@@ -204,7 +204,7 @@ namespace backend.Controllers
                 }
             }
 
-            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.updateStatusAt));
             return new JsonResult(sortResult);
         }
         
@@ -236,7 +236,7 @@ namespace backend.Controllers
                 }
             }
 
-            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.dateDonated));
+            var sortResult = result.OrderByDescending(d => long.Parse(d.transaction.updateStatusAt));
             return new JsonResult(sortResult);
         }
 
