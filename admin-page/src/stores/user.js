@@ -55,6 +55,8 @@ export const useUserStore = defineStore("user", {
     },
     getters: {
         defaultPage: (state) => {
+            if (!state.token) return null;
+
             return state.isAdmin
                 ? { name: "Dashboard" }
                 : {

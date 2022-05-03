@@ -53,15 +53,19 @@ const toggleAccountPanel = (event) => {
 };
 
 const logout = () => {
-    userStore.logout();
     router.push({ name: "Login" });
+    userStore.logout();
 };
 </script>
 
 <template>
     <div class="layout-topbar">
         <!-- Logo -->
-        <router-link to="/" class="layout-topbar-logo">
+        <router-link
+            v-if="userStore.defaultPage"
+            :to="userStore.defaultPage"
+            class="layout-topbar-logo"
+        >
             <img alt="Logo" src="../../assets/images/logo.png" />
             <span>JUDOH</span>
         </router-link>
@@ -86,7 +90,7 @@ const logout = () => {
             class="layout-topbar-menu hidden lg:flex origin-top"
             style="align-items: center"
         >
-            <!-- Serach bar -->
+            <!-- Search bar -->
             <li>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search" />
