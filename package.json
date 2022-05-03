@@ -8,10 +8,13 @@
         "start-admin": "cd admin-page && npm run dev",
         "install-lp": "cd landing-page && npm i",
         "start-lp": "cd landing-page && npm run dev",
-        "start-sv": "cd backend && dotnet run",
         "install-all": "npm run install-admin && npm run install-lp",
         "build-admin": "cd admin-page && npm run build",
-        "preview-build-admin": "npm run build-admin && cd admin-page && npm run preview"
+        "preview-build-admin": "npm run build-admin && cd admin-page && npm run preview",
+        "build-lp": "cd landing-page && npm run build",
+        "preview-build-lp": "npm run build-lp && cd landing-page && npm run preview",
+        "build-all": "npm run build-admin && npm run build-lp",
+        "start-sv": "cd backend && dotnet run"
     },
     "repository": {
         "type": "git",
