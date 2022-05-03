@@ -364,7 +364,7 @@ namespace backend.Controllers
 
             var endDate = DateTimeOffset.Now.ToLocalTime();
             var rangeOfMonth = ((endDate.Year - firstMonth.Year) * 12) + endDate.Month - firstMonth.Month;
-            var startDate = rangeOfMonth > 6 ? endDate.AddMonths(-6) : endDate.AddMonths(-rangeOfMonth);
+            var startDate = rangeOfMonth > 5 ? endDate.AddMonths(-5) : endDate.AddMonths(-rangeOfMonth);
             startDate = new DateTime(startDate.Year, startDate.Month, 1);
 
 
