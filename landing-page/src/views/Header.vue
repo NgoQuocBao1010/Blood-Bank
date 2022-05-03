@@ -17,6 +17,9 @@ const items = [
     </div>
     <div class="navbar">
       <TabMenu :model="items" />
+      <div class="login-tab">
+        <a href="http://localhost:5000/admin/login">LOGIN</a>
+      </div>
     </div>
   </div>
 </template>
@@ -51,7 +54,28 @@ const items = [
   }
 
   .navbar {
+    display: flex;
     margin: 0 0 0 auto;
+
+    .login-tab a {
+      align-items: center;
+      background-color: #ffffff;
+      border-radius: 6px 6px 0px 0px;
+      color: #f07279;
+      display: flex;
+      font-family: -apple-system;
+      font-weight: 700;
+      padding: 20px;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .login-tab a:hover {
+      background-color: #f07279;
+      color: #6c757d;
+      transition: background-color linear 0.2s, color linear 0.2s;
+    }
+
     .p-tabmenu .p-tabmenu-nav {
       border: none;
 
