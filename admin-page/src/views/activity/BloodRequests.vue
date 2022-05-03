@@ -1,18 +1,22 @@
 <script setup>
 import { onBeforeMount, watch } from "vue";
 import ProgressBar from "primevue/progressbar";
+import AppProgressBar from "../../components/AppProgressBar.vue";
 
 import RequestRepo from "../../api/RequestRepo";
 import RequestHistoryTable from "../../components/tables/RequestHistoryTable.vue";
 
 let requestHistory = $ref(null);
 let fetchingRequests = $ref(false);
+
 const fetchData = (type) => {
-  return {
-    pending: RequestRepo.getPending(),
-    rejected: RequestRepo.getRejected(),
-    approved: RequestRepo.getApproved(),
-  }[type];
+  if (type === "pending") {
+    return RequestRepo.getPending();
+  } else if (type === "rejected") {
+    return RequestRepo.getRejected();
+  } else if (type === "approved") {
+    return RequestRepo.getApproved();
+  }
 };
 
 const tabs = ["approved", "rejected", "pending"];
@@ -69,8 +73,8 @@ onBeforeMount(async () => {
           </li>
         </ul>
 
-        <!-- Donor Table -->
-        <div id="donor-table" v-if="requestHistory">
+        <!-- Request Table -->
+        <div id="request-table" v-if="requestHistory">
           <RequestHistoryTable
             :requestHistory="requestHistory"
             :isActivity="true"
@@ -81,21 +85,7 @@ onBeforeMount(async () => {
         </div>
 
         <!-- Progress bar -->
-        <div
-          class="flex flex-center"
-          style="
-            flex-direction: column;
-            padding: 3rem 1rem;
-            background-color: #f8f9fa;
-          "
-          v-else
-        >
-          <h5>Loading ...</h5>
-          <ProgressBar
-            mode="indeterminate"
-            style="height: 0.5em; width: 100%"
-          />
-        </div>
+        <AppProgressBar v-else />
       </div>
     </div>
   </div>

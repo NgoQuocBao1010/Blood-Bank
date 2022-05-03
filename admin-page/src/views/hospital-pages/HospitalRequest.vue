@@ -6,7 +6,7 @@ import RequestRepo from "../../api/RequestRepo";
 import useVuelidate from "@vuelidate/core";
 import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { required, numeric } from "@vuelidate/validators";
+import { required, numeric, maxValue, helpers } from "@vuelidate/validators";
 import { BLOOD_TYPES } from "../../constants";
 import HospitalRepo from "../../api/HospitalRepo";
 import ProgressBar from "primevue/progressbar";
@@ -32,7 +32,13 @@ let formData = $ref({
 
 const formRules = $computed(() => {
   return {
-    quantity: { required, numeric },
+    quantity: {
+      required,
+      maxValue: helpers.withMessage(
+        "You can request maximum 4000ml",
+        maxValue(4000)
+      ),
+    },
     blood: {
       name: { required },
       type: { required },
@@ -67,14 +73,6 @@ const updateRequests = async () => {
   requestHistory = data.requestHistory;
 };
 
-// Rerender Form
-let isRerender = $ref(false);
-const forceReRenderForm = async () => {
-  isRerender = true;
-  await nextTick();
-  isRerender = false;
-};
-
 onBeforeMount(async () => {
   await updateRequests();
 });
@@ -89,49 +87,52 @@ const submitData = async () => {
       detail: "Please fix your form 🙏",
       life: 3000,
     });
-
     return;
-  }
+  } else {
+    // Make API call to server
+    try {
+      submitting = true;
+      const response = await RequestRepo.post({
+        quantity: formData.quantity,
+        blood: {
+          name: formData.blood.name,
+          type: formData.blood.type,
+        },
+        hospitalId: hospital_id,
+        date: formData.date.toString(),
+      });
 
-  // Make API call to server
-  submitting = true;
-  try {
-    await RequestRepo.post({
-      quantity: formData.quantity,
-      blood: {
-        name: formData.blood.name,
-        type: formData.blood.type,
-      },
-      hospitalId: hospital_id,
-      date: formData.date.toString(),
-    });
+      if (response.status === 200) {
+        errorMessage = null;
+        submitting = false;
 
-    errorMessage = null;
-    submitting = false;
-    resetForm();
-
-    toast.add({
-      severity: "success",
-      summary: "Successful",
-      detail: "Your request is created",
-      life: 3000,
-    });
-    await updateRequests();
-    await forceReRenderForm();
-  } catch (e) {
-    if (e.response) {
-      const { status } = e.response;
-      if (status === 400) {
-        errorMessage = "You have an error";
         toast.add({
-          severity: "error",
-          summary: "Form Error",
-          detail: errorMessage,
+          severity: "success",
+          summary: "Successful",
+          detail: "Your request is created",
           life: 3000,
         });
+
+        await updateRequests();
+
+        resetForm();
+        $v.$reset();
       }
-    } else {
-      throw e;
+    } catch (e) {
+      if (e.response) {
+        const { status } = e.response;
+        if (status === 400) {
+          errorMessage = "You have an error";
+          toast.add({
+            severity: "error",
+            summary: "Form Error",
+            detail: errorMessage,
+            life: 3000,
+          });
+        }
+      } else {
+        throw e;
+      }
     }
   }
 };
@@ -140,6 +141,7 @@ const submitData = async () => {
 <template>
   <div class="grid">
     <div class="col-12">
+      <!-- Form -->
       <div class="card">
         <h4 class="hospital-name" :v-model="hospitalName">
           <i class="fa fa-hospital"></i>
@@ -147,7 +149,6 @@ const submitData = async () => {
         </h4>
         <h3 class="title">Hospital Blood Request Form</h3>
 
-        <!-- Form -->
         <div class="p-fluid formgrid grid">
           <!-- Blood name -->
           <div class="field col-12 md:col-6">
@@ -200,9 +201,10 @@ const submitData = async () => {
               rows="5"
               cols="30"
               :class="{ 'p-invalid': $v.quantity.$error }"
+              @focus="$v.$reset()"
             />
             <span v-if="$v.quantity.$error" class="app-form-error">
-              This field is required
+              {{ $v.quantity.$errors[0].$message }}
             </span>
           </div>
 
