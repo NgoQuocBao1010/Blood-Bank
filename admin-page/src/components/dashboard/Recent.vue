@@ -34,7 +34,7 @@ onBeforeMount(async () => {
 
 <template>
     <div class="card">
-        <h5>Blood Activites</h5>
+        <h5>Blood Activities</h5>
         <PrimeVueTable
             :value="activities"
             :loading="fetchingData"

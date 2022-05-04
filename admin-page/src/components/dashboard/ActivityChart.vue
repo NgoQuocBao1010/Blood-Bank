@@ -55,7 +55,7 @@ chartData.datasets = chartData.datasets.map((type) => {
 
 <template>
     <div class="card">
-        <h5>Blood Activites in Last 6 months</h5>
+        <h5>Blood Activities in Last 6 months</h5>
         <Chart type="line" :data="data" :options="CHART_OPTIONS" />
     </div>
 </template>
