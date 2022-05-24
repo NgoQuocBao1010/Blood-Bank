@@ -4,9 +4,9 @@ import { useRouter } from "vue-router";
 import Breadcrumb from "primevue/breadcrumb";
 import Divider from "primevue/divider";
 
-import EventRepo from "../../api/EventRepo";
-import EventHelper from "../../utils/helpers/Event";
-import EventSubmissionRepo from "../../api/EventSubmissionRepo";
+import EventRepo from "../../api/EventRepo.js";
+import EventHelper from "../../utils/helpers/Event.js";
+import EventSubmissionRepo from "../../api/EventSubmissionRepo.js";
 import { formatDate } from "../../utils";
 import { DEFAULT_EVENT_COVER } from "../../constants";
 import AppProgressBar from "../../components/AppProgressBar.vue";

@@ -2,8 +2,8 @@
 import { defineAsyncComponent, onBeforeMount } from "vue";
 import Breadcrumb from "primevue/breadcrumb";
 
-import DonorRepo from "../../api/DonorRepo";
-import DonorTransactionRepo from "../../api/DonorTransaction";
+import DonorRepo from "../../api/DonorRepo.js";
+import DonorTransactionRepo from "../../api/DonorTransaction.js";
 import { formatDate } from "../../utils";
 
 const props = defineProps({

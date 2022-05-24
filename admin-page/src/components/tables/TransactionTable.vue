@@ -7,7 +7,7 @@ import DropDown from "primevue/dropdown";
 import MultiSelect from "primevue/multiselect";
 import { FilterMatchMode } from "primevue/api";
 
-import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
+import DonorTransactionHelper from "../../utils/helpers/DonorTransaction.js";
 import { formatDate } from "../../utils";
 import { TRANSACTION_STATUS } from "../../constants";
 

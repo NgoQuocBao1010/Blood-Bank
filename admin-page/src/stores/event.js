@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import EventRepo from "../api/EventRepo";
-import EventHelper from "../utils/helpers/Event";
+import EventRepo from "../api/EventRepo.js";
+import EventHelper from "../utils/helpers/Event.js";
 
 export const useEventStore = defineStore("event", {
     state: () => {

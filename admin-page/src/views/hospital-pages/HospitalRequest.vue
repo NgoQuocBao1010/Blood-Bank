@@ -8,7 +8,7 @@ import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { required, numeric, maxValue, helpers } from "@vuelidate/validators";
 import { BLOOD_TYPES } from "../../constants";
-import HospitalRepo from "../../api/HospitalRepo";
+import HospitalRepo from "../../api/HospitalRepo.js";
 import ProgressBar from "primevue/progressbar";
 
 const AsyncRequestHistory = defineAsyncComponent({

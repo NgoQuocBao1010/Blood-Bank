@@ -12,8 +12,8 @@ import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 
-import { useEventStore } from "../../stores/event";
-import EventRepo from "../../api/EventRepo";
+import { useEventStore } from "../../stores/event.js";
+import EventRepo from "../../api/EventRepo.js";
 import { fileToBase64, formatDate, stringToDate } from "../../utils";
 import { PRIMARY_CITIES } from "../../constants";
 

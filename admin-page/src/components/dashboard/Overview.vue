@@ -1,5 +1,5 @@
 <script setup>
-import AppRepo from "../../api/AppRepo";
+import AppRepo from "../../api/AppRepo.js";
 
 const response = await AppRepo.getOverview();
 let data = $ref(response.data);

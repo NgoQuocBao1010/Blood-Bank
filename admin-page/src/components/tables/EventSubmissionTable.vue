@@ -3,7 +3,7 @@ import { onBeforeMount } from "vue";
 import InputText from "primevue/inputtext";
 import { FilterMatchMode } from "primevue/api";
 
-import EventSubmissionHelper from "../../utils/helpers/EventSubmission";
+import EventSubmissionHelper from "../../utils/helpers/EventSubmission.js";
 import { formatDate } from "../../utils";
 
 const { donorsData } = defineProps({

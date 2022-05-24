@@ -1,7 +1,7 @@
 <script setup>
-import { useEventStore } from "../../stores/event";
+import { useEventStore } from "../../stores/event.js";
 
-import AppRepo from "../../api/AppRepo";
+import AppRepo from "../../api/AppRepo.js";
 
 const ICONS = [
     {

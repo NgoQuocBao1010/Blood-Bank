@@ -8,9 +8,9 @@ import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required, email } from "@vuelidate/validators";
 
-import { useUserStore } from "../../stores/user";
-import UserRepo from "../../api/UserRepo";
-import HospitalRepo from "../../api/HospitalRepo";
+import { useUserStore } from "../../stores/user.js";
+import UserRepo from "../../api/UserRepo.js";
+import HospitalRepo from "../../api/HospitalRepo.js";
 
 const userStore = useUserStore();
 const toast = useToast();

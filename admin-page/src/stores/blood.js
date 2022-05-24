@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import BloodRepo from "../api/BloodRepo";
-import BloodHelper from "../utils/helpers/Blood";
+import BloodRepo from "../api/BloodRepo.js";
+import BloodHelper from "../utils/helpers/Blood.js";
 
 export const useBloodStore = defineStore("blood", {
     state: () => {

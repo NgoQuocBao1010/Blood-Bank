@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import { useUserStore } from "./stores/user";
-import { useAppStore } from "./stores/app";
+import { useUserStore } from "./stores/user.js";
+import { useAppStore } from "./stores/app.js";
 
 const router = createRouter({
     history: createWebHistory("/admin/"),

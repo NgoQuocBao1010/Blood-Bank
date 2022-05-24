@@ -3,8 +3,8 @@ import { defineAsyncComponent, markRaw, watch, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Toast from "primevue/toast";
 
-import { useUserStore } from "./stores/user";
-import { useAppStore } from "./stores/app";
+import { useUserStore } from "./stores/user.js";
+import { useAppStore } from "./stores/app.js";
 import AppLoadingPage from "./components/AppLoadingPage.vue";
 
 const userStore = useUserStore();

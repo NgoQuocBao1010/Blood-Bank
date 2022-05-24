@@ -7,7 +7,7 @@ import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../stores/user.js";
 
 // Form data and validation rules
 const formData = $ref({

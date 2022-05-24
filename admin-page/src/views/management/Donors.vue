@@ -6,7 +6,7 @@ import MultiSelect from "primevue/multiselect";
 import DropDown from "primevue/dropdown";
 import { FilterMatchMode } from "primevue/api";
 
-import DonorRepos from "../../api/DonorRepo";
+import DonorRepos from "../../api/DonorRepo.js";
 import { BLOOD_TYPES } from "../../constants";
 
 let donors = $ref(null);

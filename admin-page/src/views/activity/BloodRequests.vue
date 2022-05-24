@@ -3,7 +3,7 @@ import { onBeforeMount, watch } from "vue";
 import ProgressBar from "primevue/progressbar";
 import AppProgressBar from "../../components/AppProgressBar.vue";
 
-import RequestRepo from "../../api/RequestRepo";
+import RequestRepo from "../../api/RequestRepo.js";
 import RequestHistoryTable from "../../components/tables/RequestHistoryTable.vue";
 
 let requestHistory = $ref(null);
