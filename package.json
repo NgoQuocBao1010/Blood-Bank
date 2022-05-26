@@ -14,6 +14,7 @@
         "build-lp": "cd landing-page && npm run build",
         "preview-build-lp": "npm run build-lp && cd landing-page && npm run preview",
         "build-all": "npm run build-admin && npm run build-lp",
+        "build-to-serve": "npm run build-all && mkdir -p ./backend/wwwroot && cp -R ./admin-page/dist ./backend/wwwroot/admin &&cp -R ./landing-page/dist ./backend/wwwroot/landing-page",
         "start-sv": "cd backend && dotnet run"
     },
     "repository": {
