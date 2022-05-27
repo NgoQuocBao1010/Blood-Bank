@@ -100,58 +100,69 @@ namespace backend
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            var provider = new FileExtensionContentTypeProvider();
-
-            app.MapWhen(x => x.Request.Path.Value != null && x.Request.Path.StartsWithSegments(new PathString("/admin")), builder =>
+            if (Directory.Exists("wwwroot/admin") && Directory.Exists("wwwroot/landing-page"))
             {
-                builder.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-                    ContentTypeProvider = provider
-                });
-                builder.UseSpaStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-                    ContentTypeProvider = provider
-                });
-                builder.UseSpa(spa =>
-                {
-                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
-                    {
-                        FileProvider =
-                            new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-                        ContentTypeProvider = provider
-                    };
-                    spa.Options.SourcePath = "wwwroot";
-                    spa.Options.DefaultPage = "/admin/index.html";
-                });
-            });
+                var provider = new FileExtensionContentTypeProvider();
 
-            app.MapWhen(x => x.Request.Path.Value != null && !x.Request.Path.StartsWithSegments(new PathString("/admin")), builder =>
-            {
-                builder.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "landing-page")),
-                    ContentTypeProvider = provider
-                });
-                builder.UseSpaStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "landing-page")),
-                    ContentTypeProvider = provider
-                });
-                builder.UseSpa(spa =>
-                {
-                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                app.MapWhen(
+                    x => x.Request.Path.Value != null && x.Request.Path.StartsWithSegments(new PathString("/admin")),
+                    builder =>
                     {
-                        FileProvider =
-                            new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "landing-page")),
-                        ContentTypeProvider = provider
-                    };
-                    spa.Options.SourcePath = "wwwroot/landing-page";
-                    // spa.Options.DefaultPage = "/index.html";
-                });
-            });
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider =
+                                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpaStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider =
+                                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpa(spa =>
+                        {
+                            spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                            {
+                                FileProvider =
+                                    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                                ContentTypeProvider = provider
+                            };
+                            spa.Options.SourcePath = "wwwroot";
+                            spa.Options.DefaultPage = "/admin/index.html";
+                        });
+                    });
 
+                app.MapWhen(
+                    x => x.Request.Path.Value != null && !x.Request.Path.StartsWithSegments(new PathString("/admin")),
+                    builder =>
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot", "landing-page")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpaStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot", "landing-page")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpa(spa =>
+                        {
+                            spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                            {
+                                FileProvider =
+                                    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                                        "landing-page")),
+                                ContentTypeProvider = provider
+                            };
+                            spa.Options.SourcePath = "wwwroot/landing-page";
+                            spa.Options.DefaultPage = "/index.html";
+                        });
+                    });
+            }
         }
     }
 }
