@@ -18,7 +18,7 @@
 
 ## About The Project
 
-This project is a team project from my university. We intends to build a management system to manage a blood bank. Therefor, we provides 3 web applications for User (Landing Page), Hospital (hospital accounts) and Admins (Admin Page). We also implement other features such as organize/manage Blood Donation Events, ...
+This project is a team project from my university. We intended to build a management system to manage a blood bank. Therefor, we provides 3 web applications for User (Landing Page), Hospital (hospital accounts) and Admins (Admin Page). We also implement other features such as organize/manage Blood Donation Events, ...
 
 Here are some of the basis required feature:
 
@@ -37,7 +37,7 @@ Here are some of the basis required feature:
 -   💉 Register for a blood donation events
 <P align="center"><img src="./screenshots/register.png" alt="Logo" width="70%"></p>
 
--   More screenshots [here](#usage)
+-   More screenshots and features [here](#usage)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -60,7 +60,7 @@ For the backend API
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
+This is an example of how you may give instructions on setting up our project locally.
 To get a local copy up and running follow these simple example steps.
 
 #### Setting Up Environment
@@ -83,7 +83,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-1. Clone the repo and change to that folder
+1. Clone the repo and change directory to that folder
 
     ```sh
     git clone https://github.com/NgoQuocBao1010/Blood-Bank.git
@@ -109,7 +109,7 @@ To get a local copy up and running follow these simple example steps.
 
 1. If everything works correctly, you could visit the website on http://127.0.0.1:5000 .
 
-   If there is any error (or for debug/development purpose), you can run the project by follow the below steps.
+   **If there is any error (or for debug/development purpose)**, you can run the project by follow the below steps.
 
     - [Start server](./backend/README.md)
     - [Start landing page](./landing-page/README.md)
@@ -123,7 +123,7 @@ To get a local copy up and running follow these simple example steps.
 
 ## Usage
 
-As the introduction indicated, the main purpose of this project is for blood bank management, after the installation successfully, you can exploring around the application to enjoy all of its functionalities.
+As the introduction indicated, the main purpose of this project is for blood bank management, after the installation successfully, you can explore around our web application to enjoy all of its functionalities.
 
 1. Landing Pages: Provide basic information of blood and the important of blood donation. Display and provide for users a way to register for blood donation events.
 
@@ -291,6 +291,6 @@ Bùi Quốc Trọng - [@trongbui1105](https://github.com/trongbui1105)
 ## Acknowledgments
 
 -   This awesome README temaplate is from [Best README Template](https://github.com/othneildrew/Best-README-Template). ♥
--   Admin pages are inspired from [Sakai Prime Vue](https://www.primefaces.org/sakai-vue/#/).
+-   Admin pages UI are inspired from [Sakai Prime Vue](https://www.primefaces.org/sakai-vue/#/).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
