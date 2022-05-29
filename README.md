@@ -132,6 +132,7 @@ To get a local copy up and running follow these simple example steps.
     ```
 
 1. If everything works correctly, you could visit the website on http://127.0.0.1:5000 .
+
    If there is any error (or for debug/development purpose), you can run the project by follow the below steps.
 
     - [Start server](./backend/README.md)
@@ -299,8 +300,11 @@ Distributed under the MIT License.
 ## Contributors
 
 Trương Hoàng Thuận (Captain 💕) - [@truonghoangthuan](https://github.com/truonghoangthuan)
+
 Ngô Hồng Quốc Bảo - [@NgoQuocBao](https://twitter.com/ngohquocbao1010)
+
 Lê Chánh Nhựt - [@lcnhut070200](https://github.com/lcnhut070200)
+
 Bùi Quốc Trọng - [@trongbui1105](https://github.com/trongbui1105)
 
 Project Link: [https://github.com/NgoQuocBao1010/Blood-Bank](https://github.com/NgoQuocBao1010/Blood-Bank)
