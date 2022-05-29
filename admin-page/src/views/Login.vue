@@ -105,9 +105,9 @@ const submitData = async () => {
                         </div>
                         <span class="text-600 font-medium">
                             Please sign in to continue or
-                            <router-link to="#">
+                            <a href="http://localhost:5000">
                                 👉 go back to main page 👈
-                            </router-link>
+                            </a>
                         </span>
                     </div>
 

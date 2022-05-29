@@ -34,7 +34,6 @@ export const useUserStore = defineStore("user", {
                     this.setState(data);
                 }
             } catch (e) {
-                console.log(e.response);
                 this.logout();
                 throw e;
             }
