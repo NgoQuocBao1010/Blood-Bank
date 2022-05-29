@@ -3,40 +3,16 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="#">
-    <img src="./screenshots/logo.png" alt="Logo" width="40%">
+  <a href="https://github.com/NgoQuocBao1010/Blood-Bank">
+    <img src="./screenshots/logo.png" alt="Logo" width="200px">
   </a>
 
-  <h3 align="center">Judoh - Blood Bank Management System</h3>
+  <h2 align="center">Judoh - Blood Bank Management System</h2>
 
   <p align="center">
     A management system provides basic functional features for a blood bank.
   </p>
 </div>
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
 
 <!-- ABOUT THE PROJECT -->
 
@@ -307,7 +283,6 @@ Lê Chánh Nhựt - [@lcnhut070200](https://github.com/lcnhut070200)
 
 Bùi Quốc Trọng - [@trongbui1105](https://github.com/trongbui1105)
 
-Project Link: [https://github.com/NgoQuocBao1010/Blood-Bank](https://github.com/NgoQuocBao1010/Blood-Bank)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
