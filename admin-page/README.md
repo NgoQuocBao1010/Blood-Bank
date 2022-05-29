@@ -13,4 +13,4 @@
     npm run start-admin
     ```
 
-1. If everything is successfull, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**
+1. If everything is installed successfully, Go to http://localhost:3000/ **(make sure no service is run on the port 3000)**
