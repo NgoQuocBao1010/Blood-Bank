@@ -14,7 +14,7 @@
     dotnet run
     ```
 
-    If you get permission denied error, run:
+    If you get "Permission denied error", run:
 
     ```bash
     sudo dotnet run
