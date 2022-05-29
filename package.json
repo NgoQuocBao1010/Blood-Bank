@@ -10,11 +10,10 @@
         "start-lp": "cd landing-page && npm run dev",
         "install-all": "npm run install-admin && npm run install-lp",
         "build-admin": "cd admin-page && npm run build",
-        "preview-build-admin": "npm run build-admin && cd admin-page && npm run preview",
         "build-lp": "cd landing-page && npm run build",
-        "preview-build-lp": "npm run build-lp && cd landing-page && npm run preview",
         "build-all": "npm run build-admin && npm run build-lp",
-        "build-to-serve": "npm run build-all && mkdir -p ./backend/wwwroot && cp -R ./admin-page/dist ./backend/wwwroot/admin && cp -R ./landing-page/dist ./backend/wwwroot/landing-page",
+        "move-build": "mkdir -p ./backend/wwwroot && cp -R ./admin-page/dist ./backend/wwwroot/admin && cp -R ./landing-page/dist ./backend/wwwroot/landing-page",
+        "build-to-serve": "npm run build-all && if [ -d ./backend/wwwroot ]; then rm -Rf ./backend/wwwroot; fi && npm run move-build",
         "start-sv": "cd backend && dotnet run",
         "start": "npm run build-to-serve && npm run start-sv"
     },
