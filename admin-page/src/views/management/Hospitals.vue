@@ -6,8 +6,8 @@ import { JSONtoExcel } from "../../utils/excel";
 import { FilterMatchMode } from "primevue/api";
 
 import InputText from "primevue/inputtext";
-import HospitalRepo from "../../api/HospitalRepo";
-import HospitalsHelpers from "../../utils/helpers/Hospitals";
+import HospitalRepo from "../../api/HospitalRepo.js";
+import HospitalsHelpers from "../../utils/helpers/Hospitals.js";
 
 const router = useRouter();
 

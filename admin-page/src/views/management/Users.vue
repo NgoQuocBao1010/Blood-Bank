@@ -6,9 +6,9 @@ import Dialog from "primevue/dialog";
 import { useToast } from "primevue/usetoast";
 import { FilterMatchMode } from "primevue/api";
 
-import UserRepo from "../../api/UserRepo";
+import UserRepo from "../../api/UserRepo.js";
 import UserCreation from "../../components/form/UserCreation.vue";
-import { useUserStore } from "../../stores/user";
+import { useUserStore } from "../../stores/user.js";
 
 let users = $ref(null);
 let fetchingData = $ref(true);

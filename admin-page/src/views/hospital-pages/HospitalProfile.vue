@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeMount } from "vue";
 import { useRoute } from "vue-router";
-import HospitalRepo from "../../api/HospitalRepo";
+import HospitalRepo from "../../api/HospitalRepo.js";
 
 const route = useRoute();
 const hospitalId = route.params._id;

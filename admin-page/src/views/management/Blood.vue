@@ -2,8 +2,8 @@
 import { onBeforeMount } from "vue";
 import OverlayPanel from "primevue/overlaypanel";
 
-import { useBloodStore } from "../../stores/blood";
-import BloodHelper from "../../utils/helpers/Blood";
+import { useBloodStore } from "../../stores/blood.js";
+import BloodHelper from "../../utils/helpers/Blood.js";
 import { JSONtoExcel } from "../../utils/excel";
 
 const bloodStore = useBloodStore();

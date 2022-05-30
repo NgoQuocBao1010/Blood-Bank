@@ -1,13 +1,20 @@
 using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using backend.Controllers;
 using backend.Repositories;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -27,7 +34,6 @@ namespace backend
         public void ConfigureServices(IServiceCollection services)
         {
             var env = DotEnv.Read();
-
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options
@@ -55,7 +61,8 @@ namespace backend
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x=> {
+            }).AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = false;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -68,6 +75,7 @@ namespace backend
                 };
             });
 
+            services.AddSpaStaticFiles();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,11 +98,71 @@ namespace backend
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            app.UseEndpoints(endpoints =>
+            if (Directory.Exists("wwwroot/admin") && Directory.Exists("wwwroot/landing-page"))
             {
-                endpoints.MapControllers();
-            });
+                var provider = new FileExtensionContentTypeProvider();
+
+                app.MapWhen(
+                    x => x.Request.Path.Value != null && x.Request.Path.StartsWithSegments(new PathString("/admin")),
+                    builder =>
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider =
+                                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpaStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider =
+                                new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpa(spa =>
+                        {
+                            spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                            {
+                                FileProvider =
+                                    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                                ContentTypeProvider = provider
+                            };
+                            spa.Options.SourcePath = "wwwroot";
+                            spa.Options.DefaultPage = "/admin/index.html";
+                        });
+                    });
+
+                app.MapWhen(
+                    x => x.Request.Path.Value != null && !x.Request.Path.StartsWithSegments(new PathString("/admin")),
+                    builder =>
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot", "landing-page")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpaStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),
+                                "wwwroot", "landing-page")),
+                            ContentTypeProvider = provider
+                        });
+                        builder.UseSpa(spa =>
+                        {
+                            spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
+                            {
+                                FileProvider =
+                                    new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                                        "landing-page")),
+                                ContentTypeProvider = provider
+                            };
+                            spa.Options.SourcePath = "wwwroot/landing-page";
+                            spa.Options.DefaultPage = "/index.html";
+                        });
+                    });
+            }
         }
     }
 }

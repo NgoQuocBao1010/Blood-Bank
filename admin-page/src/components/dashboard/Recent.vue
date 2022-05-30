@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeMount } from "vue";
 
-import AppRepo from "../../api/AppRepo";
+import AppRepo from "../../api/AppRepo.js";
 import { timeDifference } from "../../utils";
 
 // Activitiy data

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import UserRepo from "../api/UserRepo";
-import { useLocalToken } from "../api/helpers";
+import UserRepo from "../api/UserRepo.js";
+import { useLocalToken } from "../api/helpers.js";
 
 export const useUserStore = defineStore("user", {
     state: () => {
@@ -34,7 +34,6 @@ export const useUserStore = defineStore("user", {
                     this.setState(data);
                 }
             } catch (e) {
-                console.log(e.response);
                 this.logout();
                 throw e;
             }

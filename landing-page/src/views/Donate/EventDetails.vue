@@ -45,8 +45,8 @@ const donateData = reactive({
 const rules = {
   fullname: {
     required,
-    minLength: minLength(6),
-    maxLength: maxLength(30),
+    // minLength: minLength(6),
+    // maxLength: maxLength(30),
   },
   idCardNumber: {
     required,

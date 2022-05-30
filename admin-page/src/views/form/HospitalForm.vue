@@ -5,7 +5,7 @@ import InputText from "primevue/inputtext";
 import { useToast } from "primevue/usetoast";
 import useVuelidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import HospitalRepo from "../../api/HospitalRepo";
+import HospitalRepo from "../../api/HospitalRepo.js";
 
 const router = useRouter();
 const { _id, hospitalData } = defineProps({

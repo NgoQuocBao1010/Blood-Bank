@@ -2,7 +2,7 @@
 import { defineAsyncComponent, onBeforeMount } from "vue";
 import Breadcrumb from "primevue/breadcrumb";
 
-import HospitalRepo from "../../api/HospitalRepo";
+import HospitalRepo from "../../api/HospitalRepo.js";
 
 const AsyncRequestHistory = defineAsyncComponent({
     loader: () => import("../../components/tables/RequestHistoryTable.vue"),

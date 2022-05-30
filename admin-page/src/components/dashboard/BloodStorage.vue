@@ -1,5 +1,5 @@
 <script setup>
-import { useBloodStore } from "../../stores/blood";
+import { useBloodStore } from "../../stores/blood.js";
 
 const bloodStore = useBloodStore();
 await bloodStore.getData();

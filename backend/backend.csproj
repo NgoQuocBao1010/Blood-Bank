@@ -3,14 +3,145 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>BloodBank</RootNamespace>
+    <SpaRoot>wwwroot\</SpaRoot>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="dotenv.net" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="5.0.0-preview.8.20414.8" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.15" />
     <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-1.a4f375f8.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-2.bd024686.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-3.98d4d9ce.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-4.1dcaf473.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-5.9b4829e4.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-6.493fd43b.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\about-img-7.ecb154f4.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\color.473bc8ca.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\default_event_cover.1144d19c.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\index.7e4f5d9b.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\index.8e126f2b.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\logo.c920f616.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\primeicons.2ab98f70.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\primeicons.788dba0a.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\primeicons.c9eaf535.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\primeicons.feb68bf6.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\assets\vendor.347ecb64.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\favicon.ico" />
+    <_ContentIncludedByDefault Remove="wwwroot\landing-page\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-1.a4f375f8.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-2.bd024686.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-3.98d4d9ce.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-4.1dcaf473.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-5.9b4829e4.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-6.493fd43b.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\about-img-7.ecb154f4.jpeg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\color.473bc8ca.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\default_event_cover.1144d19c.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\index.7e4f5d9b.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\index.8e126f2b.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\logo.c920f616.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\primeicons.2ab98f70.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\primeicons.788dba0a.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\primeicons.c9eaf535.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\primeicons.feb68bf6.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\vendor.347ecb64.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\404Error.3606b986.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\404Error.3ca85700.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\About.9365e879.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\About.ed2327f1.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\AppFooter.31e0c9cf.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\AppFooter.cd452d2b.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\AppProgressBar.3d0b0562.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\AppRepo.66f82820.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\auto.esm.15d52109.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\blood.7b184313.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Blood.c0bc33da.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Blood.fd22a91c.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\BloodRequests.02203b82.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\BloodRequests.bff6b46c.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\breadcrumb.esm.a91860c3.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\calendar.esm.7b740a4e.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\color.473bc8ca.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Dashboard.44eb5a06.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Dashboard.6ae9cb73.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\default_event_cover.097e50e7.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\dialog.esm.3ee3c23e.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\divider.esm.5e4890d6.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonationRequests.53ca53aa.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonationRequests.b25298e0.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorDetail.8e08837b.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorDetail.ac3fe858.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorRepo.a7dbdada.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Donors.65753a91.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Donors.d7f57573.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorTable.41a88457.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorTable.4e47d0c0.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorTransaction.32dc5fd8.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\DonorTransaction.b89ce3d4.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Event.6019e8d3.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\event.795dc4a1.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\EventDetail.310ac166.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\EventDetail.b43bffde.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\EventForm.6b4cc79b.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\EventForm.fab687c6.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Events.d3c7b5cf.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Events.e2299a76.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\EventSubmissionTable.49edb401.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalDetail.80898588.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalDetail.ee1e5188.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalForm.5d0413c6.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalForm.8c04d400.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalProfile.242efa5c.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalProfile.250c19fa.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalRepo.a7b70b29.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalRequest.65909b38.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\HospitalRequest.b01ae4ba.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Hospitals.42627972.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Hospitals.dc59cd53.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.023720d1.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.0f8f67cb.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.18266a61.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.8f362c68.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.e2e649d2.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\index.esm.d4f2ad44.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\LayoutDefault.1c4d2cd0.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\LayoutDefault.7d519820.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\LayoutUnauth.61a160d5.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\LayoutUnauth.bc5b6343.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Login.2b9092c6.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Login.d6f106eb.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\logo.c920f616.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\multiselect.esm.05481d33.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\overlaypanel.esm.9fc557c8.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\primeicons.2ab98f70.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\primeicons.788dba0a.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\primeicons.c9eaf535.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\primeicons.feb68bf6.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\RequestHistoryTable.6372be23.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\RequestHistoryTable.ffef92d8.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\RequestRepo.581371e8.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\ServerError.29c15d70.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\ServerError.70861863.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\TransactionTable.11a608d7.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\TransactionTable.71099434.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\UnauthError.12def1fa.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\UnauthError.93e75573.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\undraw_engineering_team_u99p.0a0909d9.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Users.549e5731.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\Users.693f32c7.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\admin-page\assets\vendor.6444e119.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <DistFiles Include="$(SpaRoot)admin-page\**; $(SpaRoot)landing-page\**" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 <script setup>
 import { onBeforeMount, watch } from "vue";
 
-import DonorRepo from "../../api/DonorRepo";
+import DonorRepo from "../../api/DonorRepo.js";
 import DonorTable from "../../components/tables/DonorTable.vue";
 import AppProgressBar from "../../components/AppProgressBar.vue";
 

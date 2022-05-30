@@ -11,13 +11,13 @@ import { BLOOD_TYPES } from "../../constants";
 
 import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import RequestsHelpers from "../../utils/helpers/Requests";
+import RequestsHelpers from "../../utils/helpers/Requests.js";
 import { JSONtoExcel } from "../../utils/excel";
 import { formatDate } from "../../utils/index";
 
 import { TRANSACTION_STATUS } from "../../constants";
-import DonorTransactionHelper from "../../utils/helpers/DonorTransaction";
-import RequestRepo from "../../api/RequestRepo";
+import DonorTransactionHelper from "../../utils/helpers/DonorTransaction.js";
+import RequestRepo from "../../api/RequestRepo.js";
 import Dialog from "primevue/dialog";
 
 const route = useRoute();

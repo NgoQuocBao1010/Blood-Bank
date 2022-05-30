@@ -1,7 +1,7 @@
 <script setup>
 import Chart from "primevue/chart";
 
-import AppRepo from "../../api/AppRepo";
+import AppRepo from "../../api/AppRepo.js";
 import { THEMES } from "../../constants";
 
 const CHART_OPTIONS = {

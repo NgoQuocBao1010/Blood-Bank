@@ -10,13 +10,13 @@ import Dialog from "primevue/dialog";
 import { useToast } from "primevue/usetoast";
 import { FilterMatchMode } from "primevue/api";
 
-import { useEventStore } from "../../stores/event";
-import DonorsHelpers from "../../utils/helpers/Donors";
+import { useEventStore } from "../../stores/event.js";
+import DonorsHelpers from "../../utils/helpers/Donors.js";
 import { BLOOD_TYPES } from "../../constants";
 import { formatDate } from "../../utils";
 import { JSONtoExcel, excelToJson } from "../../utils/excel";
-import DonorRepo from "../../api/DonorRepo";
-import DonorTransactionRepo from "../../api/DonorTransaction";
+import DonorRepo from "../../api/DonorRepo.js";
+import DonorTransactionRepo from "../../api/DonorTransaction.js";
 
 const { donorsData, participants, isApproveParticipant, isRejectParticipant } =
     defineProps({

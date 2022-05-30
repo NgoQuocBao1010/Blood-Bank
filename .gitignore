@@ -35,3 +35,6 @@ test/
 
 # Environment variables
 .env*
+
+backend/wwwroot/admin/*
+backend/wwwroot/landing-page/*

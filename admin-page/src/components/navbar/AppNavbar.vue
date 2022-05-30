@@ -4,8 +4,8 @@ import OverlayPanel from "primevue/overlaypanel";
 import { useToast } from "primevue/usetoast";
 import { useRouter } from "vue-router";
 
-import { useUserStore } from "../../stores/user";
-import AppRepo from "../../api/AppRepo";
+import { useUserStore } from "../../stores/user.js";
+import AppRepo from "../../api/AppRepo.js";
 
 const router = useRouter();
 const userStore = useUserStore();

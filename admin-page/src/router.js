@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import { useUserStore } from "./stores/user";
-import { useAppStore } from "./stores/app";
+import { useUserStore } from "./stores/user.js";
+import { useAppStore } from "./stores/app.js";
 
 const router = createRouter({
     history: createWebHistory("/admin/"),
@@ -248,7 +248,6 @@ router.beforeEach(async (to, from, next) => {
             appStore.closeLoadingScreen();
         }
 
-        console.log("Error in ROUTER", err);
         if (!err.response) return next({ name: "Server Error" });
         if (err.response) {
             if (err.response.status === 401)
